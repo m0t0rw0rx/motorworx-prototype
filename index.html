@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#faf7ff" />
-<title>Motorworx Play & Discover | Level 1 — Halloween Adventure</title>
+<title>Motorworx Play & Discover | Level 1 — Little Explorers</title>
 <style>
 :root{font-family:ui-rounded,'Trebuchet MS',system-ui,sans-serif;color:#29394a;background:#f5f2fc;font-synthesis:none}
 *[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(29px,7vw,39px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
@@ -86,6 +86,63 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .voice-bar .voice-icon{font-size:20px;line-height:1}
 .voice-bar .voice-status{font-size:12px;color:#7a698d;flex:1;line-height:1.3}
 @media(max-width:360px){.voice-bar{gap:5px}.voice-bar button{padding:9px 8px;font-size:12px}.voice-bar .voice-status{font-size:11px}}
+.theme-label{display:inline-block;background:#e7f5ec;color:#397c69;border-radius:999px;font-size:12px;font-weight:800;padding:5px 11px;margin:1px 0 7px}
+#gameScreen .theme-label,#finishScreen .theme-label{background:#e7f6e8;color:#397a58}
+#matchScreen .theme-label,#patternScreen .theme-label{background:#fff1d7;color:#95703a}
+#peekScreen .theme-label{background:#ecf5db;color:#64833a}
+#diffScreen .theme-label{background:#ecf5db;color:#64833a}
+#memoryScreen .theme-label{background:#e6e9ff;color:#665bb0}
+#spatialScreen .theme-label{background:#e1f4fa;color:#327e99}
+
+/* Level 1 visual discrimination: choose the one that is different. */
+.diff-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 14px}
+.diff-choice{display:flex;align-items:center;justify-content:center;min-height:140px;background:#faf7ff;border:3px solid #e3daf1;border-radius:22px;font-size:78px;line-height:1;color:#29394a;touch-action:manipulation}
+.diff-choice.correct{background:#eaf8f3;border-color:#53ac96}
+.diff-choice:disabled{opacity:1}
+@media(max-width:390px){.diff-choices{gap:8px}.diff-choice{min-height:108px;font-size:60px}}
+
+/* Game 9 — large, calm, finger-friendly two-place visual-tracking task. */
+#starScreen .theme-label{background:#e7e9fa;color:#6352a3}
+.star-board{width:100%;max-width:460px;margin:14px auto 6px;position:relative;background:#f5f6ff;border-radius:23px;overflow:hidden}
+.star-board svg{display:block;width:100%;touch-action:manipulation;margin:0}
+.star-launch{position:absolute;left:50%;top:8%;transform:translateX(-50%);width:27%;height:29%;min-height:0;border:0;background:transparent;padding:0;cursor:pointer;touch-action:manipulation}
+.star-launch:disabled{opacity:1;cursor:default}.star-launch:focus-visible{outline:4px solid #ffe28b;outline-offset:-5px}
+.star-stop{position:absolute;top:56%;width:39%;height:35%;border:0;background:transparent;min-height:80px;padding:0;color:#26394c;cursor:pointer;touch-action:manipulation}
+.star-stop.left{left:7%}.star-stop.right{right:7%}
+.star-stop:disabled{cursor:default;opacity:1}.star-stop:focus-visible{outline:4px solid #8760ba;outline-offset:-4px}
+/* Invisible touch targets: the object itself responds, not the button rectangle. */
+.star-stop.selected{outline:0;border:0;background:transparent}
+.star-art-tap{transform-box:fill-box;transform-origin:center center;animation:star-art-pop .58s ease-in-out}
+.star-art-wrong{transform-box:fill-box;transform-origin:center center;animation:star-art-wiggle .48s ease-in-out}
+@keyframes star-art-pop{0%,100%{transform:scale(1)}35%{transform:scale(1.22) translateY(-8px)}65%{transform:scale(.94)}}
+@keyframes star-art-wiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media(prefers-reduced-motion:reduce){.star-art-tap,.star-art-wrong{animation:none}}
+.star-control-row{display:flex;justify-content:center;gap:10px;margin-top:12px}
+@media(max-width:390px){.star-stop{min-height:65px}}
+
+/* V14: picture-first feedback in every answer game. Large invisible hit areas
+   remain in place; only the illustration bounces or wiggles. */
+.match-choice,.peek-choice,.memory-option,.diff-choice{
+  background:transparent!important;border:3px solid transparent!important;box-shadow:none!important;
+}
+.match-choice.correct,.match-choice.incorrect,.peek-choice.correct,
+.memory-option.correct,.diff-choice.correct{
+  background:transparent!important;border-color:transparent!important;
+}
+.match-choice svg,.peek-choice svg,.finish-choice svg,
+.memory-option .choice-art,.diff-choice .choice-art,
+.pattern-choice .choice-art{transform-origin:center;transform-box:fill-box}
+@keyframes motorworx-object-yes{
+  0%,100%{transform:scale(1)}35%{transform:scale(1.21) translateY(-7px)}70%{transform:scale(.95)}
+}
+@keyframes motorworx-object-no{
+  0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}
+}
+.object-yes{animation:motorworx-object-yes .58s ease-in-out}
+.object-no{animation:motorworx-object-no .48s ease-in-out}
+.choice-art{display:inline-flex;align-items:center;justify-content:center;line-height:1;pointer-events:none}
+.memory-option .choice-art,.diff-choice .choice-art{font-size:inherit}
+@media(prefers-reduced-motion:reduce){.object-yes,.object-no{animation:none}}
 </style>
 </head>
 <body>
@@ -93,17 +150,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <section id="homeScreen" class="screen home">
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
   <div class="home-label">PLAY &amp; DISCOVER | LEVEL 1</div>
-  <h1>Halloween Adventure</h1>
+  <h1>Play &amp; Discover</h1>
   <p>Choose a game and let’s play!</p>
   <div class="home-art" aria-hidden="true">
-   <svg viewBox="0 0 320 205">
-    <path d="M55 107 H265" stroke="#e3d8f5" stroke-width="55" stroke-linecap="round"/>
-    <path d="M55 107 H265" stroke="#8f79b8" stroke-width="7" stroke-dasharray="1 21" stroke-linecap="round"/>
-    <g transform="translate(59 106)"><path d="M-25 29 V-5 C-25 -48 25 -48 25 -5 V29 L12 20 0 29 -12 20Z" fill="white" stroke="#70619b" stroke-width="3"/><circle cx="-9" cy="-7" r="4" fill="#514368"/><circle cx="9" cy="-7" r="4" fill="#514368"/><path d="M-6 8 Q0 15 6 8" stroke="#514368" stroke-width="3" fill="none"/></g>
-    <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
-   </svg>
+   <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Seven Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing and patterns.</p>
+  <p><strong>Nine Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences and tracking.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -114,29 +166,32 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    <h1>Choose a Game</h1>
    <p class="hint" style="text-align:left;margin-top:10px">Tap a picture to choose a game. You can play any game you like!</p>
    <div class="activity-grid">
-     <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">👻</div><strong>Help the Ghost</strong><small>Trace 3 easy paths</small></button>
-     <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">👾</div><strong>Find My Twin</strong><small>Find the matching monster</small></button>
-     <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true">🎃</div><strong>Peekaboo!</strong><small>Find who's hiding</small></button>
-     <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>What's Missing?</strong><small>Remember one picture</small></button>
-     <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🏠</div><strong>Where Does It Go?</strong><small>Move the ghost into place</small></button>
-     <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true">🧩</div><strong>Finish the Picture</strong><small>Find the big missing part</small></button>
-     <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true">🔮</div><strong>Follow the Pattern</strong><small>Find what comes next</small></button>
+     <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">🐰</div><strong>Help the Bunny</strong><small>Little Animal Adventures · Tracing</small></button>
+     <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">🎈</div><strong>Find My Match</strong><small>Colourful Discovery · Matching</small></button>
+     <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true">🦁</div><strong>Who’s Hiding?</strong><small>Safari Explorers · Finding</small></button>
+     <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>What’s Missing?</strong><small>Little Explorers · Memory</small></button>
+     <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Where Does It Go?</strong><small>Under the Sea · Placing</small></button>
+     <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true">🧩</div><strong>Finish the Picture</strong><small>Little Animal Adventures · Completing</small></button>
+     <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true">🌈</div><strong>Follow the Pattern</strong><small>Colourful Discovery · Patterns</small></button>
+     <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true">🦒</div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
+     <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
  <section id="matchScreen" class="screen" hidden>
   <button type="button" class="back" id="matchBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
-  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Find My Twin!</h1></div><div class="counter" id="matchCounter">1 of 4</div></header>
+  <div class="theme-label">Colourful Discovery</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Find My Match!</h1></div><div class="counter" id="matchCounter">1 of 4</div></header>
   <div class="steps" id="matchSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
-  <p class="instruction">Find the same monster.</p>
+  <p class="instruction">Find the matching picture.</p>
   <p class="hint">Tap the matching picture.</p>
   <div class="match-layout">
     <div class="target-panel"><div class="target-title">Look at this one</div><div id="matchTarget"></div></div>
     <div style="font-weight:800;color:#765ca0;font-size:14px">Which one is the same?</div>
-    <div class="match-choices"><button type="button" class="match-choice" id="choice0" aria-label="Left monster"></button><button type="button" class="match-choice" id="choice1" aria-label="Right monster"></button></div>
+    <div class="match-choices"><button type="button" class="match-choice" id="choice0" aria-label="Left balloon"></button><button type="button" class="match-choice" id="choice1" aria-label="Right balloon"></button></div>
   </div>
-  <div id="matchMessage" class="message" aria-live="polite">Choose the matching monster.</div>
+  <div id="matchMessage" class="message" aria-live="polite">Choose the matching picture.</div>
   <div class="controls"><button id="matchNext" type="button" hidden>Next picture →</button></div>
   <div class="note">Four easy rounds · Two choices each time</div>
  </section>
@@ -144,9 +199,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <section id="peekScreen" class="screen" hidden>
    <button type="button" class="back" id="peekBack">← Choose a game</button>
    <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
-   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Peekaboo!</h1></div><div class="counter" id="peekCounter">1 of 4</div></header>
+  <div class="theme-label">Safari Explorers</div>
+   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Who’s Hiding?</h1></div><div class="counter" id="peekCounter">1 of 4</div></header>
    <div class="steps" id="peekSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
-   <p class="instruction" id="peekInstruction">Find the hiding ghost.</p>
+   <p class="instruction" id="peekInstruction">Find the hiding lion.</p>
    <p class="hint">Tap the picture where you see it.</p>
    <div class="peek-scene-label">Which picture has someone hiding?</div>
    <div class="peek-choices">
@@ -160,6 +216,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <section id="memoryScreen" class="screen" hidden>
   <button type="button" class="back" id="memoryBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>What's Missing?</h1></div><div class="counter" id="memoryCounter">1 of 4</div></header>
   <div class="steps" id="memorySteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
   <p class="instruction" id="memoryInstruction">Look at the picture.</p>
@@ -179,6 +236,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <section id="finishScreen" class="screen" hidden>
   <button type="button" class="back" id="finishBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Animal Adventures</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Finish the Picture</h1></div><div class="counter" id="finishCounter">1 of 4</div></header>
   <div class="steps" id="finishSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <p class="instruction">Drag the missing piece into place.</p>
@@ -193,6 +251,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <section id="patternScreen" class="screen" hidden>
   <button type="button" class="back" id="patternBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Colourful Discovery</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Pattern</h1></div><div class="counter" id="patternCounter">1 of 4</div></header>
   <div class="steps" id="patternSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
   <p class="instruction">What comes next?</p>
@@ -204,49 +263,100 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="controls"><button type="button" id="patternNext" hidden>Next pattern →</button></div>
   <div class="note">Adult guidance: point to the pictures in order if help is needed. Drag one of the two large pictures into the empty space. No timers or penalties.</div>
  </section>
+ <section id="diffScreen" class="screen" hidden>
+  <button type="button" class="back" id="diffBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Safari Explorers</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Spot the Different One!</h1></div><div class="counter" id="diffCounter">1 of 4</div></header>
+  <div class="steps" id="diffSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction">Which picture is different?</p>
+  <p class="hint">Tap the picture that is not the same.</p>
+  <div class="diff-choices">
+    <button type="button" class="diff-choice" id="diffChoice0" aria-label="First picture"></button>
+    <button type="button" class="diff-choice" id="diffChoice1" aria-label="Second picture"></button>
+    <button type="button" class="diff-choice" id="diffChoice2" aria-label="Third picture"></button>
+  </div>
+  <div class="message" id="diffMessage" aria-live="polite">Look carefully and choose the one that is different.</div>
+  <div class="controls"><button type="button" id="diffNext" hidden>Next picture →</button></div>
+  <div class="note">Four easy rounds · One clearly different picture each time · No timer</div>
+ </section>
+
+ <section id="starScreen" class="screen" hidden>
+  <button type="button" class="back" id="starBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Space Adventure</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Star!</h1></div><div class="counter" id="starCounter">1 of 4</div></header>
+  <div class="steps" id="starSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="starInstruction">Tap the star to start.</p>
+  <p class="hint" id="starHint">Then watch where it lands!</p>
+  <div class="star-board" id="starBoard">
+   <svg viewBox="0 0 360 285" aria-label="A bright star travelling towards one of two large objects in space">
+    <rect width="360" height="285" rx="24" fill="#222858"/>
+    <circle cx="38" cy="40" r="2.5" fill="#fff" opacity=".75"/><circle cx="111" cy="78" r="2" fill="#fff" opacity=".65"/>
+    <circle cx="304" cy="48" r="3" fill="#fff" opacity=".78"/><circle cx="253" cy="87" r="2.5" fill="#fff" opacity=".62"/>
+    <circle cx="338" cy="123" r="2" fill="#fff" opacity=".62"/><circle cx="21" cy="136" r="2" fill="#fff" opacity=".64"/>
+    <g id="starLeftArt"></g>
+    <g id="starRightArt"></g>
+    <g id="movingStar" transform="translate(180 59)"><path d="M0 -27 L8 -9 L28 -8 L12 6 L17 27 L0 17 L-17 27 L-12 6 L-28 -8 L-8 -9Z" fill="#ffda6d" stroke="#f6ae42" stroke-width="3" stroke-linejoin="round"/></g>
+   </svg>
+   <button type="button" class="star-launch" id="starLaunch" aria-label="Tap the star to start the movement" disabled></button>
+   <button type="button" class="star-stop left" id="starChoice0" aria-label="Tap the left space object" disabled></button>
+   <button type="button" class="star-stop right" id="starChoice1" aria-label="Tap the right space object" disabled></button>
+  </div>
+  <div id="starMessage" class="message" aria-live="polite">Listen to the instruction.</div>
+  <div class="star-control-row"><button id="starReplay" class="secondary" type="button">↻ Start again</button><button id="starNext" type="button" hidden>Next star →</button></div>
+  <div class="note">Tap the star to begin · Follow it with your eyes · Tap where the star landed</div>
+ </section>
  <section id="spatialScreen" class="screen" hidden>
   <button type="button" class="back" id="spatialBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Under the Sea</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Where Does It Go?</h1></div><div class="counter" id="spatialCounter">1 of 4</div></header>
   <div class="steps" id="spatialSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  <p class="instruction" id="spatialInstruction">Put the ghost inside the house.</p>
-  <p class="hint">Drag the ghost with your finger.</p>
-  <svg id="spatialBoard" viewBox="0 0 360 330" aria-label="Drag the ghost to the correct place" role="group">
+  <p class="instruction" id="spatialInstruction">Put the fish inside the cave.</p>
+  <p class="hint">Drag the fish with your finger.</p>
+  <svg id="spatialBoard" viewBox="0 0 360 330" aria-label="Drag the fish to the correct place" role="group">
    <rect width="360" height="320" rx="22" fill="#faf7ff"/>
    <g id="spatialScene"></g>
    <g id="spatialTarget"></g>
    <g id="spatialGhost" transform="translate(61 253)">
-    <circle r="45" fill="#f0e9ff" opacity=".8"/>
-    <path d="M-22 25 V-2 C-22 -34 22 -34 22 -2 V25 L11 18 L0 26 L-11 18Z" fill="white" stroke="#74649e" stroke-width="3" stroke-linejoin="round"/>
-    <circle cx="-8" cy="-5" r="3.5" fill="#514368"/><circle cx="9" cy="-5" r="3.5" fill="#514368"/>
-    <path d="M-5 8 Q0 13 5 8" fill="none" stroke="#514368" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M-19 0 L-39 -20 V20Z" fill="#75cfc1" stroke="#429b9c" stroke-width="3"/>
+    <ellipse cx="2" cy="0" rx="28" ry="22" fill="#8eddd1" stroke="#429b9c" stroke-width="3"/>
+    <circle cx="14" cy="-5" r="4" fill="#384c5a"/><path d="M18 8 Q10 14 5 8" stroke="#4a7782" stroke-width="2.5" fill="none"/>
    </g>
    <g id="spatialStars" hidden><text x="140" y="57" font-size="25">⭐</text><text x="252" y="67" font-size="24">✨</text></g>
   </svg>
-  <div id="spatialMessage" class="message" aria-live="polite">Touch the ghost and drag it.</div>
+  <div id="spatialMessage" class="message" aria-live="polite">Touch the fish and drag it.</div>
   <div class="controls"><button type="button" id="spatialReset" class="secondary">↻ Try again</button><button type="button" id="spatialNext" hidden>Next place →</button></div>
   <div class="note">Adult guidance: read each instruction aloud. One move at a time. No timer.</div>
  </section>
  <section id="gameScreen" class="screen" hidden>
  <button id="backHome" class="back" type="button">← Back to home</button>
  <div class="logo-slot" aria-label="Motorworx">Motorworx <span style="font-weight:400">· prototype</span></div>
- <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Help the Ghost!</h1></div><div id="counter" class="counter">1 of 3</div></header>
+ <div class="theme-label">Little Animal Adventures</div>
+ <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Help the Bunny!</h1></div><div id="counter" class="counter">1 of 3</div></header>
  <div class="steps" aria-hidden="true"><span class="current"></span><span></span><span></span></div>
- <p class="instruction">Trace the path to the pumpkin.</p>
- <p class="hint" id="hint">Touch the ghost and follow the dots.</p>
- <svg id="board" viewBox="0 0 360 305" role="img" aria-label="Trace from the friendly ghost on the left to the pumpkin on the right">
+ <p class="instruction">Trace the path to the carrot.</p>
+ <p class="hint" id="hint">Touch the bunny and follow the dots.</p>
+ <svg id="board" viewBox="0 0 360 305" role="img" aria-label="Trace from the friendly bunny to the carrot">
   <g id="trail"><line class="guide" x1="82" y1="155" x2="273" y2="155"/><line class="dots" x1="82" y1="155" x2="273" y2="155"/></g>
   <line id="traced" class="traced" x1="82" y1="155" x2="82" y2="155" />
-  <g id="pumpkin" transform="translate(288 155)">
-   <path d="M0 -29 Q-4 -43 7 -48" fill="none" stroke="#497c48" stroke-width="6" stroke-linecap="round"/>
-   <path d="M0 -32 C-31 -48 -48 -22 -43 7 C-39 36 -14 43 0 36 C18 44 42 29 43 7 C48 -22 28 -47 0 -32Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/>
-   <path d="M-13 -30 Q-29 0 -13 34 M13 -30 Q29 0 13 34" fill="none" stroke="#df8941" stroke-width="3"/><circle cx="-12" cy="-2" r="3.5" fill="#553949"/><circle cx="12" cy="-2" r="3.5" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3" stroke-linecap="round"/>
+  <g id="pumpkin" transform="translate(282 155)">
+   <path d="M-6 -17 Q-16 -31 -24 -41" fill="none" stroke="#5d995f" stroke-width="6" stroke-linecap="round"/>
+   <path d="M-11 -27 Q5 -45 23 -31 Q6 -20 -11 -27Z" fill="#7dc66e" stroke="#4f9358" stroke-width="3"/>
+   <path d="M-1 -23 L23 -10 L10 7 L31 20 L-1 28 L-24 15 Z" fill="#f3923d" stroke="#bd6f31" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M1 -11 L14 -4 M-2 2 L12 7 M-7 13 L8 18" stroke="#f6bc6e" stroke-width="3" stroke-linecap="round"/>
   </g>
   <g id="ghost" transform="translate(68 155)">
-   <path d="M-24 28 V-5 C-24 -44 24 -44 24 -5 V28 L12 20 L0 29 L-12 20Z" fill="#fff" stroke="#70619b" stroke-width="3" stroke-linejoin="round"/><circle cx="-9" cy="-7" r="3.5" fill="#514368"/><circle cx="9" cy="-7" r="3.5" fill="#514368"/><path d="M-5 7 Q0 12 5 7" stroke="#514368" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="-17" cy="5" r="4" fill="#ffd1dc"/><circle cx="17" cy="5" r="4" fill="#ffd1dc"/>
+    <ellipse cx="-13" cy="-28" rx="9" ry="24" transform="rotate(-12 -13 -28)" fill="#fcf9ff" stroke="#927dae" stroke-width="3"/>
+    <ellipse cx="13" cy="-28" rx="9" ry="24" transform="rotate(12 13 -28)" fill="#fcf9ff" stroke="#927dae" stroke-width="3"/>
+    <circle cx="0" cy="2" r="21" fill="#fcf9ff" stroke="#927dae" stroke-width="3"/>
+    <circle cx="-7" cy="0" r="3.5" fill="#514368"/><circle cx="7" cy="0" r="3.5" fill="#514368"/>
+    <circle cx="-12" cy="10" r="4.5" fill="#f5c1d3"/><circle cx="12" cy="10" r="4.5" fill="#f5c1d3"/>
+    <path d="M-4 11 Q0 15 4 11" stroke="#514368" stroke-width="2.5" fill="none" stroke-linecap="round"/>
   </g>
   <g id="sparkles" style="display:none" aria-hidden="true"><text x="155" y="80" font-size="28">⭐</text><text x="262" y="95" font-size="25">✨</text><text x="213" y="225" font-size="28">⭐</text></g>
-  <text id="feedback" x="180" y="269" text-anchor="middle" font-size="15" font-weight="800" fill="#7955a7">Start at the ghost!</text>
+  <text id="feedback" x="180" y="269" text-anchor="middle" font-size="15" font-weight="800" fill="#7955a7">Start at the bunny!</text>
  </svg>
  <div id="message" class="message" aria-live="polite">Ready to trace?</div>
  <div class="controls"><button id="reset" class="secondary">↻ Try again</button><button id="next" hidden>Next path →</button></div>
@@ -258,35 +368,51 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 (()=>{
  'use strict';
  const $=id=>document.getElementById(id), board=$('board'),ghost=$('ghost'),pumpkin=$('pumpkin'),trail=$('trail'),traced=$('traced'),feedback=$('feedback'),message=$('message'),reset=$('reset'),next=$('next');
+ function animateObject(element,ok){
+  if(!element)return;const art=element.querySelector('svg,.choice-art')||element;
+  art.classList.remove('object-yes','object-no');void art.getBoundingClientRect();
+  art.classList.add(ok?'object-yes':'object-no');
+ }
  function show(id){document.querySelectorAll('.screen').forEach(el=>el.hidden=el.id!==id);window.scrollTo(0,0)}
  const paths=[{y:155,a:82,b:273},{y:124,a:82,b:273},{y:185,a:82,b:273}];
  let current=0,progress=0,drag=false,completed=false,pointerId=null;
  const path=()=>paths[current];
  function redraw(){let {y,a,b}=path();ghost.setAttribute('transform',`translate(${a-14+(b-a)*progress} ${y})`);pumpkin.setAttribute('transform',`translate(${b+15} ${y})`);trail.innerHTML=`<line class="guide" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/><line class="dots" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/>`;traced.setAttribute('x1',a);traced.setAttribute('x2',a+(b-a)*progress);traced.setAttribute('y1',y);traced.setAttribute('y2',y);$('sparkles').style.display=completed?'':'none';$('counter').textContent=`${current+1} of 3`;document.querySelectorAll('.steps span').forEach((s,i)=>s.classList.toggle('current',i<=current));}
- function startOver(){progress=0;drag=false;completed=false;pointerId=null;next.hidden=true;reset.hidden=false;feedback.textContent='Start at the ghost!';message.textContent='Ready to trace?';redraw()}
+ function startOver(){progress=0;drag=false;completed=false;pointerId=null;next.hidden=true;reset.hidden=false;feedback.textContent='Start at the bunny!';message.textContent='Ready to trace?';redraw()}
  function coordinates(e){let r=board.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*305/r.height};}
- function down(e){if(completed)return;const p=coordinates(e),{y,a,b}=path(),ghostX=a-14+(b-a)*progress;if(Math.abs(p.x-ghostX)<37&&Math.abs(p.y-y)<44){drag=true;pointerId=e.pointerId;board.setPointerCapture(pointerId);feedback.textContent='Follow the dots!';message.textContent='Keep going!';e.preventDefault()}else{feedback.textContent='Touch the ghost first.';}}
- function move(e){if(!drag||pointerId!==e.pointerId)return;e.preventDefault();const p=coordinates(e),{y,a,b}=path(),target=Math.max(0,Math.min(1,(p.x-a)/(b-a)));if(Math.abs(p.y-y)>35){drag=false;message.textContent='Try staying on the path.';window.motorworxFeedback?.('retry','trace-path');feedback.textContent='Touch the ghost and try again.';return;}if(target<progress-0.075)return;if(target>progress+0.19){drag=false;message.textContent='Move slowly along the dots.';window.motorworxFeedback?.('retry','trace-speed');return;}progress=Math.max(progress,target);redraw();if(progress>=.97){progress=1;drag=false;completed=true;redraw();feedback.textContent='You did it!';window.motorworxFeedback?.('success','trace');message.textContent=current===2?'All three paths complete! Well done!':'Wonderful tracing!';next.textContent=current===2?'Play again ↻':'Next path →';next.hidden=false;reset.hidden=true;}}
+ function down(e){if(completed)return;const p=coordinates(e),{y,a,b}=path(),ghostX=a-14+(b-a)*progress;if(Math.abs(p.x-ghostX)<37&&Math.abs(p.y-y)<44){drag=true;pointerId=e.pointerId;board.setPointerCapture(pointerId);feedback.textContent='Follow the dots!';message.textContent='Keep going!';e.preventDefault()}else{feedback.textContent='Touch the bunny first.';}}
+ function move(e){if(!drag||pointerId!==e.pointerId)return;e.preventDefault();const p=coordinates(e),{y,a,b}=path(),target=Math.max(0,Math.min(1,(p.x-a)/(b-a)));if(Math.abs(p.y-y)>35){drag=false;message.textContent='Try staying on the path.';window.motorworxFeedback?.('retry','trace-path');feedback.textContent='Touch the bunny and try again.';return;}if(target<progress-0.075)return;if(target>progress+0.19){drag=false;message.textContent='Move slowly along the dots.';window.motorworxFeedback?.('retry','trace-speed');return;}progress=Math.max(progress,target);redraw();if(progress>=.97){progress=1;drag=false;completed=true;redraw();feedback.textContent='You did it!';window.motorworxFeedback?.('success','trace');message.textContent=current===2?'All three paths complete! Well done!':'Wonderful tracing!';next.textContent=current===2?'Play again ↻':'Next path →';next.hidden=false;reset.hidden=true;}}
  board.addEventListener('pointerdown',down);board.addEventListener('pointermove',move);board.addEventListener('pointerup',()=>drag=false);board.addEventListener('pointercancel',()=>drag=false);board.addEventListener('lostpointercapture',()=>drag=false);reset.addEventListener('click',startOver);$('play').addEventListener('click',()=>show('chooseScreen'));$('backHome').addEventListener('click',()=>{drag=false;show('chooseScreen')});next.addEventListener('click',()=>{current=current===2?0:current+1;startOver()});startOver();
  $('chooseBack').addEventListener('click',()=>show('homeScreen'));
  $('startTrace').addEventListener('click',()=>{show('gameScreen');current=0;startOver()});
  $('startMatch').addEventListener('click',()=>{show('matchScreen');round=0;renderMatch()});
  $('matchBack').addEventListener('click',()=>show('chooseScreen'));
- // The identical SVG is reused for the example and precisely one answer choice.
- // Large whole-body colour differences avoid ambiguous small-detail matching.
- function monster(color){return `<svg viewBox="0 0 144 134" role="img" aria-label="${color} friendly monster"><path d="M40 39 Q32 19 22 13 M103 39 Q110 19 122 13" fill="none" stroke="#635e79" stroke-width="6" stroke-linecap="round"/><circle cx="22" cy="13" r="9" fill="${color}" stroke="#635e79" stroke-width="3"/><circle cx="122" cy="13" r="9" fill="${color}" stroke="#635e79" stroke-width="3"/><path d="M26 75 Q24 36 71 32 Q121 34 119 75 L118 101 Q112 121 72 122 Q31 120 26 101Z" fill="${color}" stroke="#635e79" stroke-width="3.5"/><ellipse cx="52" cy="76" rx="12" ry="15" fill="white"/><ellipse cx="92" cy="76" rx="12" ry="15" fill="white"/><circle cx="54" cy="78" r="5" fill="#383144"/><circle cx="94" cy="78" r="5" fill="#383144"/><path d="M61 99 Q72 110 84 99" fill="none" stroke="#383144" stroke-width="4" stroke-linecap="round"/><circle cx="37" cy="96" r="5" fill="#f8b7c5" opacity=".75"/><circle cx="107" cy="96" r="5" fill="#f8b7c5" opacity=".75"/></svg>`}
- const rounds=[{target:'#9158ca',other:'#f4a342',correct:1},{target:'#54bcb0',other:'#9158ca',correct:0},{target:'#f4a342',other:'#54bcb0',correct:1},{target:'#9158ca',other:'#54bcb0',correct:0}];
+ // The identical SVG is reused for the target and exactly one answer choice.
+ // Level 1 uses bold whole-object differences and a small variety of cheerful objects.
+ function matchPic(kind,color){
+   const common='stroke="#76678b" stroke-width="3"';
+   if(kind==='balloon')return `<svg viewBox="0 0 144 134" role="img" aria-label="${color} balloon"><ellipse cx="72" cy="57" rx="39" ry="47" fill="${color}" ${common}/><path d="M67 104 L77 104 L72 113Z" fill="${color}" stroke="#76678b" stroke-width="2"/><path d="M72 112 Q58 122 73 133" stroke="#76678b" stroke-width="2.5" fill="none"/><ellipse cx="57" cy="36" rx="9" ry="17" fill="white" opacity=".22" transform="rotate(23 57 36)"/></svg>`;
+   if(kind==='star')return `<svg viewBox="0 0 144 134" role="img" aria-label="${color} star"><path d="M72 16 L84 47 L118 47 L91 66 L102 99 L72 80 L42 99 L53 66 L26 47 L60 47Z" fill="${color}" ${common} stroke-linejoin="round"/><circle cx="72" cy="64" r="4" fill="#ffffff" opacity=".28"/></svg>`;
+   if(kind==='flower')return `<svg viewBox="0 0 144 134" role="img" aria-label="${color} flower"><circle cx="72" cy="67" r="17" fill="#ffd66b" stroke="#c9953d" stroke-width="3"/><circle cx="72" cy="37" r="18" fill="${color}" ${common}/><circle cx="100" cy="55" r="18" fill="${color}" ${common}/><circle cx="89" cy="89" r="18" fill="${color}" ${common}/><circle cx="55" cy="89" r="18" fill="${color}" ${common}/><circle cx="44" cy="55" r="18" fill="${color}" ${common}/></svg>`;
+   return `<svg viewBox="0 0 144 134" role="img" aria-label="${color} ball"><circle cx="72" cy="67" r="40" fill="${color}" ${common}/><path d="M32 67 H112 M72 27 V107" stroke="#ffffff" stroke-width="4" opacity=".4"/></svg>`;
+ }
+ const rounds=[
+   {target:{kind:'balloon',color:'#9158ca'},other:{kind:'star',color:'#f4a342'},correct:1},
+   {target:{kind:'star',color:'#54bcb0'},other:{kind:'flower',color:'#f08cab'},correct:0},
+   {target:{kind:'flower',color:'#f4a342'},other:{kind:'ball',color:'#54bcb0'},correct:1},
+   {target:{kind:'ball',color:'#6fa8ff'},other:{kind:'balloon',color:'#f08cab'},correct:0}
+ ];
  let round=0,matchDone=false;
- function renderMatch(){const r=rounds[round];matchDone=false;$('matchCounter').textContent=`${round+1} of ${rounds.length}`;$('matchTarget').innerHTML=monster(r.target);for(let i=0;i<2;i++){const b=$('choice'+i);b.innerHTML=monster(i===r.correct?r.target:r.other);b.disabled=false;b.className='match-choice'}$('matchMessage').textContent='Choose the matching monster.';$('matchNext').hidden=true;document.querySelectorAll('#matchSteps span').forEach((el,i)=>el.classList.toggle('current',i<=round));}
- function selectMatch(i){if(matchDone)return;const r=rounds[round];if(i!==r.correct){$('matchMessage').textContent='Try the other picture!';window.motorworxFeedback?.('retry','match');$('choice'+i).classList.add('incorrect');return;}matchDone=true;window.motorworxFeedback?.('success','match');$('choice'+i).classList.add('correct');$('choice0').disabled=true;$('choice1').disabled=true;$('matchMessage').textContent=round===rounds.length-1?'You found all the twins! Well done!':'Yes! They are the same!';const btn=$('matchNext');btn.textContent=round===rounds.length-1?'Play again ↻':'Next picture →';btn.hidden=false;}
+ function renderMatch(){const r=rounds[round];matchDone=false;$('matchCounter').textContent=`${round+1} of ${rounds.length}`;$('matchTarget').innerHTML=matchPic(r.target.kind,r.target.color);for(let i=0;i<2;i++){const b=$('choice'+i);const item=i===r.correct?r.target:r.other;b.innerHTML=matchPic(item.kind,item.color);b.disabled=false;b.className='match-choice'}$('matchMessage').textContent='Choose the matching picture.';$('matchNext').hidden=true;document.querySelectorAll('#matchSteps span').forEach((el,i)=>el.classList.toggle('current',i<=round));}
+ function selectMatch(i){if(matchDone)return;const r=rounds[round];if(i!==r.correct){$('matchMessage').textContent='Try the other picture!';window.motorworxFeedback?.('retry','match');animateObject($('choice'+i),false);return;}matchDone=true;window.motorworxFeedback?.('success','match');animateObject($('choice'+i),true);$('choice0').disabled=true;$('choice1').disabled=true;$('matchMessage').textContent=round===rounds.length-1?'You found all the matches! Well done!':'Yes! They are the same!';const btn=$('matchNext');btn.textContent=round===rounds.length-1?'Play again ↻':'Next picture →';btn.hidden=false;}
  $('choice0').addEventListener('click',()=>selectMatch(0));$('choice1').addEventListener('click',()=>selectMatch(1));$('matchNext').addEventListener('click',()=>{round=round===rounds.length-1?0:round+1;renderMatch()});
  // Activity 3: figure-ground. Same-sized natural hiding places; the target is
  // visibly peeking above the occluder (not a tiny detail or an ambiguous outline).
  const peekRounds=[
-   {kind:'ghost',cover:'pumpkin',correct:1,name:'ghost'},
-   {kind:'cat',cover:'bush',correct:0,name:'cat'},
-   {kind:'bat',cover:'cloud',correct:1,name:'bat'},
-   {kind:'ghost',cover:'bush',correct:0,name:'ghost'}
+   {kind:'lion',cover:'bush',correct:1,name:'lion'},
+   {kind:'zebra',cover:'bush',correct:0,name:'zebra'},
+   {kind:'elephant',cover:'bush',correct:1,name:'elephant'},
+   {kind:'lion',cover:'bush',correct:0,name:'lion'}
  ];
  let peekRound=0,peekDone=false;
  function coverPicture(kind){
@@ -295,13 +421,13 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    return `<path d="M18 139 Q12 115 40 110 Q43 82 74 96 Q91 70 113 96 Q149 88 148 119 Q169 141 139 157 H36 Q19 155 18 139Z" fill="#d3e9fa" stroke="#91b9d9" stroke-width="3"/>`;
  }
  function peeker(kind){
-  if(kind==='ghost')return `<path d="M58 122 V84 Q59 36 83 40 Q108 43 109 84 V122Z" fill="white" stroke="#7d71a2" stroke-width="3.5"/><circle cx="74" cy="78" r="4" fill="#4b415d"/><circle cx="95" cy="78" r="4" fill="#4b415d"/><path d="M77 93 Q85 101 93 93" fill="none" stroke="#4b415d" stroke-width="3" stroke-linecap="round"/>`;
-  if(kind==='cat')return `<path d="M50 121 L49 46 L72 63 Q88 58 103 65 L127 46 L124 121Z" fill="#a679cf" stroke="#6d4b96" stroke-width="3.5"/><path d="M57 57 L70 69 M118 57 L105 69" stroke="#dcbaf3" stroke-width="6"/><ellipse cx="75" cy="88" rx="5" ry="7" fill="#30283f"/><ellipse cx="105" cy="88" rx="5" ry="7" fill="#30283f"/><path d="M86 100 L94 100 L90 106Z" fill="#f5a6b7"/>`;
-  return `<path d="M43 100 Q22 58 15 97 Q29 111 48 119 Q70 99 84 104 Q102 99 121 119 Q145 111 155 97 Q144 58 125 100 Q111 68 91 81 Q73 68 60 81Z" fill="#8966b8" stroke="#58457f" stroke-width="3"/><path d="M69 87 L76 65 L87 85 L98 65 L106 90" fill="#8966b8" stroke="#58457f" stroke-width="3"/><circle cx="78" cy="96" r="3.5" fill="white"/><circle cx="99" cy="96" r="3.5" fill="white"/>`;
+  if(kind==='lion')return `<circle cx="85" cy="78" r="40" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="85" cy="82" r="27" fill="#f4ddb8" stroke="#c8a174" stroke-width="2"/><circle cx="54" cy="76" r="16" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="63" cy="52" r="14" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="85" cy="42" r="14" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="107" cy="52" r="14" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="116" cy="76" r="16" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="107" cy="100" r="14" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="85" cy="110" r="14" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="63" cy="100" r="14" fill="#cf8b39" stroke="#9c6328" stroke-width="3"/><circle cx="74" cy="80" r="4" fill="#4d4145"/><circle cx="96" cy="80" r="4" fill="#4d4145"/><path d="M81 93 Q85 98 89 93" stroke="#60464c" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M85 84 L81 90 H89Z" fill="#7a5d46"/>`;
+  if(kind==='zebra')return `<ellipse cx="85" cy="86" rx="36" ry="46" fill="white" stroke="#6a626c" stroke-width="3"/><path d="M67 48 L74 63 M83 42 L87 63 M98 46 L99 66 M58 77 L78 87 M96 74 L112 84 M61 101 L77 110 M95 100 L108 112" stroke="#4f4951" stroke-width="7" stroke-linecap="round"/><path d="M70 42 L62 28 L77 36Z" fill="white" stroke="#6a626c" stroke-width="3" stroke-linejoin="round"/><path d="M100 42 L92 28 L107 36Z" fill="white" stroke="#6a626c" stroke-width="3" stroke-linejoin="round"/><circle cx="74" cy="82" r="4" fill="#3c3740"/><circle cx="96" cy="82" r="4" fill="#3c3740"/><ellipse cx="85" cy="109" rx="13" ry="8" fill="#d7c7c7" stroke="#b7a7a7" stroke-width="2"/>`;
+  return `<circle cx="85" cy="82" r="41" fill="#aebbc7" stroke="#7a8998" stroke-width="3"/><ellipse cx="46" cy="91" rx="17" ry="28" fill="#c4cdd6" stroke="#7a8998" stroke-width="3"/><ellipse cx="124" cy="91" rx="17" ry="28" fill="#c4cdd6" stroke="#7a8998" stroke-width="3"/><path d="M81 100 Q76 120 91 126 Q105 126 99 103" fill="#b5c3ce" stroke="#7a8998" stroke-width="3"/><circle cx="72" cy="79" r="4"/><circle cx="99" cy="79" r="4"/>`;
  }
  function peekScene(r,contains){return `<svg viewBox="0 0 175 180" role="img" aria-label="${contains?'Partially hidden '+r.name:'Only the hiding place'}"><rect x="4" y="4" width="167" height="171" rx="19" fill="#ffffff"/>${contains?peeker(r.kind):''}${coverPicture(r.cover)}</svg>`}
  function renderPeek(){const r=peekRounds[peekRound];peekDone=false;$('peekCounter').textContent=`${peekRound+1} of ${peekRounds.length}`;$('peekInstruction').textContent=`Find the hiding ${r.name}.`;for(let i=0;i<2;i++){const b=$('peekChoice'+i);b.innerHTML=peekScene(r,i===r.correct);b.className='peek-choice';b.disabled=false;b.setAttribute('aria-label',`${i===0?'Left':'Right'} picture`)}$('peekMessage').textContent='Look closely!';$('peekNext').hidden=true;document.querySelectorAll('#peekSteps span').forEach((el,i)=>el.classList.toggle('current',i<=peekRound))}
- function choosePeek(i){if(peekDone)return;const r=peekRounds[peekRound];if(i!==r.correct){$('peekMessage').textContent='Look again. Where is it peeking out?';window.motorworxFeedback?.('retry','peek');return;}peekDone=true;window.motorworxFeedback?.('success','peek');$('peekChoice'+i).classList.add('correct');$('peekChoice0').disabled=true;$('peekChoice1').disabled=true;$('peekMessage').textContent=peekRound===peekRounds.length-1?'All the hiding friends found!':'You found it! Well done!';const b=$('peekNext');b.textContent=peekRound===peekRounds.length-1?'Play again ↻':'Next picture →';b.hidden=false}
+ function choosePeek(i){if(peekDone)return;const r=peekRounds[peekRound];if(i!==r.correct){$('peekMessage').textContent='Look again. Where is it peeking out?';animateObject($('peekChoice'+i),false);window.motorworxFeedback?.('retry','peek');return;}peekDone=true;window.motorworxFeedback?.('success','peek');animateObject($('peekChoice'+i),true);$('peekChoice0').disabled=true;$('peekChoice1').disabled=true;$('peekMessage').textContent=peekRound===peekRounds.length-1?'All the hiding friends found!':'You found it! Well done!';const b=$('peekNext');b.textContent=peekRound===peekRounds.length-1?'Play again ↻':'Next picture →';b.hidden=false}
  $('startPeek').addEventListener('click',()=>{peekRound=0;renderPeek();show('peekScreen')});
  $('peekBack').addEventListener('click',()=>show('chooseScreen'));
  $('peekChoice0').addEventListener('click',()=>choosePeek(0));
@@ -310,10 +436,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  // Activity 4: visual memory, Level 1. The reference disappears BEFORE the two options appear.
  const memoryRounds=[
-  {seen:'🎃',other:'👻',correct:1,name:'pumpkin',otherName:'ghost'},
-  {seen:'👻',other:'🐈',correct:0,name:'ghost',otherName:'cat'},
-  {seen:'🐈',other:'🎃',correct:1,name:'cat',otherName:'pumpkin'},
-  {seen:'🦇',other:'⭐',correct:0,name:'bat',otherName:'star'}
+  {seen:'🧸',other:'🚗',correct:1,name:'teddy bear',otherName:'toy car'},
+  {seen:'🚗',other:'⚽',correct:0,name:'toy car',otherName:'ball'},
+  {seen:'🪁',other:'🧸',correct:1,name:'kite',otherName:'teddy bear'},
+  {seen:'⚽',other:'🪁',correct:0,name:'ball',otherName:'kite'}
  ];
  let memoryRound=0,memoryPhase='look';
  function renderMemory(){
@@ -341,7 +467,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   $('memoryHint').textContent='Tap the one you saw.';
   for(let i=0;i<2;i++){
    const btn=$('memoryChoice'+i),isCorrect=i===r.correct;
-   btn.textContent=isCorrect?r.seen:r.other;
+   btn.innerHTML=`<span class="choice-art">${isCorrect?r.seen:r.other}</span>`;
    btn.setAttribute('aria-label',isCorrect?r.name:r.otherName);
    btn.className='memory-option';btn.disabled=false;
   }
@@ -350,8 +476,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function chooseMemory(i){
   if(memoryPhase!=='choose')return;
   const r=memoryRounds[memoryRound];
-  if(i!==r.correct){$('memoryMessage').textContent='Try remembering the picture again.';window.motorworxFeedback?.('retry','memory');return;}
-  memoryPhase='done';window.motorworxFeedback?.('success','memory');$('memoryChoice'+i).classList.add('correct');
+  if(i!==r.correct){$('memoryMessage').textContent='Try remembering the picture again.';animateObject($('memoryChoice'+i),false);window.motorworxFeedback?.('retry','memory');return;}
+  memoryPhase='done';window.motorworxFeedback?.('success','memory');animateObject($('memoryChoice'+i),true);
   $('memoryChoice0').disabled=true;$('memoryChoice1').disabled=true;
   $('memoryMessage').textContent=memoryRound===memoryRounds.length-1?'Great remembering! You finished all four!':'You remembered it!';
   $('memoryNext').textContent=memoryRound===memoryRounds.length-1?'Play again ↻':'Next picture →';
@@ -361,20 +487,20 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('memoryChoice1').addEventListener('click',()=>chooseMemory(1));
  $('memoryNext').addEventListener('click',()=>{memoryRound=(memoryRound+1)%memoryRounds.length;renderMemory()});
 
- // Activity 5: easy spatial relationships, drag ghost to one large destination.
+ // Activity 5: underwater spatial relationships, drag fish to one large destination.
  // Coordinates are in SVG viewBox units; pointer coordinates work for phone and mouse.
  const spatialRounds=[
-  {instruction:'Put the ghost inside the house.',scene:'house',tx:222,ty:158},
-  {instruction:'Put the ghost above the pumpkin.',scene:'pumpkin',tx:240,ty:73},
-  {instruction:'Put the ghost under the cloud.',scene:'cloud',tx:236,ty:198},
-  {instruction:'Put the ghost outside the house.',scene:'outside',tx:290,ty:166}
+  {instruction:'Put the fish inside the cave.',scene:'cave',tx:222,ty:170},
+  {instruction:'Put the fish above the shell.',scene:'shell',tx:240,ty:72},
+  {instruction:'Put the fish under the seaweed.',scene:'seaweed',tx:235,ty:219},
+  {instruction:'Put the fish outside the cave.',scene:'outside',tx:290,ty:166}
  ];
  const spatialBoard=$('spatialBoard'),spatialGhost=$('spatialGhost');
  let spatialRound=0,spatialDone=false,spatialDragging=false,spatialPointer=null,spatialX=61,spatialY=253;
  function spatialArt(scene){
-  if(scene==='house'||scene==='outside')return `<g><path d="M118 135 L208 66 L298 135" fill="#ecbc93" stroke="#bc805f" stroke-width="5" stroke-linejoin="round"/><rect x="133" y="134" width="150" height="131" rx="7" fill="#ffe3ba" stroke="#c88965" stroke-width="4"/><rect x="188" y="180" width="39" height="85" rx="5" fill="#dba27c" stroke="#a96b56" stroke-width="3"/><circle cx="218" cy="222" r="3" fill="#fff"/><rect x="148" y="157" width="30" height="30" rx="5" fill="#bce3ee" stroke="#ab806b" stroke-width="3"/></g>`;
-  if(scene==='pumpkin')return `<g transform="translate(239 224)"><path d="M0 -55 Q-3 -70 12 -73" stroke="#528653" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M0 -54 C-51 -77 -78 -33 -68 16 C-60 60 -18 67 0 57 C27 73 70 50 70 13 C76 -33 50 -77 0 -54Z" fill="#f8ab58" stroke="#c98045" stroke-width="4"/><path d="M-22 -53 Q-48 0 -22 58 M22 -53 Q49 0 22 58" fill="none" stroke="#dc8a44" stroke-width="4"/><circle cx="-24" cy="-4" r="5" fill="#634453"/><circle cx="22" cy="-4" r="5" fill="#634453"/><path d="M-16 18 Q0 32 16 18" fill="none" stroke="#634453" stroke-width="4" stroke-linecap="round"/></g>`;
-  return `<g><path d="M160 112 Q142 78 177 65 Q193 27 234 51 Q275 33 294 73 Q323 76 316 109 Q310 134 278 135 H188 Q157 132 160 112Z" fill="#c9e4f8" stroke="#8bb9d9" stroke-width="4"/></g>`;
+  if(scene==='cave'||scene==='outside')return `<g><path d="M112 264 L112 154 Q130 71 213 71 Q296 71 310 154 V264Z" fill="#b1bbc9" stroke="#7c92a7" stroke-width="5"/><path d="M151 265 V164 Q152 113 215 113 Q267 113 272 164 V265Z" fill="#d3eaf0" stroke="#7c92a7" stroke-width="4"/><circle cx="146" cy="120" r="5" fill="#f5e0a7"/></g>`;
+  if(scene==='shell')return `<g transform="translate(238 222)"><path d="M-67 34 Q-72 -37 0 -63 Q73 -36 67 34 Q37 61 0 61 Q-39 61 -67 34Z" fill="#f6c5c9" stroke="#cf8fa8" stroke-width="4"/><path d="M0 -61 V59 M-30 -51 L-15 57 M30 -51 L15 57" stroke="#df9eae" stroke-width="4" fill="none"/></g>`;
+  return `<g><path d="M205 120 Q180 68 213 54 Q232 91 219 149 M238 124 Q271 68 248 39 Q224 76 231 149 M264 135 Q293 99 290 76 Q256 88 248 152" fill="#8fd8ad" stroke="#519b80" stroke-width="5"/><path d="M177 146 Q231 165 299 142" stroke="#8fbb9a" stroke-width="5" fill="none"/></g>`;
  }
  function spatialPoint(e){const r=spatialBoard.getBoundingClientRect();return{x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*330/r.height}}
  function spatialPosition(x,y){spatialX=x;spatialY=y;spatialGhost.setAttribute('transform',`translate(${x} ${y})`)}
@@ -389,16 +515,16 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   spatialPosition(61,253);
   $('spatialStars').hidden=true;
   $('spatialNext').hidden=true;$('spatialReset').hidden=false;
-  $('spatialMessage').textContent='Touch the ghost and drag it.';
+  $('spatialMessage').textContent='Touch the fish and drag it.';
   document.querySelectorAll('#spatialSteps span').forEach((el,i)=>el.classList.toggle('current',i<=spatialRound));
  }
  spatialBoard.addEventListener('pointerdown',e=>{
   if(spatialDone)return;
   const c=spatialPoint(e);
-  if(Math.hypot(c.x-spatialX,c.y-spatialY)>51){$('spatialMessage').textContent='Touch the ghost first.';return}
+  if(Math.hypot(c.x-spatialX,c.y-spatialY)>51){$('spatialMessage').textContent='Touch the fish first.';return}
   spatialDragging=true;spatialPointer=e.pointerId;
   try{spatialBoard.setPointerCapture(e.pointerId)}catch(err){}
-  $('spatialMessage').textContent='Move the ghost to the dotted circle.';
+  $('spatialMessage').textContent='Move the fish to the dotted circle.';
   e.preventDefault();
  });
  spatialBoard.addEventListener('pointermove',e=>{
@@ -412,9 +538,9 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   const r=spatialRounds[spatialRound];
   if(Math.hypot(spatialX-r.tx,spatialY-r.ty)<=49){
    spatialDone=true;window.motorworxFeedback?.('success','spatial');spatialPosition(r.tx,r.ty);$('spatialStars').hidden=false;
-   $('spatialMessage').textContent=spatialRound===3?'Fantastic! You finished all four places!':'Well done! The ghost is in the right place!';
+   $('spatialMessage').textContent=spatialRound===3?'Fantastic! You finished all four places!':'Well done! The fish is in the right place!';
    $('spatialNext').textContent=spatialRound===3?'Play again ↻':'Next place →';$('spatialNext').hidden=false;$('spatialReset').hidden=true;
-  }else{$('spatialMessage').textContent='Good try! Move the ghost into the circle.';window.motorworxFeedback?.('retry','spatial');spatialPosition(61,253)}
+  }else{$('spatialMessage').textContent='Good try! Move the fish into the circle.';window.motorworxFeedback?.('retry','spatial');spatialPosition(61,253)}
  }
  spatialBoard.addEventListener('pointerup',spatialRelease);
  spatialBoard.addEventListener('pointercancel',()=>{spatialDragging=false;spatialPosition(61,253)});
@@ -427,31 +553,33 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  // Game 6: visual closure with four large unmistakable missing parts.
  // The incorrect choice is deliberately a completely different object.
  const finishRounds=[
-  {name:'pumpkin',correct:0}, {name:'house',correct:1},
-  {name:'cat',correct:1}, {name:'bat',correct:0}
+  {name:'apple',correct:0}, {name:'house',correct:1},
+  {name:'bee',correct:0}, {name:'butterfly',correct:1}
  ];
  const makeSvg=(body,view='0 0 320 230')=>`<svg viewBox="${view}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
  const finParts={
-  stem:'<path d="M0 31 Q-7 10 12 1" fill="none" stroke="#568450" stroke-width="13" stroke-linecap="round"/>',
+  stemleaf:'<path d="M-7 30 Q-13 6 3 -6" fill="none" stroke="#5c944b" stroke-width="12" stroke-linecap="round"/><path d="M4 -5 Q26 -19 37 -1 Q17 9 4 -5Z" fill="#93d37f" stroke="#5c944b" stroke-width="5"/>',
   roof:'<path d="M-75 27 L0 -31 L75 27Z" fill="#e7a77d" stroke="#ba765d" stroke-width="6" stroke-linejoin="round"/>',
-  tail:'<path d="M-19 32 Q57 42 47 -20 Q41 -52 18 -31" fill="none" stroke="#514263" stroke-width="21" stroke-linecap="round"/>',
-  wing:'<path d="M0 -21 Q-36 -47 -72 -14 L-66 23 L-44 10 L-23 35 L-8 13 L0 17Z" fill="#9a7abe" stroke="#665284" stroke-width="5" stroke-linejoin="round"/>',
+  beeWing:'<ellipse cx="-16" cy="-2" rx="18" ry="26" fill="#ecfbff" stroke="#89b6c4" stroke-width="5"/><ellipse cx="16" cy="-2" rx="18" ry="26" fill="#ecfbff" stroke="#89b6c4" stroke-width="5"/><path d="M-2 20 Q0 31 1 40" stroke="#89b6c4" stroke-width="3" fill="none"/>',
+  butterflyWing:'<path d="M0 0 Q-40 -44 -86 -18 Q-64 10 -58 46 Q-18 35 0 12Z" fill="#f6a9c8" stroke="#c56b95" stroke-width="5" stroke-linejoin="round"/><path d="M-2 8 Q-34 34 -44 70 Q-14 62 -2 34Z" fill="#f2b6d1" stroke="#c56b95" stroke-width="5" stroke-linejoin="round"/>',
   star:'<path d="M0 -35 L10 -11 L36 -11 L16 5 L24 30 L0 15 L-24 30 L-16 5 L-36 -11 L-10 -11Z" fill="#f7cd62" stroke="#c18a39" stroke-width="5" stroke-linejoin="round"/>',
   circle:'<circle r="32" fill="#8bcfe8" stroke="#5499b1" stroke-width="5"/>',
+  flower:'<circle cx="0" cy="0" r="12" fill="#ffd76b" stroke="#c4953e" stroke-width="4"/><circle cx="0" cy="-26" r="13" fill="#f5b8d0" stroke="#bf7892" stroke-width="4"/><circle cx="24" cy="-6" r="13" fill="#f5b8d0" stroke="#bf7892" stroke-width="4"/><circle cx="14" cy="22" r="13" fill="#f5b8d0" stroke="#bf7892" stroke-width="4"/><circle cx="-14" cy="22" r="13" fill="#f5b8d0" stroke="#bf7892" stroke-width="4"/><circle cx="-24" cy="-6" r="13" fill="#f5b8d0" stroke="#bf7892" stroke-width="4"/>',
+  leaf:'<path d="M-30 12 Q2 -38 32 4 Q2 33 -30 12Z" fill="#9dd89b" stroke="#5f995d" stroke-width="5"/>',
   triangle:'<path d="M0 -34 L35 28 H-35Z" fill="#a6d8a3" stroke="#60955e" stroke-width="5"/>',
   square:'<rect x="-30" y="-30" width="60" height="60" rx="4" fill="#edabc5" stroke="#ba7394" stroke-width="5"/>'
  };
  const finConfig={
-   pumpkin:{missing:'stem',wrong:'star',position:'translate(155 42)',art:'<path d="M155 61 C99 33 69 81 79 133 C84 185 124 203 155 190 C194 209 234 179 231 132 C241 80 206 32 155 61Z" fill="#fab058" stroke="#c37a3d" stroke-width="6"/><path d="M134 61 Q110 123 135 191 M177 61 Q200 125 176 191" fill="none" stroke="#dc8a40" stroke-width="5"/><circle cx="130" cy="129" r="7" fill="#54384c"/><circle cx="181" cy="129" r="7" fill="#54384c"/><path d="M138 157 Q155 175 173 157" stroke="#54384c" stroke-width="5" stroke-linecap="round" fill="none"/>',hint:'stem'},
-   house:{missing:'roof',wrong:'circle',position:'translate(160 69)',art:'<rect x="88" y="106" width="144" height="110" rx="5" fill="#ffdfae" stroke="#be8662" stroke-width="6"/><rect x="145" y="154" width="37" height="62" fill="#d49f81" stroke="#b77d65" stroke-width="4"/><rect x="105" y="133" width="27" height="27" rx="4" fill="#bfe7f1" stroke="#8ea7b0" stroke-width="4"/>',hint:'roof'},
-   cat:{missing:'tail',wrong:'triangle',position:'translate(230 145)',art:'<path d="M105 190 Q75 129 121 111 L123 79 L149 98 L174 79 L190 112 Q224 131 203 191Z" fill="#76618d" stroke="#554467" stroke-width="6"/><path d="M123 115 Q149 98 190 113" stroke="#554467" fill="none" stroke-width="5"/><circle cx="139" cy="129" r="6" fill="#fff"/><circle cx="174" cy="129" r="6" fill="#fff"/><path d="M151 150 L160 150 L155 159Z" fill="#efb6bd"/>',hint:'tail'},
-   bat:{missing:'wing',wrong:'square',position:'translate(211 120)',art:'<path d="M152 116 Q109 81 62 110 L59 166 L83 155 L100 178 L129 152 L151 153Z" fill="#9a7abe" stroke="#665284" stroke-width="5"/><ellipse cx="169" cy="146" rx="30" ry="42" fill="#9a7abe" stroke="#665284" stroke-width="5"/><path d="M148 116 L153 97 L166 111 L180 98 L191 119" fill="#9a7abe" stroke="#665284" stroke-width="5"/><circle cx="157" cy="137" r="5" fill="#fff"/><circle cx="178" cy="137" r="5" fill="#fff"/><path d="M161 156 Q170 163 178 156" stroke="#554467" stroke-width="3" fill="none"/>',hint:'wing'}
+   apple:{missing:'stemleaf',wrong:'star',position:'translate(157 44)',art:'<path d="M157 60 C108 30 67 70 79 129 C87 187 121 204 157 188 C196 205 229 185 235 129 C247 71 207 30 157 60Z" fill="#ef6668" stroke="#c44d56" stroke-width="6"/><path d="M157 66 Q184 40 204 58" stroke="#e8898c" stroke-width="4" fill="none"/><circle cx="137" cy="129" r="7" fill="#fff4f2" opacity=".55"/>',hint:'stalk and leaf'},
+   house:{missing:'roof',wrong:'circle',position:'translate(160 79)',art:'<rect x="88" y="106" width="144" height="110" rx="5" fill="#ffdfae" stroke="#be8662" stroke-width="6"/><rect x="145" y="154" width="37" height="62" fill="#d49f81" stroke="#b77d65" stroke-width="4"/><rect x="105" y="133" width="27" height="27" rx="4" fill="#bfe7f1" stroke="#8ea7b0" stroke-width="4"/>',hint:'roof'},
+   bee:{missing:'beeWing',wrong:'flower',position:'translate(160 86)',art:'<ellipse cx="160" cy="138" rx="32" ry="45" fill="#f7cf57" stroke="#be9229" stroke-width="6"/><path d="M138 120 H182 M136 138 H184 M140 156 H180" stroke="#4e4141" stroke-width="8" stroke-linecap="round"/><circle cx="150" cy="130" r="4" fill="#3f3645"/><circle cx="170" cy="130" r="4" fill="#3f3645"/><path d="M154 145 Q160 150 166 145" stroke="#57424f" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M152 91 Q145 74 135 64 M168 91 Q175 74 185 64" stroke="#6f5967" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M160 180 L151 196 H169Z" fill="#4e4141"/>',hint:'wings'},
+   butterfly:{missing:'butterflyWing',wrong:'leaf',position:'translate(118 105)',art:'<path d="M155 86 Q146 72 136 84 M165 86 Q174 72 184 84" stroke="#6f5967" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="160" cy="132" rx="11" ry="45" fill="#7aa6b6" stroke="#547b89" stroke-width="5"/><path d="M168 101 Q207 56 239 95 Q210 121 205 151 Q177 145 168 129Z" fill="#f6a9c8" stroke="#c56b95" stroke-width="5" stroke-linejoin="round"/><path d="M167 133 Q200 155 206 182 Q175 173 166 150Z" fill="#f2b6d1" stroke="#c56b95" stroke-width="5" stroke-linejoin="round"/><circle cx="155" cy="126" r="3" fill="#38495a"/><circle cx="165" cy="126" r="3" fill="#38495a"/>',hint:'wing'}
  };
  let finishIndex=0,finishDone=false,finishSelected=null,finishDrag=null;
  const finArtwork=$('finishArt');
  function finTarget(){
-   const r=finishRounds[finishIndex],config=finConfig[r.name];
-   const points={pumpkin:[155,42],house:[160,79],cat:[230,145],bat:[211,120]};
+   const r=finishRounds[finishIndex];
+   const points={apple:[157,44],house:[160,79],bee:[160,86],butterfly:[118,105]};
    return points[r.name];
  }
  function finPartSvg(i){
@@ -478,12 +606,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  }
  function finComplete(idx){
    const r=finishRounds[finishIndex],c=finConfig[r.name];
-   if(idx!==r.correct){$('finishMessage').textContent='That piece does not fit. Try the other one.';window.motorworxFeedback?.('retry','finish');return}
+   if(idx!==r.correct){animateObject($('finishChoice'+idx),false);$('finishMessage').textContent='That piece does not fit. Try the other one.';window.motorworxFeedback?.('retry','finish');return}
    finishDone=true;window.motorworxFeedback?.('success','finish');finishSelected=null;
    const pos=r.name==='house'?'translate(160 79)':c.position;
    finArtwork.innerHTML=makeSvg(c.art+`<g transform="${pos}">${finParts[c.missing]}</g>`);
    [0,1].forEach(i=>{$('finishChoice'+i).disabled=true;$('finishChoice'+i).classList.remove('selected')});
-   $('finishChoice'+idx).classList.add('correct');finArtwork.classList.remove('ready');
+   animateObject($('finishChoice'+idx),true);finArtwork.classList.remove('ready');
    $('finishMessage').textContent=finishIndex===3?'Wonderful! All four pictures are complete!':'Well done! You completed the picture!';
    $('finishNext').textContent=finishIndex===3?'Play again ↻':'Next picture →';$('finishNext').hidden=false;
  }
@@ -492,7 +620,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    const rect=svg.getBoundingClientRect(),[x,y]=finTarget();
    const px=rect.left+x/320*rect.width,py=rect.top+y/230*rect.height;
    // Generous drop allowance for Level 1; never allows arbitrary drops elsewhere.
-   const radius=Math.max(50, Math.min(82,rect.width*.22));
+   const radius=Math.max(34, Math.min(56,rect.width*.16));
    return Math.hypot(clientX-px,clientY-py)<radius;
  }
  function finDrop(idx,x,y){
@@ -550,10 +678,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  // Game 7 — repeated AB patterns. Only the symbols/starting positions vary.
  // Children recognise the next picture; no independent drawing required at Level 1.
  const patternRounds=[
-   {items:['🎃','👻','🎃'],choices:['👻','🎃'],correct:0},
-   {items:['👻','🎃','👻'],choices:['👻','🎃'],correct:1},
-   {items:['⭐','🦇','⭐'],choices:['🦇','⭐'],correct:0},
-   {items:['🦇','⭐','🦇'],choices:['🦇','⭐'],correct:1}
+   {items:['⭐','🎈','⭐'],choices:['🎈','⭐'],correct:0},
+   {items:['🎈','⭐','🎈'],choices:['🎈','⭐'],correct:1},
+   {items:['🌼','🔵','🌼'],choices:['🔵','🌼'],correct:0},
+   {items:['🔵','🌼','🔵'],choices:['🔵','🌼'],correct:1}
  ];
  let patternIndex=0,patternComplete=false,patternDrag=null;
  function patternClearDrag(){
@@ -568,7 +696,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    $('patternCounter').textContent=`${patternIndex+1} of ${patternRounds.length}`;
    $('patternExample').innerHTML=r.items.map((pic,i)=>`<div class="pattern-unit" aria-label="Picture ${i+1}: ${pic}">${pic}</div>`).join('')+'<div class="pattern-unit missing" id="patternMissing" aria-label="Empty position">?</div>';
    for(let i=0;i<2;i++){
-     const b=$('patternChoice'+i);b.textContent=r.choices[i];b.classList.remove('correct','dragging');b.disabled=false;
+     const b=$('patternChoice'+i);b.innerHTML=`<span class="choice-art">${r.choices[i]}</span>`;b.classList.remove('correct','dragging');b.disabled=false;
      b.setAttribute('aria-label',`Drag ${r.choices[i]} into the empty position`);
    }
    $('patternMessage').textContent='Drag the next picture into the empty space.';$('patternNext').hidden=true;
@@ -577,9 +705,9 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function patternChoose(which){
    if(patternComplete)return;
    const r=patternRounds[patternIndex];
-   if(which!==r.correct){$('patternMessage').textContent='Look again. Try the other picture.';window.motorworxFeedback?.('retry','pattern');return;}
+   if(which!==r.correct){animateObject($('patternChoice'+which),false);$('patternMessage').textContent='Look again. Try the other picture.';window.motorworxFeedback?.('retry','pattern');return;}
    patternComplete=true;window.motorworxFeedback?.('success','pattern');
-   const missing=$('patternMissing');missing.textContent=r.choices[r.correct];missing.classList.add('complete');missing.classList.remove('missing');
+   const missing=$('patternMissing');missing.textContent=r.choices[r.correct];missing.classList.add('complete');missing.classList.remove('missing');animateObject(missing,true);
    for(let i=0;i<2;i++)$('patternChoice'+i).disabled=true;
    $('patternMessage').textContent=patternIndex===patternRounds.length-1?'All four patterns complete! Well done!':'Yes! You finished the pattern!';
    $('patternNext').textContent=patternIndex===patternRounds.length-1?'Play again ↻':'Next pattern →';$('patternNext').hidden=false;
@@ -618,6 +746,146 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('patternBack').addEventListener('click',()=>{patternClearDrag();show('chooseScreen')});
  $('patternNext').addEventListener('click',()=>{if(!patternComplete)return;patternIndex=(patternIndex+1)%patternRounds.length;patternRender()});
 
+ // Game 8 — spot the different one. Two are the same and one is different.
+ const diffRounds=[
+  {items:['🦁','🦁','🐘'],correct:2},
+  {items:['🦒','🐒','🦒'],correct:1},
+  {items:['🐘','🦓','🦓'],correct:0},
+  {items:['🐒','🐒','🦁'],correct:2}
+ ];
+ let diffRound=0,diffDone=false;
+ function renderDiff(){const r=diffRounds[diffRound];diffDone=false;$('diffCounter').textContent=`${diffRound+1} of ${diffRounds.length}`;for(let i=0;i<3;i++){const b=$('diffChoice'+i);b.innerHTML=`<span class="choice-art">${r.items[i]}</span>`;b.className='diff-choice';b.disabled=false;}$('diffMessage').textContent='Look carefully and choose the one that is different.';$('diffNext').hidden=true;document.querySelectorAll('#diffSteps span').forEach((el,i)=>el.classList.toggle('current',i<=diffRound));}
+ function chooseDiff(i){if(diffDone)return;const r=diffRounds[diffRound];if(i!==r.correct){$('diffMessage').textContent='Try the different picture.';animateObject($('diffChoice'+i),false);window.motorworxFeedback?.('retry','diff');return;}diffDone=true;window.motorworxFeedback?.('success','diff');animateObject($('diffChoice'+i),true);[0,1,2].forEach(j=>$('diffChoice'+j).disabled=true);$('diffMessage').textContent=diffRound===diffRounds.length-1?'You found all the different pictures!':'Yes! That one is different!';$('diffNext').textContent=diffRound===diffRounds.length-1?'Play again ↻':'Next picture →';$('diffNext').hidden=false;}
+ [0,1,2].forEach(i=>$('diffChoice'+i).addEventListener('click',()=>chooseDiff(i)));
+ $('startDiff').addEventListener('click',()=>{diffRound=0;renderDiff();show('diffScreen')});
+ $('diffBack').addEventListener('click',()=>show('chooseScreen'));
+ $('diffNext').addEventListener('click',()=>{diffRound=(diffRound+1)%diffRounds.length;renderDiff()});
+
+ // Game 9 — space visual tracking. The child hears the instruction first,
+ // taps the stationary star to launch it, then taps the planet where it landed.
+ // Each round uses different, very distinct space objects; only two landing choices.
+ const starRounds=[
+   {correct:0,choices:[{kind:'bluePlanet',name:'blue planet'},{kind:'pinkPlanet',name:'pink planet'}]},
+   {correct:1,choices:[{kind:'moon',name:'moon'},{kind:'rocket',name:'rocket'}]},
+   {correct:0,choices:[{kind:'ringPlanet',name:'ringed planet'},{kind:'satellite',name:'satellite'}]},
+   {correct:1,choices:[{kind:'rocket',name:'rocket'},{kind:'moon',name:'moon'}]}
+ ];
+ function starSpacePicture(kind,x,y){
+   const a=`translate(${x} ${y})`;
+   if(kind==='bluePlanet')return `<g transform="${a}"><circle r="44" fill="#7ec9f1" stroke="#c3eafb" stroke-width="4"/><path d="M-30 -16 Q-9 -35 9 -21 Q24 -8 39 -11 M-26 21 Q-1 10 21 29" fill="none" stroke="#3d93ce" stroke-width="8" stroke-linecap="round"/></g>`;
+   if(kind==='pinkPlanet')return `<g transform="${a}"><circle r="44" fill="#edb7df" stroke="#ffe1f0" stroke-width="4"/><path d="M-29 -12 Q-9 -30 15 -10 Q29 0 34 -13 M-23 26 Q0 11 23 25" fill="none" stroke="#ce82bc" stroke-width="8" stroke-linecap="round"/></g>`;
+   if(kind==='moon')return `<g transform="${a}"><circle r="44" fill="#d7dde9" stroke="#f3f5f9" stroke-width="4"/><circle cx="-14" cy="-12" r="12" fill="#afb9cf"/><circle cx="19" cy="15" r="10" fill="#afb9cf"/><circle cx="15" cy="-20" r="6" fill="#afb9cf"/></g>`;
+   if(kind==='rocket')return `<g transform="${a}"><path d="M0 -47 Q27 -31 24 18 L12 38 H-12 L-24 18 Q-27 -31 0 -47Z" fill="#f1f4ff" stroke="#8192c3" stroke-width="4"/><path d="M-23 10 L-40 31 L-12 26 M23 10 L40 31 L12 26" fill="#ed9b9c" stroke="#bb666a" stroke-width="4" stroke-linejoin="round"/><circle cy="-13" r="11" fill="#7ec9f1" stroke="#8192c3" stroke-width="3"/><path d="M-12 38 L0 51 L12 38" fill="#ffcb75" stroke="#df9740" stroke-width="3"/></g>`;
+   if(kind==='ringPlanet')return `<g transform="${a}"><circle r="34" fill="#f3c175" stroke="#d6a058" stroke-width="4"/><ellipse rx="53" ry="17" fill="none" stroke="#e9e4d7" stroke-width="9" transform="rotate(-22)"/><ellipse rx="53" ry="17" fill="none" stroke="#a17e62" stroke-width="2" transform="rotate(-22)"/></g>`;
+   return `<g transform="${a}"><rect x="-15" y="-26" width="30" height="49" rx="7" fill="#e3e8f3" stroke="#8e9dbc" stroke-width="3"/><rect x="-49" y="-20" width="30" height="38" rx="3" fill="#77afdc" stroke="#4b7fae" stroke-width="3"/><rect x="19" y="-20" width="30" height="38" rx="3" fill="#77afdc" stroke="#4b7fae" stroke-width="3"/><circle cy="-2" r="8" fill="#f8d777"/><path d="M0 -27 V-41 M-9 -41 H9" stroke="#e3e8f3" stroke-width="4"/></g>`;
+ }
+ function starAnimateChoice(which,correct){
+   const art=$('star'+(which===0?'Left':'Right')+'Art');
+   art.classList.remove('star-art-tap','star-art-wrong');
+   void art.getBoundingClientRect();
+   art.classList.add(correct?'star-art-tap':'star-art-wrong');
+ }
+ const previousStarDestination=[null,null,null,null];
+ let starDestination=0;
+ let starRound=0,starComplete=false,starReady=false,starFrame=0,starDelay=0,starRun=0,starPhase='intro',starIntroFallback=0;
+ const movingStar=$('movingStar');
+ function starCancel(){
+   starRun++;
+   if(starFrame)cancelAnimationFrame(starFrame);
+   if(starDelay)clearTimeout(starDelay);
+   if(starIntroFallback)clearTimeout(starIntroFallback);
+   starFrame=0;starDelay=0;starIntroFallback=0;
+ }
+ function starPosition(x,y){movingStar.setAttribute('transform',`translate(${x.toFixed(1)} ${y.toFixed(1)})`);}
+ function starIntroDone(){
+   if(starPhase!=='intro'||$('starScreen').hidden)return;
+   starPhase='launch';$('starLaunch').disabled=false;
+   $('starMessage').textContent='Tap the star to start!';
+ }
+ window.motorworxStarIntroDone=starIntroDone;
+ window.motorworxStarNeedsIntro=()=>starPhase==='intro';
+ function starWatch(){
+   starCancel();starComplete=false;starReady=false;starPhase='intro';
+   const run=starRun;
+   $('starCounter').textContent=`${starRound+1} of ${starRounds.length}`;
+   $('starInstruction').textContent='Tap the star to start.';
+   $('starHint').textContent='Then watch where it lands!';
+   $('starMessage').textContent='Listen to the instruction.';
+   $('starNext').hidden=true;
+   movingStar.style.display='';
+   $('starLaunch').hidden=false;$('starLaunch').disabled=true;
+   const r=starRounds[starRound];
+   // Random first play; a same-round replay changes the landing place.
+   let destination=Math.random()<.5?0:1;
+   if(previousStarDestination[starRound]===destination)destination=1-destination;
+   previousStarDestination[starRound]=destination;
+   starDestination=destination;
+   [0,1].forEach(i=>{
+     const b=$('starChoice'+i);b.disabled=true;b.classList.remove('selected');
+     const art=$('star'+(i===0?'Left':'Right')+'Art');
+     art.classList.remove('star-art-tap','star-art-wrong');
+     art.innerHTML=starSpacePicture(r.choices[i].kind,i===0?82:279,215);
+     b.setAttribute('aria-label',`Tap the ${r.choices[i].name}`);
+   });
+   document.querySelectorAll('#starSteps span').forEach((el,i)=>el.classList.toggle('current',i<=starRound));
+   starPosition(180,59);
+   // If the device cannot play speech or fails to report completion,
+   // the child can still begin without waiting indefinitely.
+   starIntroFallback=setTimeout(()=>{if(run===starRun)starIntroDone()},9000);
+ }
+ function starLaunch(){
+   if(starPhase!=='launch'||$('starScreen').hidden)return;
+   starPhase='moving';$('starLaunch').hidden=true;$('starLaunch').disabled=true;
+   $('starInstruction').textContent='Watch the star!';
+   $('starHint').textContent='Follow it with your eyes.';
+   $('starMessage').textContent='Watch where it lands!';
+   const run=starRun,endX=starDestination===0?82:279;
+   let started=null;
+   function animate(time){
+     if(run!==starRun||$('starScreen').hidden)return;
+     if(started===null)started=time;
+     const t=Math.min(1,(time-started)/3200);
+     const u=t*t*(3-2*t);
+     const x=180+(endX-180)*u;
+     const y=59+142*u-18*Math.sin(Math.PI*u);
+     starPosition(x,y);
+     if(t<1)starFrame=requestAnimationFrame(animate);
+     else{
+       starFrame=0;
+       starDelay=setTimeout(()=>{
+         if(run!==starRun||$('starScreen').hidden)return;
+         movingStar.style.display='none';starReady=true;starPhase='choose';
+         $('starInstruction').textContent='Where did the star land?';
+         $('starHint').textContent='Tap where the star stopped.';
+         $('starMessage').textContent='Tap the landing place!';
+         [0,1].forEach(i=>$('starChoice'+i).disabled=false);
+         window.motorworxSpeakCurrent?.();
+       },850);
+     }
+   }
+   starFrame=requestAnimationFrame(animate);
+ }
+ function starChoose(which){
+   if(!starReady||starComplete)return;
+   if(which!==starDestination){
+     starAnimateChoice(which,false);
+     $('starMessage').textContent='Have another look. Where did the star land?';
+     window.motorworxFeedback?.('retry','star');return;
+   }
+   starComplete=true;starReady=false;starPhase='complete';
+   starAnimateChoice(which,true);
+   [0,1].forEach(i=>$('starChoice'+i).disabled=true);
+   $('starMessage').textContent='Well done!';
+   window.motorworxFeedback?.('success','star');
+   $('starNext').textContent=starRound===starRounds.length-1?'Play again ↻':'Next star →';
+   $('starNext').hidden=false;
+ }
+ $('starLaunch').addEventListener('click',starLaunch);
+ [0,1].forEach(i=>$('starChoice'+i).addEventListener('click',()=>starChoose(i)));
+ $('startStar').addEventListener('click',()=>{starRound=0;show('starScreen');starWatch()});
+ $('starReplay').addEventListener('click',starWatch);
+ $('starBack').addEventListener('click',()=>{starCancel();starPhase='away';show('chooseScreen')});
+ $('starNext').addEventListener('click',()=>{if(!starComplete)return;starRound=(starRound+1)%starRounds.length;starWatch()});
 })();
 </script>
 
@@ -628,13 +896,15 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  'use strict';
  const activities={
   chooseScreen:'Choose a game! Tap one of the pictures to start playing.',
-  gameScreen:'Trace the path to the pumpkin. Touch the ghost and follow the dots.',
-  matchScreen:'Find the same monster. Tap the matching picture.',
+  gameScreen:'Trace the path to the carrot. Touch the bunny and follow the dots.',
+  matchScreen:'Find the matching picture. Tap the picture that is the same.',
   peekScreen:()=>document.getElementById('peekInstruction').textContent+' Tap the picture where you see it.',
   memoryScreen:()=>document.getElementById('memoryChoices').hidden?'Look at the picture. Remember what you see. Tap I’m ready when you are ready.':'Which picture did you see? Tap the one you remember.',
-  spatialScreen:()=>document.getElementById('spatialInstruction').textContent+' Drag the ghost with your finger.',
+  spatialScreen:()=>document.getElementById('spatialInstruction').textContent+' Drag the fish with your finger.',
   finishScreen:'Drag the missing piece into place. Choose the piece that fits.',
-  patternScreen:'What comes next? Drag the next picture into the empty space.'
+  patternScreen:'What comes next? Drag the next picture into the empty space.',
+  diffScreen:'Which picture is different? Tap the picture that is not the same.',
+  starScreen:()=>document.getElementById('starInstruction').textContent==='Where did the star land?'?'Where did the star land? Tap the place where it stopped.':'Tap the star to start. Watch where it lands.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -652,7 +922,9 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memory:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!'],
   spatial:['Fantastic!','Great job!','Well done!','Excellent work!','Awesome!'],
   finish:['Well done!','Awesome!','Excellent work!','Fantastic!','Great job!'],
-  pattern:['Great job!','Fantastic!','Awesome!','Well done!','Excellent work!']
+  pattern:['Great job!','Fantastic!','Awesome!','Well done!','Excellent work!'],
+  diff:['Awesome!','Well done!','Great job!','Excellent work!','Fantastic!'],
+  star:['Well done!','Great job!','Awesome!','Excellent work!','Fantastic!']
  };
  const encouragement={
   'trace-path':[
@@ -668,10 +940,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Oops! Slow down and try that path again.'
   ],
   match:[
-   'Oops! Not that monster. Try again!',
+   'Oops! Not that picture. Try again!',
    'Oh dear! Look for the one that is the same.',
-   'Whoopsie! Try the other monster.',
-   'Have another look! Which monster matches?'
+   'Whoopsie! Try the other picture.',
+   'Have another look! Which picture matches?'
   ],
   peek:[
    'Oh dear! Look for the friend hiding behind something.',
@@ -686,9 +958,9 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Let’s try remembering again!'
   ],
   spatial:[
-   'Oops! Try moving the ghost into the dotted circle.',
-   'Oh dear! Let’s find the right place for the ghost.',
-   'Whoops! Move the ghost a little closer to the circle.',
+   'Oops! Try moving the fish into the dotted circle.',
+   'Oh dear! Let’s find the right place for the fish.',
+   'Whoops! Move the fish a little closer to the circle.',
    'Almost! Look for the dotted circle and try again.'
   ],
   finish:[
@@ -702,6 +974,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Oh dear! Which picture comes next?',
    'Whoops! Look at the pictures in order.',
    'Have another go! What comes after this picture?'
+  ],
+  star:[
+   'Oh dear! Look at the two places again.',
+   'Whoops! Which planet did the star land on?',
+   'Oops! Try the other landing place.',
+   'Have another look! Where did the star stop?'
+  ],
+  diff:[
+   'Oops! Tap the picture that is different.',
+   'Oh dear! Which one is not the same?',
+   'Whoops! Look for the one that is different.',
+   'Have another look! Which picture is different?'
   ]
  };
  const indices={};
@@ -729,21 +1013,26 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     ||voices.find(v=>/^en/i.test(v.lang)&&/female|woman|samantha|karen|zira/i.test(v.name))
     ||voices.find(v=>/^en/i.test(v.lang));
  }
- function say(phrase){
+ function say(phrase,onFinished){
   stop();
-  if(!supported||!soundOn||!phrase)return;
+  if(!supported||!soundOn||!phrase){onFinished?.();return;}
   try{
    const utterance=new SpeechSynthesisUtterance(phrase);
    utterance.lang='en-GB';
    utterance.rate=0.88; utterance.pitch=1.06; utterance.volume=1;
+   utterance.onend=()=>onFinished?.();
+   utterance.onerror=()=>onFinished?.();
    const voice=chooseVoice();if(voice){utterance.voice=voice;utterance.lang=voice.lang}
    synth.speak(utterance);
-  }catch(e){/* A browser may block speech until user taps Replay. */}
+  }catch(e){onFinished?.();/* Browser voice may require user interaction. */}
  }
  function speak(id){
   if(!id||document.getElementById(id).hidden)return;
-  say(instruction(id));
+  const onFinished=(id==='starScreen'&&window.motorworxStarNeedsIntro?.())
+   ?()=>window.motorworxStarIntroDone?.():undefined;
+  say(instruction(id),onFinished);
  }
+ window.motorworxSpeakCurrent=()=>speak(current());
  // Feedback shared by every activity, without changing its game rules.
  // Gentle retries are rate-limited and only triggered by real attempts.
  window.motorworxFeedback=function(type,activity){
@@ -773,25 +1062,25 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    soundOn=!soundOn;
    try{localStorage.setItem('motorworx-voice-enabled',String(soundOn))}catch(e){}
    stop();setControls();
-   if(soundOn)speak(id);
+   if(soundOn)speak(id);else if(id==='starScreen')window.motorworxStarIntroDone?.();
   });
   bars.push({button,status:bar.querySelector('.voice-status')});
  });
  setControls();
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext'];
- [...startIds,...nextIds,'reset','spatialReset','memoryReady'].forEach(id=>{
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext'];
+ [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
