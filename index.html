@@ -28,6 +28,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .peek-choice.correct{border-color:#51ae91;background:#eefaf4}.peek-choice:disabled{opacity:1}
 .peek-scene-label{text-align:center;font-weight:800;color:#7259a1;font-size:14px;margin-top:18px}
 @media(max-width:390px){.peek-choices{gap:8px}.peek-choice{min-height:138px;padding:3px}}
+
+/* Spatial game: large finger target and high-contrast, simple pictures. */
+#spatialBoard{touch-action:none;user-select:none;-webkit-user-select:none;max-height:440px}
+#spatialGhost{pointer-events:none}
+#spatialBoard .drop-ring{stroke:#7c66b0;stroke-width:3;stroke-dasharray:7 9;fill:#e6dcfa;fill-opacity:.55}
+@media(max-width:390px){#spatialBoard{margin-top:7px}}
 </style>
 </head>
 <body>
@@ -45,7 +51,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
    </svg>
   </div>
-  <p><strong>Four Level 1 activities</strong><br/>Practise tracing, matching, finding and remembering.</p>
+  <p><strong>Five Level 1 activities</strong><br/>Practise tracing, matching, finding, remembering and placing.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Temporary artwork</div>
  </section>
@@ -60,6 +66,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">👾</div><strong>Find My Twin</strong><small>Find the matching monster</small></button>
      <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true">🎃</div><strong>Peekaboo!</strong><small>Find who's hiding</small></button>
      <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>What's Missing?</strong><small>Remember one picture</small></button>
+     <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🏠</div><strong>Where Does It Go?</strong><small>Move the ghost into place</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -112,6 +119,30 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="message" id="memoryMessage" aria-live="polite">Take your time to look.</div>
   <div class="controls"><button type="button" id="memoryNext" hidden>Next picture →</button></div>
   <div class="note">Adult guidance: let the child look, then ask them to tap “I'm ready”.<br>Hide the example before they choose. One picture to remember.</div>
+ </section>
+
+ <section id="spatialScreen" class="screen" hidden>
+  <button type="button" class="back" id="spatialBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Where Does It Go?</h1></div><div class="counter" id="spatialCounter">1 of 4</div></header>
+  <div class="steps" id="spatialSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="spatialInstruction">Put the ghost inside the house.</p>
+  <p class="hint">Drag the ghost with your finger.</p>
+  <svg id="spatialBoard" viewBox="0 0 360 330" aria-label="Drag the ghost to the correct place" role="group">
+   <rect width="360" height="320" rx="22" fill="#faf7ff"/>
+   <g id="spatialScene"></g>
+   <g id="spatialTarget"></g>
+   <g id="spatialGhost" transform="translate(61 253)">
+    <circle r="45" fill="#f0e9ff" opacity=".8"/>
+    <path d="M-22 25 V-2 C-22 -34 22 -34 22 -2 V25 L11 18 L0 26 L-11 18Z" fill="white" stroke="#74649e" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="-8" cy="-5" r="3.5" fill="#514368"/><circle cx="9" cy="-5" r="3.5" fill="#514368"/>
+    <path d="M-5 8 Q0 13 5 8" fill="none" stroke="#514368" stroke-width="2.5" stroke-linecap="round"/>
+   </g>
+   <g id="spatialStars" hidden><text x="140" y="57" font-size="25">⭐</text><text x="252" y="67" font-size="24">✨</text></g>
+  </svg>
+  <div id="spatialMessage" class="message" aria-live="polite">Touch the ghost and drag it.</div>
+  <div class="controls"><button type="button" id="spatialReset" class="secondary">↻ Try again</button><button type="button" id="spatialNext" hidden>Next place →</button></div>
+  <div class="note">Adult guidance: read each instruction aloud. One move at a time. No timer.</div>
  </section>
  <section id="gameScreen" class="screen" hidden>
  <button id="backHome" class="back" type="button">← Back to home</button>
@@ -246,6 +277,69 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('memoryChoice0').addEventListener('click',()=>chooseMemory(0));
  $('memoryChoice1').addEventListener('click',()=>chooseMemory(1));
  $('memoryNext').addEventListener('click',()=>{memoryRound=(memoryRound+1)%memoryRounds.length;renderMemory()});
+
+ // Activity 5: easy spatial relationships, drag ghost to one large destination.
+ // Coordinates are in SVG viewBox units; pointer coordinates work for phone and mouse.
+ const spatialRounds=[
+  {instruction:'Put the ghost inside the house.',scene:'house',tx:222,ty:158},
+  {instruction:'Put the ghost above the pumpkin.',scene:'pumpkin',tx:240,ty:73},
+  {instruction:'Put the ghost under the cloud.',scene:'cloud',tx:236,ty:198},
+  {instruction:'Put the ghost outside the house.',scene:'outside',tx:290,ty:166}
+ ];
+ const spatialBoard=$('spatialBoard'),spatialGhost=$('spatialGhost');
+ let spatialRound=0,spatialDone=false,spatialDragging=false,spatialPointer=null,spatialX=61,spatialY=253;
+ function spatialArt(scene){
+  if(scene==='house'||scene==='outside')return `<g><path d="M118 135 L208 66 L298 135" fill="#ecbc93" stroke="#bc805f" stroke-width="5" stroke-linejoin="round"/><rect x="133" y="134" width="150" height="131" rx="7" fill="#ffe3ba" stroke="#c88965" stroke-width="4"/><rect x="188" y="180" width="39" height="85" rx="5" fill="#dba27c" stroke="#a96b56" stroke-width="3"/><circle cx="218" cy="222" r="3" fill="#fff"/><rect x="148" y="157" width="30" height="30" rx="5" fill="#bce3ee" stroke="#ab806b" stroke-width="3"/></g>`;
+  if(scene==='pumpkin')return `<g transform="translate(239 224)"><path d="M0 -55 Q-3 -70 12 -73" stroke="#528653" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M0 -54 C-51 -77 -78 -33 -68 16 C-60 60 -18 67 0 57 C27 73 70 50 70 13 C76 -33 50 -77 0 -54Z" fill="#f8ab58" stroke="#c98045" stroke-width="4"/><path d="M-22 -53 Q-48 0 -22 58 M22 -53 Q49 0 22 58" fill="none" stroke="#dc8a44" stroke-width="4"/><circle cx="-24" cy="-4" r="5" fill="#634453"/><circle cx="22" cy="-4" r="5" fill="#634453"/><path d="M-16 18 Q0 32 16 18" fill="none" stroke="#634453" stroke-width="4" stroke-linecap="round"/></g>`;
+  return `<g><path d="M160 112 Q142 78 177 65 Q193 27 234 51 Q275 33 294 73 Q323 76 316 109 Q310 134 278 135 H188 Q157 132 160 112Z" fill="#c9e4f8" stroke="#8bb9d9" stroke-width="4"/></g>`;
+ }
+ function spatialPoint(e){const r=spatialBoard.getBoundingClientRect();return{x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*330/r.height}}
+ function spatialPosition(x,y){spatialX=x;spatialY=y;spatialGhost.setAttribute('transform',`translate(${x} ${y})`)}
+ function spatialDraw(){
+  const r=spatialRounds[spatialRound];spatialDone=false;spatialDragging=false;spatialPointer=null;
+  $('spatialInstruction').textContent=r.instruction;
+  $('spatialCounter').textContent=`${spatialRound+1} of 4`;
+  $('spatialScene').innerHTML=spatialArt(r.scene);
+  // Outside destination sits clearly to the right of the house, never overlapping the structure.
+  if(r.scene==='outside'){$('spatialScene').setAttribute('transform','translate(-48 0)')}else{$('spatialScene').removeAttribute('transform')}
+  $('spatialTarget').innerHTML=`<circle class="drop-ring" cx="${r.tx}" cy="${r.ty}" r="43"/>`;
+  spatialPosition(61,253);
+  $('spatialStars').hidden=true;
+  $('spatialNext').hidden=true;$('spatialReset').hidden=false;
+  $('spatialMessage').textContent='Touch the ghost and drag it.';
+  document.querySelectorAll('#spatialSteps span').forEach((el,i)=>el.classList.toggle('current',i<=spatialRound));
+ }
+ spatialBoard.addEventListener('pointerdown',e=>{
+  if(spatialDone)return;
+  const c=spatialPoint(e);
+  if(Math.hypot(c.x-spatialX,c.y-spatialY)>51){$('spatialMessage').textContent='Touch the ghost first.';return}
+  spatialDragging=true;spatialPointer=e.pointerId;
+  try{spatialBoard.setPointerCapture(e.pointerId)}catch(err){}
+  $('spatialMessage').textContent='Move the ghost to the dotted circle.';
+  e.preventDefault();
+ });
+ spatialBoard.addEventListener('pointermove',e=>{
+  if(!spatialDragging||e.pointerId!==spatialPointer)return;
+  e.preventDefault();const c=spatialPoint(e);
+  spatialPosition(Math.max(39,Math.min(321,c.x)),Math.max(45,Math.min(277,c.y)));
+ });
+ function spatialRelease(e){
+  if(!spatialDragging||e.pointerId!==spatialPointer)return;
+  spatialDragging=false;
+  const r=spatialRounds[spatialRound];
+  if(Math.hypot(spatialX-r.tx,spatialY-r.ty)<=49){
+   spatialDone=true;spatialPosition(r.tx,r.ty);$('spatialStars').hidden=false;
+   $('spatialMessage').textContent=spatialRound===3?'Fantastic! You finished all four places!':'Well done! The ghost is in the right place!';
+   $('spatialNext').textContent=spatialRound===3?'Play again ↻':'Next place →';$('spatialNext').hidden=false;$('spatialReset').hidden=true;
+  }else{$('spatialMessage').textContent='Good try! Move the ghost into the circle.';spatialPosition(61,253)}
+ }
+ spatialBoard.addEventListener('pointerup',spatialRelease);
+ spatialBoard.addEventListener('pointercancel',()=>{spatialDragging=false;spatialPosition(61,253)});
+ $('startSpatial').addEventListener('click',()=>{spatialRound=0;spatialDraw();show('spatialScreen')});
+ $('spatialBack').addEventListener('click',()=>{spatialDragging=false;show('chooseScreen')});
+ $('spatialReset').addEventListener('click',spatialDraw);
+ $('spatialNext').addEventListener('click',()=>{spatialRound=(spatialRound+1)%spatialRounds.length;spatialDraw()});
+
 })();
 </script>
 </body>
