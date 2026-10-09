@@ -34,6 +34,17 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 #spatialGhost{pointer-events:none}
 #spatialBoard .drop-ring{stroke:#7c66b0;stroke-width:3;stroke-dasharray:7 9;fill:#e6dcfa;fill-opacity:.55}
 @media(max-width:390px){#spatialBoard{margin-top:7px}}
+
+/* Level 1 visual closure: a single large unfinished picture, two very different pieces. */
+.finish-art{width:100%;max-width:365px;margin:8px auto 0;border:2px solid #e9def6;border-radius:20px;background:#fdfaff;padding:8px}
+.finish-art svg{display:block;width:100%;height:auto}
+.finish-choices{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:390px;margin:0 auto 12px}
+.finish-choice{height:112px;border:3px solid #dccdf1;background:#fff;border-radius:20px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.finish-choice svg{width:110px;height:92px;max-width:95%}
+.finish-choice:focus-visible{outline:4px solid #8e71b9;outline-offset:2px}
+.finish-choice.correct{border-color:#54ad93;background:#ebfcf4}
+.finish-choice:disabled{opacity:1}
+.finish-choice.selected{border-color:#8663b8;background:#f3eafb}.finish-choice.dragging{opacity:.55}.finish-floating{position:fixed;z-index:9999;pointer-events:none;width:110px;height:100px;transform:translate(-50%,-50%);filter:drop-shadow(0 8px 8px #493c5e33)}.finish-floating svg{width:100%;height:100%}.finish-art{touch-action:none}.finish-art.ready{outline:3px dashed #a78ac8;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -51,7 +62,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
    </svg>
   </div>
-  <p><strong>Five Level 1 activities</strong><br/>Practise tracing, matching, finding, remembering and placing.</p>
+  <p><strong>Six Level 1 activities</strong><br/>Practise tracing, matching, finding, remembering, placing and completing.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Temporary artwork</div>
  </section>
@@ -67,6 +78,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true">🎃</div><strong>Peekaboo!</strong><small>Find who's hiding</small></button>
      <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>What's Missing?</strong><small>Remember one picture</small></button>
      <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🏠</div><strong>Where Does It Go?</strong><small>Move the ghost into place</small></button>
+     <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true">🧩</div><strong>Finish the Picture</strong><small>Find the big missing part</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -121,6 +133,21 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="note">Adult guidance: let the child look, then ask them to tap “I'm ready”.<br>Hide the example before they choose. One picture to remember.</div>
  </section>
 
+
+ <section id="finishScreen" class="screen" hidden>
+  <button type="button" class="back" id="finishBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Finish the Picture</h1></div><div class="counter" id="finishCounter">1 of 4</div></header>
+  <div class="steps" id="finishSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction">Drag the missing piece into place.</p>
+  <p class="hint">Choose the piece that fits, then drag it to the picture.</p>
+  <div class="finish-art" id="finishArt" aria-label="Picture with one large missing part"></div>
+  <div class="target-title" style="text-align:center;margin:9px 0 7px">Drag one of these pieces into the empty shape.</div>
+  <div class="finish-choices"><button type="button" class="finish-choice" id="finishChoice0" aria-label="Left missing piece"></button><button type="button" class="finish-choice" id="finishChoice1" aria-label="Right missing piece"></button></div>
+  <div id="finishMessage" class="message" aria-live="polite">Drag the missing piece.</div>
+  <div class="controls"><button type="button" id="finishNext" hidden>Next picture →</button></div>
+  <div class="note">Adult guidance: show the child how to drag a piece into the matching outline. Allow them to try independently. Only two choices, with one correct answer.</div>
+ </section>
  <section id="spatialScreen" class="screen" hidden>
   <button type="button" class="back" id="spatialBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
@@ -339,6 +366,130 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('spatialBack').addEventListener('click',()=>{spatialDragging=false;show('chooseScreen')});
  $('spatialReset').addEventListener('click',spatialDraw);
  $('spatialNext').addEventListener('click',()=>{spatialRound=(spatialRound+1)%spatialRounds.length;spatialDraw()});
+
+
+ // Game 6: visual closure with four large unmistakable missing parts.
+ // The incorrect choice is deliberately a completely different object.
+ const finishRounds=[
+  {name:'pumpkin',correct:0}, {name:'house',correct:1},
+  {name:'cat',correct:1}, {name:'bat',correct:0}
+ ];
+ const makeSvg=(body,view='0 0 320 230')=>`<svg viewBox="${view}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
+ const finParts={
+  stem:'<path d="M0 31 Q-7 10 12 1" fill="none" stroke="#568450" stroke-width="13" stroke-linecap="round"/>',
+  roof:'<path d="M-75 27 L0 -31 L75 27Z" fill="#e7a77d" stroke="#ba765d" stroke-width="6" stroke-linejoin="round"/>',
+  tail:'<path d="M-19 32 Q57 42 47 -20 Q41 -52 18 -31" fill="none" stroke="#514263" stroke-width="21" stroke-linecap="round"/>',
+  wing:'<path d="M0 -21 Q-36 -47 -72 -14 L-66 23 L-44 10 L-23 35 L-8 13 L0 17Z" fill="#9a7abe" stroke="#665284" stroke-width="5" stroke-linejoin="round"/>',
+  star:'<path d="M0 -35 L10 -11 L36 -11 L16 5 L24 30 L0 15 L-24 30 L-16 5 L-36 -11 L-10 -11Z" fill="#f7cd62" stroke="#c18a39" stroke-width="5" stroke-linejoin="round"/>',
+  circle:'<circle r="32" fill="#8bcfe8" stroke="#5499b1" stroke-width="5"/>',
+  triangle:'<path d="M0 -34 L35 28 H-35Z" fill="#a6d8a3" stroke="#60955e" stroke-width="5"/>',
+  square:'<rect x="-30" y="-30" width="60" height="60" rx="4" fill="#edabc5" stroke="#ba7394" stroke-width="5"/>'
+ };
+ const finConfig={
+   pumpkin:{missing:'stem',wrong:'star',position:'translate(155 42)',art:'<path d="M155 61 C99 33 69 81 79 133 C84 185 124 203 155 190 C194 209 234 179 231 132 C241 80 206 32 155 61Z" fill="#fab058" stroke="#c37a3d" stroke-width="6"/><path d="M134 61 Q110 123 135 191 M177 61 Q200 125 176 191" fill="none" stroke="#dc8a40" stroke-width="5"/><circle cx="130" cy="129" r="7" fill="#54384c"/><circle cx="181" cy="129" r="7" fill="#54384c"/><path d="M138 157 Q155 175 173 157" stroke="#54384c" stroke-width="5" stroke-linecap="round" fill="none"/>',hint:'stem'},
+   house:{missing:'roof',wrong:'circle',position:'translate(160 69)',art:'<rect x="88" y="106" width="144" height="110" rx="5" fill="#ffdfae" stroke="#be8662" stroke-width="6"/><rect x="145" y="154" width="37" height="62" fill="#d49f81" stroke="#b77d65" stroke-width="4"/><rect x="105" y="133" width="27" height="27" rx="4" fill="#bfe7f1" stroke="#8ea7b0" stroke-width="4"/>',hint:'roof'},
+   cat:{missing:'tail',wrong:'triangle',position:'translate(230 145)',art:'<path d="M105 190 Q75 129 121 111 L123 79 L149 98 L174 79 L190 112 Q224 131 203 191Z" fill="#76618d" stroke="#554467" stroke-width="6"/><path d="M123 115 Q149 98 190 113" stroke="#554467" fill="none" stroke-width="5"/><circle cx="139" cy="129" r="6" fill="#fff"/><circle cx="174" cy="129" r="6" fill="#fff"/><path d="M151 150 L160 150 L155 159Z" fill="#efb6bd"/>',hint:'tail'},
+   bat:{missing:'wing',wrong:'square',position:'translate(211 120)',art:'<path d="M152 116 Q109 81 62 110 L59 166 L83 155 L100 178 L129 152 L151 153Z" fill="#9a7abe" stroke="#665284" stroke-width="5"/><ellipse cx="169" cy="146" rx="30" ry="42" fill="#9a7abe" stroke="#665284" stroke-width="5"/><path d="M148 116 L153 97 L166 111 L180 98 L191 119" fill="#9a7abe" stroke="#665284" stroke-width="5"/><circle cx="157" cy="137" r="5" fill="#fff"/><circle cx="178" cy="137" r="5" fill="#fff"/><path d="M161 156 Q170 163 178 156" stroke="#554467" stroke-width="3" fill="none"/>',hint:'wing'}
+ };
+ let finishIndex=0,finishDone=false,finishSelected=null,finishDrag=null;
+ const finArtwork=$('finishArt');
+ function finTarget(){
+   const r=finishRounds[finishIndex],config=finConfig[r.name];
+   const points={pumpkin:[155,42],house:[160,79],cat:[230,145],bat:[211,120]};
+   return points[r.name];
+ }
+ function finPartSvg(i){
+   const r=finishRounds[finishIndex],c=finConfig[r.name],name=i===r.correct?c.missing:c.wrong;
+   return makeSvg(`<g transform="translate(160 115)">${finParts[name]}</g>`);
+ }
+ function finRender(){
+   if(finishDrag)finClearDrag();
+   const r=finishRounds[finishIndex],c=finConfig[r.name];finishDone=false;finishSelected=null;
+   $('finishCounter').textContent=`${finishIndex+1} of 4`;
+   document.querySelectorAll('#finishSteps span').forEach((el,i)=>el.classList.toggle('current',i<=finishIndex));
+   const target=finTarget();
+   const pos=r.name==='house'?'translate(160 79)':c.position;
+   // The pale placeholder has exactly the same silhouette as the correct missing piece.
+   finArtwork.innerHTML=makeSvg(c.art+`<g transform="${pos}" opacity=".22">${finParts[c.missing]}</g>`);
+   [0,1].forEach(i=>{const el=$('finishChoice'+i);el.innerHTML=finPartSvg(i);el.disabled=false;el.classList.remove('correct','selected','dragging');el.setAttribute('aria-label',i===0?'Drag left piece to picture':'Drag right piece to picture')});
+   $('finishMessage').textContent='Drag the missing piece into the empty shape.';$('finishNext').hidden=true;
+ }
+ function finClearDrag(){
+   if(!finishDrag)return;
+   finishDrag.ghost.remove();
+   $('finishChoice'+finishDrag.idx).classList.remove('dragging');
+   finishDrag=null;
+ }
+ function finComplete(idx){
+   const r=finishRounds[finishIndex],c=finConfig[r.name];
+   if(idx!==r.correct){$('finishMessage').textContent='That piece does not fit. Try the other one.';return}
+   finishDone=true;finishSelected=null;
+   const pos=r.name==='house'?'translate(160 79)':c.position;
+   finArtwork.innerHTML=makeSvg(c.art+`<g transform="${pos}">${finParts[c.missing]}</g>`);
+   [0,1].forEach(i=>{$('finishChoice'+i).disabled=true;$('finishChoice'+i).classList.remove('selected')});
+   $('finishChoice'+idx).classList.add('correct');finArtwork.classList.remove('ready');
+   $('finishMessage').textContent=finishIndex===3?'Wonderful! All four pictures are complete!':'Well done! You completed the picture!';
+   $('finishNext').textContent=finishIndex===3?'Play again ↻':'Next picture →';$('finishNext').hidden=false;
+ }
+ function finInTarget(clientX,clientY){
+   const svg=finArtwork.querySelector('svg');if(!svg)return false;
+   const rect=svg.getBoundingClientRect(),[x,y]=finTarget();
+   const px=rect.left+x/320*rect.width,py=rect.top+y/230*rect.height;
+   // Generous drop allowance for Level 1; never allows arbitrary drops elsewhere.
+   const radius=Math.max(50, Math.min(82,rect.width*.22));
+   return Math.hypot(clientX-px,clientY-py)<radius;
+ }
+ function finDrop(idx,x,y){
+   if(finishDone)return;
+   if(finInTarget(x,y)){finComplete(idx)}
+   else $('finishMessage').textContent='Try placing the piece on the pale missing shape.';
+ }
+ [0,1].forEach(idx=>{
+   const btn=$('finishChoice'+idx);
+   btn.addEventListener('pointerdown',e=>{
+     if(finishDone||finishDrag)return;
+     if(e.button!==undefined&&e.button!==0)return;
+     e.preventDefault();finishSelected=idx;
+     [0,1].forEach(j=>$('finishChoice'+j).classList.toggle('selected',j===idx));
+     const ghost=document.createElement('div');ghost.className='finish-floating';ghost.innerHTML=finPartSvg(idx);
+     document.body.appendChild(ghost);ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';
+     btn.classList.add('dragging');btn.setPointerCapture(e.pointerId);
+     finishDrag={idx,ghost,id:e.pointerId,startX:e.clientX,startY:e.clientY,moved:false};
+     $('finishMessage').textContent='Move the piece onto its matching shape.';
+   });
+   btn.addEventListener('pointermove',e=>{
+     if(!finishDrag||finishDrag.id!==e.pointerId||finishDrag.idx!==idx)return;
+     e.preventDefault();finishDrag.ghost.style.left=e.clientX+'px';finishDrag.ghost.style.top=e.clientY+'px';
+     if(Math.hypot(e.clientX-finishDrag.startX,e.clientY-finishDrag.startY)>8)finishDrag.moved=true;
+   });
+   btn.addEventListener('pointerup',e=>{
+     if(!finishDrag||finishDrag.id!==e.pointerId||finishDrag.idx!==idx)return;
+     const moved=finishDrag.moved;finClearDrag();
+     if(moved)finDrop(idx,e.clientX,e.clientY);
+     else $('finishMessage').textContent='Now tap the empty shape, or drag the piece there.';
+   });
+   btn.addEventListener('pointercancel',finClearDrag);
+   btn.addEventListener('lostpointercapture',finClearDrag);
+   btn.addEventListener('click',()=>{
+     if(finishDone)return;
+     finishSelected=idx;
+     [0,1].forEach(j=>$('finishChoice'+j).classList.toggle('selected',j===idx));
+     $('finishMessage').textContent='Tap the empty shape to place the piece.';
+   });
+ });
+ finArtwork.addEventListener('click',e=>{
+   if(finishDone||finishSelected===null)return;
+   if(finInTarget(e.clientX,e.clientY))finComplete(finishSelected);
+   else $('finishMessage').textContent='Tap the pale missing shape.';
+ });
+ $('startFinish').addEventListener('click',()=>{finishIndex=0;finRender();show('finishScreen')});
+ $('finishBack').addEventListener('click',()=>{finClearDrag();show('chooseScreen')});
+ $('finishNext').addEventListener('click',()=>{
+   if(!finishDone)return;
+   finishIndex=finishIndex===finishRounds.length-1?0:finishIndex+1;
+   finRender();
+ });
+
 
 })();
 </script>
