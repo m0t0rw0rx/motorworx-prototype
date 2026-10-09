@@ -10,6 +10,9 @@
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(29px,7vw,39px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
 .game{width:min(100%,580px);background:#fff;border:2px solid #e9e1f4;border-radius:26px;padding:clamp(15px,4vw,27px);box-shadow:0 12px 40px #68559217}
 header{display:flex;justify-content:space-between;gap:10px;align-items:center}.eyebrow{color:#7855aa;font-size:clamp(11px,2.7vw,13px);font-weight:850;letter-spacing:.055em}.logo-slot{font-size:12px;color:#7e8492;margin-bottom:10px}h1{font-size:clamp(24px,6vw,31px);margin:7px 0 0;line-height:1.15}.counter{white-space:nowrap;color:#69449f;background:#eee6fa;border-radius:50px;padding:9px 12px;font-weight:800;font-size:13px}.steps{display:flex;gap:8px;margin:19px 0}.steps span{height:8px;flex:1;background:#e1d6f2;border-radius:20px}.steps span.current{background:#805db9}.instruction{text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,21px);margin:15px 0 5px}.hint{text-align:center;color:#68768b;font-size:14px;min-height:19px}svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;margin:4px 0}svg .guide{stroke:#eee6fb;stroke-width:68;stroke-linecap:round}svg .dots{stroke:#8f79b8;stroke-width:7;stroke-linecap:round;stroke-dasharray:1 21}svg .traced{stroke:#55bba6;stroke-width:9;stroke-linecap:round}#ghost{pointer-events:none}.message{min-height:28px;text-align:center;color:#477f70;font-size:16px;font-weight:800}.controls{display:flex;gap:10px;justify-content:center;margin:16px 0 0;flex-wrap:wrap}button{border:0;border-radius:16px;background:#7753b7;color:#fff;padding:14px 20px;min-height:48px;font-size:15px;font-weight:800;cursor:pointer}button.secondary{background:#e9e1f6;color:#6b4a9f}button:focus-visible{outline:3px solid #efb751;outline-offset:3px}.note{text-align:center;font-size:12px;color:#768093;margin:16px 0 0}.logo-note{font-size:11px;color:#8d879b;text-align:center;padding-top:4px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Activity chooser and Level 1 matching */
+.activity-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:20px 0}.activity-tile{background:#faf7ff;color:#29394a;border:2px solid #e9dff6;padding:16px 8px 14px;border-radius:22px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}.activity-tile svg{max-width:118px;max-height:92px;margin:0}.activity-tile strong{font-size:16px}.activity-tile small{font-size:12px;line-height:1.35;color:#6c788d}.tile-emoji{font-size:49px}.match-layout{display:flex;flex-direction:column;align-items:center;gap:12px;margin:18px 0 0}.target-panel{width:min(100%,235px);background:#f5f0fd;border:2px solid #e6daf9;border-radius:20px;padding:10px;text-align:center}.target-panel svg{width:150px;max-width:100%;margin:0 auto}.target-title{font-weight:800;font-size:14px;color:#60468d}.match-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin:4px 0}.match-choice{padding:9px;background:#fff;border:3px solid #e3d9f0;border-radius:21px;min-height:138px;color:#29394a;display:flex;align-items:center;justify-content:center}.match-choice svg{width:120px;max-width:100%;margin:0;pointer-events:none}.match-choice:disabled{cursor:default;opacity:1}.match-choice.correct{border-color:#53ac96;background:#eaf8f3}.match-choice.incorrect{border-color:#d9c9ed}.match-choice:focus-visible{outline:3px solid #efb751}.match-choices:empty{display:none}@media(max-width:370px){.match-choice{min-height:110px}.match-choice svg{width:100px}.activity-grid{gap:8px}.activity-tile{padding:10px 6px}} 
 </style>
 </head>
 <body>
@@ -18,7 +21,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
   <div class="home-label">PLAY &amp; DISCOVER | LEVEL 1</div>
   <h1>Halloween Adventure</h1>
-  <p>Come and play with our friendly ghost!</p>
+  <p>Choose a game and let’s play!</p>
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205">
     <path d="M55 107 H265" stroke="#e3d8f5" stroke-width="55" stroke-linecap="round"/>
@@ -27,9 +30,37 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
    </svg>
   </div>
-  <p><strong>Help the Ghost</strong><br/>Trace three easy paths to the pumpkin.</p>
-  <button id="play" class="start">Play ▶</button>
+  <p><strong>Two Level 1 activities</strong><br/>Practise tracing and picture matching.</p>
+  <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Temporary artwork</div>
+ </section>
+ <section id="chooseScreen" class="screen" hidden>
+   <button type="button" id="chooseBack" class="back">← Back to home</button>
+   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+   <div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div>
+   <h1>Choose a Game</h1>
+   <p class="hint" style="text-align:left;margin-top:10px">Choose one activity to practise.</p>
+   <div class="activity-grid">
+     <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">👻</div><strong>Help the Ghost</strong><small>Trace 3 easy paths</small></button>
+     <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">👾</div><strong>Find My Twin</strong><small>Find the matching monster</small></button>
+   </div>
+   <div class="note">Temporary artwork · No scores or timers</div>
+ </section>
+ <section id="matchScreen" class="screen" hidden>
+  <button type="button" class="back" id="matchBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Find My Twin!</h1></div><div class="counter" id="matchCounter">1 of 4</div></header>
+  <div class="steps" id="matchSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction">Find the same monster.</p>
+  <p class="hint">Tap the matching picture.</p>
+  <div class="match-layout">
+    <div class="target-panel"><div class="target-title">Look at this one</div><div id="matchTarget"></div></div>
+    <div style="font-weight:800;color:#765ca0;font-size:14px">Which one is the same?</div>
+    <div class="match-choices"><button type="button" class="match-choice" id="choice0" aria-label="Left monster"></button><button type="button" class="match-choice" id="choice1" aria-label="Right monster"></button></div>
+  </div>
+  <div id="matchMessage" class="message" aria-live="polite">Choose the matching monster.</div>
+  <div class="controls"><button id="matchNext" type="button" hidden>Next picture →</button></div>
+  <div class="note">Four easy rounds · Two choices each time</div>
  </section>
  <section id="gameScreen" class="screen" hidden>
  <button id="backHome" class="back" type="button">← Back to home</button>
@@ -62,6 +93,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 (()=>{
  'use strict';
  const $=id=>document.getElementById(id), board=$('board'),ghost=$('ghost'),pumpkin=$('pumpkin'),trail=$('trail'),traced=$('traced'),feedback=$('feedback'),message=$('message'),reset=$('reset'),next=$('next');
+ function show(id){document.querySelectorAll('.screen').forEach(el=>el.hidden=el.id!==id);window.scrollTo(0,0)}
  const paths=[{y:155,a:82,b:273},{y:124,a:82,b:273},{y:185,a:82,b:273}];
  let current=0,progress=0,drag=false,completed=false,pointerId=null;
  const path=()=>paths[current];
@@ -70,7 +102,19 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function coordinates(e){let r=board.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*305/r.height};}
  function down(e){if(completed)return;const p=coordinates(e),{y,a,b}=path(),ghostX=a-14+(b-a)*progress;if(Math.abs(p.x-ghostX)<37&&Math.abs(p.y-y)<44){drag=true;pointerId=e.pointerId;board.setPointerCapture(pointerId);feedback.textContent='Follow the dots!';message.textContent='Keep going!';e.preventDefault()}else{feedback.textContent='Touch the ghost first.';}}
  function move(e){if(!drag||pointerId!==e.pointerId)return;e.preventDefault();const p=coordinates(e),{y,a,b}=path(),target=Math.max(0,Math.min(1,(p.x-a)/(b-a)));if(Math.abs(p.y-y)>35){drag=false;message.textContent='Try staying on the path.';feedback.textContent='Touch the ghost and try again.';return;}if(target<progress-0.075)return;if(target>progress+0.19){drag=false;message.textContent='Move slowly along the dots.';return;}progress=Math.max(progress,target);redraw();if(progress>=.97){progress=1;drag=false;completed=true;redraw();feedback.textContent='You did it!';message.textContent=current===2?'All three paths complete! Well done!':'Wonderful tracing!';next.textContent=current===2?'Play again ↻':'Next path →';next.hidden=false;reset.hidden=true;}}
- board.addEventListener('pointerdown',down);board.addEventListener('pointermove',move);board.addEventListener('pointerup',()=>drag=false);board.addEventListener('pointercancel',()=>drag=false);board.addEventListener('lostpointercapture',()=>drag=false);reset.addEventListener('click',startOver);$('play').addEventListener('click',()=>{$('homeScreen').hidden=true;$('gameScreen').hidden=false;current=0;startOver()});$('backHome').addEventListener('click',()=>{drag=false;$('gameScreen').hidden=true;$('homeScreen').hidden=false});next.addEventListener('click',()=>{current=current===2?0:current+1;startOver()});startOver();
+ board.addEventListener('pointerdown',down);board.addEventListener('pointermove',move);board.addEventListener('pointerup',()=>drag=false);board.addEventListener('pointercancel',()=>drag=false);board.addEventListener('lostpointercapture',()=>drag=false);reset.addEventListener('click',startOver);$('play').addEventListener('click',()=>show('chooseScreen'));$('backHome').addEventListener('click',()=>{drag=false;show('chooseScreen')});next.addEventListener('click',()=>{current=current===2?0:current+1;startOver()});startOver();
+ $('chooseBack').addEventListener('click',()=>show('homeScreen'));
+ $('startTrace').addEventListener('click',()=>{show('gameScreen');current=0;startOver()});
+ $('startMatch').addEventListener('click',()=>{show('matchScreen');round=0;renderMatch()});
+ $('matchBack').addEventListener('click',()=>show('chooseScreen'));
+ // The identical SVG is reused for the example and precisely one answer choice.
+ // Large whole-body colour differences avoid ambiguous small-detail matching.
+ function monster(color){return `<svg viewBox="0 0 144 134" role="img" aria-label="${color} friendly monster"><path d="M40 39 Q32 19 22 13 M103 39 Q110 19 122 13" fill="none" stroke="#635e79" stroke-width="6" stroke-linecap="round"/><circle cx="22" cy="13" r="9" fill="${color}" stroke="#635e79" stroke-width="3"/><circle cx="122" cy="13" r="9" fill="${color}" stroke="#635e79" stroke-width="3"/><path d="M26 75 Q24 36 71 32 Q121 34 119 75 L118 101 Q112 121 72 122 Q31 120 26 101Z" fill="${color}" stroke="#635e79" stroke-width="3.5"/><ellipse cx="52" cy="76" rx="12" ry="15" fill="white"/><ellipse cx="92" cy="76" rx="12" ry="15" fill="white"/><circle cx="54" cy="78" r="5" fill="#383144"/><circle cx="94" cy="78" r="5" fill="#383144"/><path d="M61 99 Q72 110 84 99" fill="none" stroke="#383144" stroke-width="4" stroke-linecap="round"/><circle cx="37" cy="96" r="5" fill="#f8b7c5" opacity=".75"/><circle cx="107" cy="96" r="5" fill="#f8b7c5" opacity=".75"/></svg>`}
+ const rounds=[{target:'#9158ca',other:'#f4a342',correct:1},{target:'#54bcb0',other:'#9158ca',correct:0},{target:'#f4a342',other:'#54bcb0',correct:1},{target:'#9158ca',other:'#54bcb0',correct:0}];
+ let round=0,matchDone=false;
+ function renderMatch(){const r=rounds[round];matchDone=false;$('matchCounter').textContent=`${round+1} of ${rounds.length}`;$('matchTarget').innerHTML=monster(r.target);for(let i=0;i<2;i++){const b=$('choice'+i);b.innerHTML=monster(i===r.correct?r.target:r.other);b.disabled=false;b.className='match-choice'}$('matchMessage').textContent='Choose the matching monster.';$('matchNext').hidden=true;document.querySelectorAll('#matchSteps span').forEach((el,i)=>el.classList.toggle('current',i<=round));}
+ function selectMatch(i){if(matchDone)return;const r=rounds[round];if(i!==r.correct){$('matchMessage').textContent='Try the other picture!';$('choice'+i).classList.add('incorrect');return;}matchDone=true;$('choice'+i).classList.add('correct');$('choice0').disabled=true;$('choice1').disabled=true;$('matchMessage').textContent=round===rounds.length-1?'You found all the twins! Well done!':'Yes! They are the same!';const btn=$('matchNext');btn.textContent=round===rounds.length-1?'Play again ↻':'Next picture →';btn.hidden=false;}
+ $('choice0').addEventListener('click',()=>selectMatch(0));$('choice1').addEventListener('click',()=>selectMatch(1));$('matchNext').addEventListener('click',()=>{round=round===rounds.length-1?0:round+1;renderMatch()});
 })();
 </script>
 </body>
