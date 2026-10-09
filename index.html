@@ -45,6 +45,38 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .finish-choice.correct{border-color:#54ad93;background:#ebfcf4}
 .finish-choice:disabled{opacity:1}
 .finish-choice.selected{border-color:#8663b8;background:#f3eafb}.finish-choice.dragging{opacity:.55}.finish-floating{position:fixed;z-index:9999;pointer-events:none;width:110px;height:100px;transform:translate(-50%,-50%);filter:drop-shadow(0 8px 8px #493c5e33)}.finish-floating svg{width:100%;height:100%}.finish-art{touch-action:none}.finish-art.ready{outline:3px dashed #a78ac8;outline-offset:2px}
+
+/* Draggable artwork stays visually unboxed; only the destination is marked. */
+.finish-choice{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important}
+.finish-choice.correct,.finish-choice.selected{border:0!important;background:transparent!important}
+.finish-choice.dragging{opacity:.38}
+.finish-choice svg{pointer-events:none}
+/* Level 1 repeating visual patterns: three large examples and one empty space. */
+.pattern-example{display:flex;align-items:center;justify-content:center;gap:7px;margin:27px auto 23px;max-width:440px}
+.pattern-unit{width:23%;min-width:0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#fff;border:3px solid #e4d9f3;border-radius:19px;font-size:clamp(34px,10vw,65px);line-height:1;user-select:none}
+.pattern-unit.missing{color:#9272bd;background:#f2ebfc;border:4px dashed #a58bc6;font-size:clamp(35px,10vw,65px);font-weight:800}
+.pattern-unit.complete{background:#ebfcf4;border-color:#5ab499}
+.pattern-choose{text-align:center;font-weight:800;font-size:17px;margin:13px 0}
+.pattern-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:340px;margin:0 auto 13px}
+.pattern-choice{display:flex;align-items:center;justify-content:center;min-height:120px;border-radius:20px;background:#fff;border:3px solid #d9caed;font-size:70px;line-height:1;touch-action:manipulation;cursor:pointer}
+.pattern-choice.correct{background:#ecfbf5;border-color:#4fab91}
+.pattern-choice:focus-visible{outline:4px solid #8461b3;outline-offset:3px}
+.pattern-choice:disabled{opacity:1;cursor:default}
+@media(max-width:375px){.pattern-unit{border-radius:12px}.pattern-choices{gap:12px}.pattern-choice{min-height:105px;font-size:60px}}
+/* No visible cards around draggable objects. Large invisible finger hit areas remain. */
+.pattern-unit:not(.missing):not(.complete){border-color:transparent;background:transparent}
+.pattern-unit.complete{border-color:transparent;background:transparent}
+.pattern-choice,.pattern-choice.correct{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.pattern-choice.dragging{opacity:.38}
+.pattern-floating{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);font-size:clamp(55px,14vw,79px);line-height:1;filter:drop-shadow(0 6px 6px #61527433)}
+
+
+/* Version 8.2: bigger visible pieces for Level 1, no draggable card outlines. */
+.finish-choices{max-width:440px;gap:12px;margin-top:12px}
+.finish-choice{height:164px;min-height:164px;padding:0 4px}
+.finish-choice svg{width:100%;max-width:174px;height:152px;pointer-events:none}
+.finish-floating{width:174px;height:156px}
+@media(max-width:390px){.finish-choices{gap:6px}.finish-choice{height:142px;min-height:142px}.finish-choice svg{height:135px;max-width:152px}.finish-floating{width:150px;height:138px}}
 </style>
 </head>
 <body>
@@ -62,7 +94,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
    </svg>
   </div>
-  <p><strong>Six Level 1 activities</strong><br/>Practise tracing, matching, finding, remembering, placing and completing.</p>
+  <p><strong>Seven Level 1 activities</strong><br/>Practise tracing, matching, finding, remembering, placing, completing and patterns.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Temporary artwork</div>
  </section>
@@ -79,6 +111,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>What's Missing?</strong><small>Remember one picture</small></button>
      <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🏠</div><strong>Where Does It Go?</strong><small>Move the ghost into place</small></button>
      <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true">🧩</div><strong>Finish the Picture</strong><small>Find the big missing part</small></button>
+     <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true">🔮</div><strong>Follow the Pattern</strong><small>Find what comes next</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -142,11 +175,25 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <p class="instruction">Drag the missing piece into place.</p>
   <p class="hint">Choose the piece that fits, then drag it to the picture.</p>
   <div class="finish-art" id="finishArt" aria-label="Picture with one large missing part"></div>
-  <div class="target-title" style="text-align:center;margin:9px 0 7px">Drag one of these pieces into the empty shape.</div>
+  <div class="target-title" style="text-align:center;margin:9px 0 7px">Drag a picture piece into the empty shape.</div>
   <div class="finish-choices"><button type="button" class="finish-choice" id="finishChoice0" aria-label="Left missing piece"></button><button type="button" class="finish-choice" id="finishChoice1" aria-label="Right missing piece"></button></div>
   <div id="finishMessage" class="message" aria-live="polite">Drag the missing piece.</div>
   <div class="controls"><button type="button" id="finishNext" hidden>Next picture →</button></div>
   <div class="note">Adult guidance: show the child how to drag a piece into the matching outline. Allow them to try independently. Only two choices, with one correct answer.</div>
+ </section>
+ <section id="patternScreen" class="screen" hidden>
+  <button type="button" class="back" id="patternBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Pattern</h1></div><div class="counter" id="patternCounter">1 of 4</div></header>
+  <div class="steps" id="patternSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction">What comes next?</p>
+  <p class="hint">Look at the pictures. Tap the one that comes next.</p>
+  <div class="pattern-example" id="patternExample" aria-label="Picture pattern with the last picture missing"></div>
+  <p class="pattern-choose">Drag the next picture into the empty space.</p>
+  <div class="pattern-choices"><button type="button" class="pattern-choice" id="patternChoice0" aria-label="Left pattern choice"></button><button type="button" class="pattern-choice" id="patternChoice1" aria-label="Right pattern choice"></button></div>
+  <div class="message" id="patternMessage" aria-live="polite">Look at the pattern.</div>
+  <div class="controls"><button type="button" id="patternNext" hidden>Next pattern →</button></div>
+  <div class="note">Adult guidance: point to the pictures in order if help is needed. Drag one of the two large pictures into the empty space. No timers or penalties.</div>
  </section>
  <section id="spatialScreen" class="screen" hidden>
   <button type="button" class="back" id="spatialBack">← Choose a game</button>
@@ -400,7 +447,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  }
  function finPartSvg(i){
    const r=finishRounds[finishIndex],c=finConfig[r.name],name=i===r.correct?c.missing:c.wrong;
-   return makeSvg(`<g transform="translate(160 115)">${finParts[name]}</g>`);
+   return makeSvg(`<g transform="translate(95 90) scale(1.18)">${finParts[name]}</g>`,'0 0 190 180');
  }
  function finRender(){
    if(finishDrag)finClearDrag();
@@ -490,6 +537,77 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    finRender();
  });
 
+
+ // Game 7 — repeated AB patterns. Only the symbols/starting positions vary.
+ // Children recognise the next picture; no independent drawing required at Level 1.
+ const patternRounds=[
+   {items:['🎃','👻','🎃'],choices:['👻','🎃'],correct:0},
+   {items:['👻','🎃','👻'],choices:['👻','🎃'],correct:1},
+   {items:['⭐','🦇','⭐'],choices:['🦇','⭐'],correct:0},
+   {items:['🦇','⭐','🦇'],choices:['🦇','⭐'],correct:1}
+ ];
+ let patternIndex=0,patternComplete=false,patternDrag=null;
+ function patternClearDrag(){
+   if(!patternDrag)return;
+   patternDrag.floating.remove();
+   $('patternChoice'+patternDrag.which).classList.remove('dragging');
+   patternDrag=null;
+ }
+ function patternRender(){
+   patternClearDrag();
+   const r=patternRounds[patternIndex];patternComplete=false;
+   $('patternCounter').textContent=`${patternIndex+1} of ${patternRounds.length}`;
+   $('patternExample').innerHTML=r.items.map((pic,i)=>`<div class="pattern-unit" aria-label="Picture ${i+1}: ${pic}">${pic}</div>`).join('')+'<div class="pattern-unit missing" id="patternMissing" aria-label="Empty position">?</div>';
+   for(let i=0;i<2;i++){
+     const b=$('patternChoice'+i);b.textContent=r.choices[i];b.classList.remove('correct','dragging');b.disabled=false;
+     b.setAttribute('aria-label',`Drag ${r.choices[i]} into the empty position`);
+   }
+   $('patternMessage').textContent='Drag the next picture into the empty space.';$('patternNext').hidden=true;
+   [...$('patternSteps').children].forEach((el,i)=>el.classList.toggle('current',i<=patternIndex));
+ }
+ function patternChoose(which){
+   if(patternComplete)return;
+   const r=patternRounds[patternIndex];
+   if(which!==r.correct){$('patternMessage').textContent='Look again. Try the other picture.';return;}
+   patternComplete=true;
+   const missing=$('patternMissing');missing.textContent=r.choices[r.correct];missing.classList.add('complete');missing.classList.remove('missing');
+   for(let i=0;i<2;i++)$('patternChoice'+i).disabled=true;
+   $('patternMessage').textContent=patternIndex===patternRounds.length-1?'All four patterns complete! Well done!':'Yes! You finished the pattern!';
+   $('patternNext').textContent=patternIndex===patternRounds.length-1?'Play again ↻':'Next pattern →';$('patternNext').hidden=false;
+ }
+ function patternOnTarget(x,y){
+   const target=$('patternMissing');if(!target)return false;
+   const r=target.getBoundingClientRect();
+   const cx=r.left+r.width/2,cy=r.top+r.height/2;
+   return Math.abs(x-cx)<=r.width/2+34 && Math.abs(y-cy)<=r.height/2+34;
+ }
+ [0,1].forEach(which=>{
+   const btn=$('patternChoice'+which);
+   btn.addEventListener('pointerdown',e=>{
+     if(patternComplete||patternDrag||e.button!==undefined&&e.button!==0)return;
+     e.preventDefault();
+     const floating=document.createElement('div');floating.className='pattern-floating';floating.textContent=patternRounds[patternIndex].choices[which];
+     document.body.appendChild(floating);floating.style.left=e.clientX+'px';floating.style.top=e.clientY+'px';
+     btn.classList.add('dragging');btn.setPointerCapture(e.pointerId);
+     patternDrag={which,id:e.pointerId,floating};
+     $('patternMessage').textContent='Drag the picture to the dotted space.';
+   });
+   btn.addEventListener('pointermove',e=>{
+     if(!patternDrag||patternDrag.id!==e.pointerId||patternDrag.which!==which)return;
+     e.preventDefault();patternDrag.floating.style.left=e.clientX+'px';patternDrag.floating.style.top=e.clientY+'px';
+   });
+   btn.addEventListener('pointerup',e=>{
+     if(!patternDrag||patternDrag.id!==e.pointerId||patternDrag.which!==which)return;
+     const goodDrop=patternOnTarget(e.clientX,e.clientY);patternClearDrag();
+     if(goodDrop)patternChoose(which);
+     else $('patternMessage').textContent='Move your picture into the dotted space.';
+   });
+   btn.addEventListener('pointercancel',patternClearDrag);
+   btn.addEventListener('lostpointercapture',patternClearDrag);
+ });
+ $('startPattern').addEventListener('click',()=>{patternIndex=0;patternRender();show('patternScreen')});
+ $('patternBack').addEventListener('click',()=>{patternClearDrag();show('chooseScreen')});
+ $('patternNext').addEventListener('click',()=>{if(!patternComplete)return;patternIndex=(patternIndex+1)%patternRounds.length;patternRender()});
 
 })();
 </script>
