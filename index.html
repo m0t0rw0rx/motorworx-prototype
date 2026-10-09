@@ -77,6 +77,15 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .finish-choice svg{width:100%;max-width:174px;height:152px;pointer-events:none}
 .finish-floating{width:174px;height:156px}
 @media(max-width:390px){.finish-choices{gap:6px}.finish-choice{height:142px;min-height:142px}.finish-choice svg{height:135px;max-width:152px}.finish-floating{width:150px;height:138px}}
+
+/* Version 8.3: accessible, unobtrusive Level 1 spoken instructions. */
+.voice-bar{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin:8px 0 1px;min-height:48px}
+.voice-bar button{min-height:44px;padding:9px 13px;background:#f1eafd;color:#65459a;border:2px solid #ded0f2;border-radius:15px;font-size:14px;font-weight:850;display:inline-flex;gap:7px;align-items:center;justify-content:center;touch-action:manipulation}
+.voice-bar button.voice-muted{color:#666c7d;background:#f4f3f5;border-color:#dad9de}
+.voice-bar button:focus-visible{outline:3px solid #e4b33d;outline-offset:2px}
+.voice-bar .voice-icon{font-size:20px;line-height:1}
+.voice-bar .voice-status{font-size:12px;color:#7a698d;flex:1;line-height:1.3}
+@media(max-width:360px){.voice-bar{gap:5px}.voice-bar button{padding:9px 8px;font-size:12px}.voice-bar .voice-status{font-size:11px}}
 </style>
 </head>
 <body>
@@ -94,16 +103,16 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
    </svg>
   </div>
-  <p><strong>Seven Level 1 activities</strong><br/>Practise tracing, matching, finding, remembering, placing, completing and patterns.</p>
+  <p><strong>Seven Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing and patterns.</p>
   <button id="play" class="start">Choose a game ▶</button>
-  <div class="note">Free prototype · Temporary artwork</div>
+  <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
  <section id="chooseScreen" class="screen" hidden>
    <button type="button" id="chooseBack" class="back">← Back to home</button>
    <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
    <div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div>
    <h1>Choose a Game</h1>
-   <p class="hint" style="text-align:left;margin-top:10px">Choose one activity to practise.</p>
+   <p class="hint" style="text-align:left;margin-top:10px">Tap a picture to choose a game. You can play any game you like!</p>
    <div class="activity-grid">
      <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">👻</div><strong>Help the Ghost</strong><small>Trace 3 easy paths</small></button>
      <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">👾</div><strong>Find My Twin</strong><small>Find the matching monster</small></button>
@@ -187,7 +196,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Pattern</h1></div><div class="counter" id="patternCounter">1 of 4</div></header>
   <div class="steps" id="patternSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
   <p class="instruction">What comes next?</p>
-  <p class="hint">Look at the pictures. Tap the one that comes next.</p>
+  <p class="hint">Look at the pictures. Drag the one that comes next.</p>
   <div class="pattern-example" id="patternExample" aria-label="Picture pattern with the last picture missing"></div>
   <p class="pattern-choose">Drag the next picture into the empty space.</p>
   <div class="pattern-choices"><button type="button" class="pattern-choice" id="patternChoice0" aria-label="Left pattern choice"></button><button type="button" class="pattern-choice" id="patternChoice1" aria-label="Right pattern choice"></button></div>
@@ -257,7 +266,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function startOver(){progress=0;drag=false;completed=false;pointerId=null;next.hidden=true;reset.hidden=false;feedback.textContent='Start at the ghost!';message.textContent='Ready to trace?';redraw()}
  function coordinates(e){let r=board.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*305/r.height};}
  function down(e){if(completed)return;const p=coordinates(e),{y,a,b}=path(),ghostX=a-14+(b-a)*progress;if(Math.abs(p.x-ghostX)<37&&Math.abs(p.y-y)<44){drag=true;pointerId=e.pointerId;board.setPointerCapture(pointerId);feedback.textContent='Follow the dots!';message.textContent='Keep going!';e.preventDefault()}else{feedback.textContent='Touch the ghost first.';}}
- function move(e){if(!drag||pointerId!==e.pointerId)return;e.preventDefault();const p=coordinates(e),{y,a,b}=path(),target=Math.max(0,Math.min(1,(p.x-a)/(b-a)));if(Math.abs(p.y-y)>35){drag=false;message.textContent='Try staying on the path.';feedback.textContent='Touch the ghost and try again.';return;}if(target<progress-0.075)return;if(target>progress+0.19){drag=false;message.textContent='Move slowly along the dots.';return;}progress=Math.max(progress,target);redraw();if(progress>=.97){progress=1;drag=false;completed=true;redraw();feedback.textContent='You did it!';message.textContent=current===2?'All three paths complete! Well done!':'Wonderful tracing!';next.textContent=current===2?'Play again ↻':'Next path →';next.hidden=false;reset.hidden=true;}}
+ function move(e){if(!drag||pointerId!==e.pointerId)return;e.preventDefault();const p=coordinates(e),{y,a,b}=path(),target=Math.max(0,Math.min(1,(p.x-a)/(b-a)));if(Math.abs(p.y-y)>35){drag=false;message.textContent='Try staying on the path.';window.motorworxFeedback?.('retry','trace-path');feedback.textContent='Touch the ghost and try again.';return;}if(target<progress-0.075)return;if(target>progress+0.19){drag=false;message.textContent='Move slowly along the dots.';window.motorworxFeedback?.('retry','trace-speed');return;}progress=Math.max(progress,target);redraw();if(progress>=.97){progress=1;drag=false;completed=true;redraw();feedback.textContent='You did it!';window.motorworxFeedback?.('success','trace');message.textContent=current===2?'All three paths complete! Well done!':'Wonderful tracing!';next.textContent=current===2?'Play again ↻':'Next path →';next.hidden=false;reset.hidden=true;}}
  board.addEventListener('pointerdown',down);board.addEventListener('pointermove',move);board.addEventListener('pointerup',()=>drag=false);board.addEventListener('pointercancel',()=>drag=false);board.addEventListener('lostpointercapture',()=>drag=false);reset.addEventListener('click',startOver);$('play').addEventListener('click',()=>show('chooseScreen'));$('backHome').addEventListener('click',()=>{drag=false;show('chooseScreen')});next.addEventListener('click',()=>{current=current===2?0:current+1;startOver()});startOver();
  $('chooseBack').addEventListener('click',()=>show('homeScreen'));
  $('startTrace').addEventListener('click',()=>{show('gameScreen');current=0;startOver()});
@@ -269,7 +278,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const rounds=[{target:'#9158ca',other:'#f4a342',correct:1},{target:'#54bcb0',other:'#9158ca',correct:0},{target:'#f4a342',other:'#54bcb0',correct:1},{target:'#9158ca',other:'#54bcb0',correct:0}];
  let round=0,matchDone=false;
  function renderMatch(){const r=rounds[round];matchDone=false;$('matchCounter').textContent=`${round+1} of ${rounds.length}`;$('matchTarget').innerHTML=monster(r.target);for(let i=0;i<2;i++){const b=$('choice'+i);b.innerHTML=monster(i===r.correct?r.target:r.other);b.disabled=false;b.className='match-choice'}$('matchMessage').textContent='Choose the matching monster.';$('matchNext').hidden=true;document.querySelectorAll('#matchSteps span').forEach((el,i)=>el.classList.toggle('current',i<=round));}
- function selectMatch(i){if(matchDone)return;const r=rounds[round];if(i!==r.correct){$('matchMessage').textContent='Try the other picture!';$('choice'+i).classList.add('incorrect');return;}matchDone=true;$('choice'+i).classList.add('correct');$('choice0').disabled=true;$('choice1').disabled=true;$('matchMessage').textContent=round===rounds.length-1?'You found all the twins! Well done!':'Yes! They are the same!';const btn=$('matchNext');btn.textContent=round===rounds.length-1?'Play again ↻':'Next picture →';btn.hidden=false;}
+ function selectMatch(i){if(matchDone)return;const r=rounds[round];if(i!==r.correct){$('matchMessage').textContent='Try the other picture!';window.motorworxFeedback?.('retry','match');$('choice'+i).classList.add('incorrect');return;}matchDone=true;window.motorworxFeedback?.('success','match');$('choice'+i).classList.add('correct');$('choice0').disabled=true;$('choice1').disabled=true;$('matchMessage').textContent=round===rounds.length-1?'You found all the twins! Well done!':'Yes! They are the same!';const btn=$('matchNext');btn.textContent=round===rounds.length-1?'Play again ↻':'Next picture →';btn.hidden=false;}
  $('choice0').addEventListener('click',()=>selectMatch(0));$('choice1').addEventListener('click',()=>selectMatch(1));$('matchNext').addEventListener('click',()=>{round=round===rounds.length-1?0:round+1;renderMatch()});
  // Activity 3: figure-ground. Same-sized natural hiding places; the target is
  // visibly peeking above the occluder (not a tiny detail or an ambiguous outline).
@@ -292,7 +301,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  }
  function peekScene(r,contains){return `<svg viewBox="0 0 175 180" role="img" aria-label="${contains?'Partially hidden '+r.name:'Only the hiding place'}"><rect x="4" y="4" width="167" height="171" rx="19" fill="#ffffff"/>${contains?peeker(r.kind):''}${coverPicture(r.cover)}</svg>`}
  function renderPeek(){const r=peekRounds[peekRound];peekDone=false;$('peekCounter').textContent=`${peekRound+1} of ${peekRounds.length}`;$('peekInstruction').textContent=`Find the hiding ${r.name}.`;for(let i=0;i<2;i++){const b=$('peekChoice'+i);b.innerHTML=peekScene(r,i===r.correct);b.className='peek-choice';b.disabled=false;b.setAttribute('aria-label',`${i===0?'Left':'Right'} picture`)}$('peekMessage').textContent='Look closely!';$('peekNext').hidden=true;document.querySelectorAll('#peekSteps span').forEach((el,i)=>el.classList.toggle('current',i<=peekRound))}
- function choosePeek(i){if(peekDone)return;const r=peekRounds[peekRound];if(i!==r.correct){$('peekMessage').textContent='Look again. Where is it peeking out?';return;}peekDone=true;$('peekChoice'+i).classList.add('correct');$('peekChoice0').disabled=true;$('peekChoice1').disabled=true;$('peekMessage').textContent=peekRound===peekRounds.length-1?'All the hiding friends found!':'You found it! Well done!';const b=$('peekNext');b.textContent=peekRound===peekRounds.length-1?'Play again ↻':'Next picture →';b.hidden=false}
+ function choosePeek(i){if(peekDone)return;const r=peekRounds[peekRound];if(i!==r.correct){$('peekMessage').textContent='Look again. Where is it peeking out?';window.motorworxFeedback?.('retry','peek');return;}peekDone=true;window.motorworxFeedback?.('success','peek');$('peekChoice'+i).classList.add('correct');$('peekChoice0').disabled=true;$('peekChoice1').disabled=true;$('peekMessage').textContent=peekRound===peekRounds.length-1?'All the hiding friends found!':'You found it! Well done!';const b=$('peekNext');b.textContent=peekRound===peekRounds.length-1?'Play again ↻':'Next picture →';b.hidden=false}
  $('startPeek').addEventListener('click',()=>{peekRound=0;renderPeek();show('peekScreen')});
  $('peekBack').addEventListener('click',()=>show('chooseScreen'));
  $('peekChoice0').addEventListener('click',()=>choosePeek(0));
@@ -341,8 +350,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function chooseMemory(i){
   if(memoryPhase!=='choose')return;
   const r=memoryRounds[memoryRound];
-  if(i!==r.correct){$('memoryMessage').textContent='Try remembering the picture again.';return;}
-  memoryPhase='done';$('memoryChoice'+i).classList.add('correct');
+  if(i!==r.correct){$('memoryMessage').textContent='Try remembering the picture again.';window.motorworxFeedback?.('retry','memory');return;}
+  memoryPhase='done';window.motorworxFeedback?.('success','memory');$('memoryChoice'+i).classList.add('correct');
   $('memoryChoice0').disabled=true;$('memoryChoice1').disabled=true;
   $('memoryMessage').textContent=memoryRound===memoryRounds.length-1?'Great remembering! You finished all four!':'You remembered it!';
   $('memoryNext').textContent=memoryRound===memoryRounds.length-1?'Play again ↻':'Next picture →';
@@ -402,10 +411,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   spatialDragging=false;
   const r=spatialRounds[spatialRound];
   if(Math.hypot(spatialX-r.tx,spatialY-r.ty)<=49){
-   spatialDone=true;spatialPosition(r.tx,r.ty);$('spatialStars').hidden=false;
+   spatialDone=true;window.motorworxFeedback?.('success','spatial');spatialPosition(r.tx,r.ty);$('spatialStars').hidden=false;
    $('spatialMessage').textContent=spatialRound===3?'Fantastic! You finished all four places!':'Well done! The ghost is in the right place!';
    $('spatialNext').textContent=spatialRound===3?'Play again ↻':'Next place →';$('spatialNext').hidden=false;$('spatialReset').hidden=true;
-  }else{$('spatialMessage').textContent='Good try! Move the ghost into the circle.';spatialPosition(61,253)}
+  }else{$('spatialMessage').textContent='Good try! Move the ghost into the circle.';window.motorworxFeedback?.('retry','spatial');spatialPosition(61,253)}
  }
  spatialBoard.addEventListener('pointerup',spatialRelease);
  spatialBoard.addEventListener('pointercancel',()=>{spatialDragging=false;spatialPosition(61,253)});
@@ -469,8 +478,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  }
  function finComplete(idx){
    const r=finishRounds[finishIndex],c=finConfig[r.name];
-   if(idx!==r.correct){$('finishMessage').textContent='That piece does not fit. Try the other one.';return}
-   finishDone=true;finishSelected=null;
+   if(idx!==r.correct){$('finishMessage').textContent='That piece does not fit. Try the other one.';window.motorworxFeedback?.('retry','finish');return}
+   finishDone=true;window.motorworxFeedback?.('success','finish');finishSelected=null;
    const pos=r.name==='house'?'translate(160 79)':c.position;
    finArtwork.innerHTML=makeSvg(c.art+`<g transform="${pos}">${finParts[c.missing]}</g>`);
    [0,1].forEach(i=>{$('finishChoice'+i).disabled=true;$('finishChoice'+i).classList.remove('selected')});
@@ -568,8 +577,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function patternChoose(which){
    if(patternComplete)return;
    const r=patternRounds[patternIndex];
-   if(which!==r.correct){$('patternMessage').textContent='Look again. Try the other picture.';return;}
-   patternComplete=true;
+   if(which!==r.correct){$('patternMessage').textContent='Look again. Try the other picture.';window.motorworxFeedback?.('retry','pattern');return;}
+   patternComplete=true;window.motorworxFeedback?.('success','pattern');
    const missing=$('patternMissing');missing.textContent=r.choices[r.correct];missing.classList.add('complete');missing.classList.remove('missing');
    for(let i=0;i<2;i++)$('patternChoice'+i).disabled=true;
    $('patternMessage').textContent=patternIndex===patternRounds.length-1?'All four patterns complete! Well done!':'Yes! You finished the pattern!';
@@ -609,6 +618,184 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('patternBack').addEventListener('click',()=>{patternClearDrag();show('chooseScreen')});
  $('patternNext').addEventListener('click',()=>{if(!patternComplete)return;patternIndex=(patternIndex+1)%patternRounds.length;patternRender()});
 
+})();
+</script>
+
+<script>
+/* Motorworx shared audio component, independent of game mechanics. Uses device voices;
+   no downloads, microphones, external services or children's data are required. */
+(()=>{
+ 'use strict';
+ const activities={
+  chooseScreen:'Choose a game! Tap one of the pictures to start playing.',
+  gameScreen:'Trace the path to the pumpkin. Touch the ghost and follow the dots.',
+  matchScreen:'Find the same monster. Tap the matching picture.',
+  peekScreen:()=>document.getElementById('peekInstruction').textContent+' Tap the picture where you see it.',
+  memoryScreen:()=>document.getElementById('memoryChoices').hidden?'Look at the picture. Remember what you see. Tap I’m ready when you are ready.':'Which picture did you see? Tap the one you remember.',
+  spatialScreen:()=>document.getElementById('spatialInstruction').textContent+' Drag the ghost with your finger.',
+  finishScreen:'Drag the missing piece into place. Choose the piece that fits.',
+  patternScreen:'What comes next? Drag the next picture into the empty space.'
+ };
+ const synth=window.speechSynthesis;
+ const supported=!!(synth&&window.SpeechSynthesisUtterance);
+ let soundOn=true;
+ try{soundOn=localStorage.getItem('motorworx-voice-enabled')!=='false'}catch(e){}
+ const bars=[];
+ let activeId='';
+ let lastRetryAt=0;
+ // Child-friendly messages should always match what the child is doing.
+ // Short, general praise only. Vary the phrase without naming the game task.
+ const praise={
+  trace:['Well done!','Great job!','Excellent work!','Awesome!','Fantastic!'],
+  match:['Great job!','Excellent work!','Awesome!','Well done!','Fantastic!'],
+  peek:['Excellent work!','Awesome!','Well done!','Fantastic!','Great job!'],
+  memory:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!'],
+  spatial:['Fantastic!','Great job!','Well done!','Excellent work!','Awesome!'],
+  finish:['Well done!','Awesome!','Excellent work!','Fantastic!','Great job!'],
+  pattern:['Great job!','Fantastic!','Awesome!','Well done!','Excellent work!']
+ };
+ const encouragement={
+  'trace-path':[
+   'Oops! Stay on the dotted path. Try again!',
+   'Oh dear! Let’s follow the dots together.',
+   'Whoops! Try keeping your finger on the path.',
+   'Almost! Follow the little dots again.'
+  ],
+  'trace-speed':[
+   'Whoops! Let’s move a little slower.',
+   'Oh dear! Follow the dots one by one.',
+   'Nearly there! Take your time.',
+   'Oops! Slow down and try that path again.'
+  ],
+  match:[
+   'Oops! Not that monster. Try again!',
+   'Oh dear! Look for the one that is the same.',
+   'Whoopsie! Try the other monster.',
+   'Have another look! Which monster matches?'
+  ],
+  peek:[
+   'Oh dear! Look for the friend hiding behind something.',
+   'Oops! Can you spot the one peeking out?',
+   'Whoops! Try looking at the other picture.',
+   'Keep looking! Where is our hiding friend?'
+  ],
+  memory:[
+   'Whoops! Let’s remember the picture we saw.',
+   'Oh dear! Think back to the picture.',
+   'Oops! Have another think. What did you see?',
+   'Let’s try remembering again!'
+  ],
+  spatial:[
+   'Oops! Try moving the ghost into the dotted circle.',
+   'Oh dear! Let’s find the right place for the ghost.',
+   'Whoops! Move the ghost a little closer to the circle.',
+   'Almost! Look for the dotted circle and try again.'
+  ],
+  finish:[
+   'Oh dear! That piece doesn’t fit. Try the other one!',
+   'Whoops! Let’s find the piece that fits.',
+   'Oops! Try another piece for the missing part.',
+   'Nearly! Look for the shape that belongs there.'
+  ],
+  pattern:[
+   'Oops! Look at the pattern again!',
+   'Oh dear! Which picture comes next?',
+   'Whoops! Look at the pictures in order.',
+   'Have another go! What comes after this picture?'
+  ]
+ };
+ const indices={};
+ function nextPhrase(group,key){const options=group[key]||[];if(!options.length)return '';
+  const id=(group===praise?'praise:':'retry:')+key;
+  const n=indices[id]||0;indices[id]=n+1;return options[n%options.length];}
+ function stop(){if(supported){try{synth.cancel()}catch(e){}}}
+ function current(){return Object.keys(activities).find(id=>!document.getElementById(id).hidden)||''}
+ function instruction(id){const val=activities[id];return typeof val==='function'?val():val}
+ function setControls(){
+  bars.forEach(({button,status})=>{
+   button.classList.toggle('voice-muted',!soundOn);
+   button.setAttribute('aria-pressed',String(soundOn));
+   button.setAttribute('aria-label',soundOn?'Turn spoken instructions off':'Turn spoken instructions on');
+   button.innerHTML=soundOn?'<span class="voice-icon" aria-hidden="true">🔊</span><span>Sound on</span>':'<span class="voice-icon" aria-hidden="true">🔇</span><span>Sound off</span>';
+   status.textContent=!supported?'Voice not available on this device':soundOn?'':'Voice muted';
+  });
+ }
+ function chooseVoice(){
+  const voices=synth.getVoices();
+  return voices.find(v=>/^en-ZA$/i.test(v.lang)&&/female|woman|zira|samantha|karen|moira|tessa/i.test(v.name))
+    ||voices.find(v=>/^en-GB$/i.test(v.lang)&&/female|woman|samantha|karen|moira|serena/i.test(v.name))
+    ||voices.find(v=>/^en-ZA$/i.test(v.lang))
+    ||voices.find(v=>/^en-GB$/i.test(v.lang))
+    ||voices.find(v=>/^en/i.test(v.lang)&&/female|woman|samantha|karen|zira/i.test(v.name))
+    ||voices.find(v=>/^en/i.test(v.lang));
+ }
+ function say(phrase){
+  stop();
+  if(!supported||!soundOn||!phrase)return;
+  try{
+   const utterance=new SpeechSynthesisUtterance(phrase);
+   utterance.lang='en-GB';
+   utterance.rate=0.88; utterance.pitch=1.06; utterance.volume=1;
+   const voice=chooseVoice();if(voice){utterance.voice=voice;utterance.lang=voice.lang}
+   synth.speak(utterance);
+  }catch(e){/* A browser may block speech until user taps Replay. */}
+ }
+ function speak(id){
+  if(!id||document.getElementById(id).hidden)return;
+  say(instruction(id));
+ }
+ // Feedback shared by every activity, without changing its game rules.
+ // Gentle retries are rate-limited and only triggered by real attempts.
+ window.motorworxFeedback=function(type,activity){
+  if(!soundOn||!supported)return;
+  if(type==='retry'){
+   const now=Date.now();
+   if(now-lastRetryAt<1600)return;
+   lastRetryAt=now;
+   say(nextPhrase(encouragement,activity));
+  }else if(type==='success'){
+   say(nextPhrase(praise,activity));
+  }
+ };
+ Object.keys(activities).forEach(id=>{
+  const screen=document.getElementById(id);
+  const bar=document.createElement('div');bar.className='voice-bar';bar.setAttribute('role','group');bar.setAttribute('aria-label','Spoken instructions');
+  bar.innerHTML='<span class="voice-status" aria-live="polite"></span><button type="button" class="voice-replay"><span class="voice-icon" aria-hidden="true">🔁</span><span>Hear again</span></button><button type="button" class="voice-toggle"></button>';
+  const steps=screen.querySelector('.steps');
+  const anchor=id==='chooseScreen'?screen.querySelector('p.hint'):(steps||screen.querySelector('header'));
+  anchor.insertAdjacentElement('afterend',bar);
+  const replay=bar.querySelector('.voice-replay');
+  const button=bar.querySelector('.voice-toggle');
+  replay.disabled=!supported;
+  replay.setAttribute('aria-label','Hear the instruction again');
+  replay.addEventListener('click',()=>speak(id));
+  button.addEventListener('click',()=>{
+   soundOn=!soundOn;
+   try{localStorage.setItem('motorworx-voice-enabled',String(soundOn))}catch(e){}
+   stop();setControls();
+   if(soundOn)speak(id);
+  });
+  bars.push({button,status:bar.querySelector('.voice-status')});
+ });
+ setControls();
+ // Existing game handlers execute first; these additional handlers only read the
+ // active screen and speak. They do not alter game navigation or touch behaviour.
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext'];
+ [...startIds,...nextIds,'reset','spatialReset','memoryReady'].forEach(id=>{
+  const button=document.getElementById(id);
+  button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
+ });
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','play'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',()=>{stop()});
+ });
+ // The home Play button and Back to Game Menu actions are deliberate taps,
+ // so they can also unlock mobile speech synthesis for the chooser prompt.
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
+ });
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
+ window.addEventListener('pagehide',stop);
 })();
 </script>
 </body>
