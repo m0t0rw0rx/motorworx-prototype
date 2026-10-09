@@ -7,13 +7,20 @@
 <title>Motorworx Play & Discover | Level 1 — Halloween Adventure</title>
 <style>
 :root{font-family:ui-rounded,'Trebuchet MS',system-ui,sans-serif;color:#29394a;background:#f5f2fc;font-synthesis:none}
-*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(29px,7vw,39px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
+*[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(29px,7vw,39px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
 .game{width:min(100%,580px);background:#fff;border:2px solid #e9e1f4;border-radius:26px;padding:clamp(15px,4vw,27px);box-shadow:0 12px 40px #68559217}
 header{display:flex;justify-content:space-between;gap:10px;align-items:center}.eyebrow{color:#7855aa;font-size:clamp(11px,2.7vw,13px);font-weight:850;letter-spacing:.055em}.logo-slot{font-size:12px;color:#7e8492;margin-bottom:10px}h1{font-size:clamp(24px,6vw,31px);margin:7px 0 0;line-height:1.15}.counter{white-space:nowrap;color:#69449f;background:#eee6fa;border-radius:50px;padding:9px 12px;font-weight:800;font-size:13px}.steps{display:flex;gap:8px;margin:19px 0}.steps span{height:8px;flex:1;background:#e1d6f2;border-radius:20px}.steps span.current{background:#805db9}.instruction{text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,21px);margin:15px 0 5px}.hint{text-align:center;color:#68768b;font-size:14px;min-height:19px}svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;margin:4px 0}svg .guide{stroke:#eee6fb;stroke-width:68;stroke-linecap:round}svg .dots{stroke:#8f79b8;stroke-width:7;stroke-linecap:round;stroke-dasharray:1 21}svg .traced{stroke:#55bba6;stroke-width:9;stroke-linecap:round}#ghost{pointer-events:none}.message{min-height:28px;text-align:center;color:#477f70;font-size:16px;font-weight:800}.controls{display:flex;gap:10px;justify-content:center;margin:16px 0 0;flex-wrap:wrap}button{border:0;border-radius:16px;background:#7753b7;color:#fff;padding:14px 20px;min-height:48px;font-size:15px;font-weight:800;cursor:pointer}button.secondary{background:#e9e1f6;color:#6b4a9f}button:focus-visible{outline:3px solid #efb751;outline-offset:3px}.note{text-align:center;font-size:12px;color:#768093;margin:16px 0 0}.logo-note{font-size:11px;color:#8d879b;text-align:center;padding-top:4px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 /* Activity chooser and Level 1 matching */
 .activity-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:20px 0}.activity-tile{background:#faf7ff;color:#29394a;border:2px solid #e9dff6;padding:16px 8px 14px;border-radius:22px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}.activity-tile svg{max-width:118px;max-height:92px;margin:0}.activity-tile strong{font-size:16px}.activity-tile small{font-size:12px;line-height:1.35;color:#6c788d}.tile-emoji{font-size:49px}.match-layout{display:flex;flex-direction:column;align-items:center;gap:12px;margin:18px 0 0}.target-panel{width:min(100%,235px);background:#f5f0fd;border:2px solid #e6daf9;border-radius:20px;padding:10px;text-align:center}.target-panel svg{width:150px;max-width:100%;margin:0 auto}.target-title{font-weight:800;font-size:14px;color:#60468d}.match-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin:4px 0}.match-choice{padding:9px;background:#fff;border:3px solid #e3d9f0;border-radius:21px;min-height:138px;color:#29394a;display:flex;align-items:center;justify-content:center}.match-choice svg{width:120px;max-width:100%;margin:0;pointer-events:none}.match-choice:disabled{cursor:default;opacity:1}.match-choice.correct{border-color:#53ac96;background:#eaf8f3}.match-choice.incorrect{border-color:#d9c9ed}.match-choice:focus-visible{outline:3px solid #efb751}.match-choices:empty{display:none}@media(max-width:370px){.match-choice{min-height:110px}.match-choice svg{width:100px}.activity-grid{gap:8px}.activity-tile{padding:10px 6px}} 
 
+/* Level 1 memory: remember one picture, then choose between two bold objects */
+.memory-display{min-height:200px;display:flex;align-items:center;justify-content:center;background:#faf7ff;border:3px solid #e9dff6;border-radius:24px;margin:20px auto 14px;max-width:300px}
+.memory-object{font-size:106px;line-height:1.3;display:block;text-align:center}
+.memory-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 12px}
+.memory-option{font-size:79px;line-height:1.35;background:#faf7ff;border:3px solid #e9dff6;border-radius:23px;min-height:158px;touch-action:manipulation}
+.memory-option.correct{background:#eaf8f3;border-color:#53ac96}
+@media(max-width:390px){.memory-option{font-size:66px;min-height:125px}}
 /* Level 1 Peekaboo: two generous targets, with one unmistakable partially visible object */
 .peek-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 16px}
 .peek-choice{display:flex;justify-content:center;align-items:center;background:#faf7ff;border:3px solid #e6dff1;border-radius:23px;padding:7px;min-height:185px;touch-action:manipulation}
@@ -38,7 +45,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <g transform="translate(274 106)"><path d="M0 -27 Q-3 -43 8 -45" fill="none" stroke="#497c48" stroke-width="6"/><path d="M0 -31 C-30 -46 -47 -22 -42 7 C-36 38 -13 41 0 35 C17 43 40 30 42 7 C47 -22 26 -45 0 -31Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/><circle cx="-12" cy="-2" r="4" fill="#553949"/><circle cx="12" cy="-2" r="4" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3"/></g>
    </svg>
   </div>
-  <p><strong>Three Level 1 activities</strong><br/>Practise tracing, matching and finding hidden objects.</p>
+  <p><strong>Four Level 1 activities</strong><br/>Practise tracing, matching, finding and remembering.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Temporary artwork</div>
  </section>
@@ -52,6 +59,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">👻</div><strong>Help the Ghost</strong><small>Trace 3 easy paths</small></button>
      <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">👾</div><strong>Find My Twin</strong><small>Find the matching monster</small></button>
      <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true">🎃</div><strong>Peekaboo!</strong><small>Find who's hiding</small></button>
+     <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>What's Missing?</strong><small>Remember one picture</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -87,6 +95,23 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    <div class="message" id="peekMessage" aria-live="polite">Look closely!</div>
    <div class="controls"><button type="button" id="peekNext" hidden>Next picture →</button></div>
    <div class="note">Four friendly rounds · One clearly visible hiding object · No timer</div>
+ </section>
+ <section id="memoryScreen" class="screen" hidden>
+  <button type="button" class="back" id="memoryBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>What's Missing?</h1></div><div class="counter" id="memoryCounter">1 of 4</div></header>
+  <div class="steps" id="memorySteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="memoryInstruction">Look at the picture.</p>
+  <p class="hint" id="memoryHint">Remember what you see.</p>
+  <div class="memory-display" id="memoryDisplay"><span class="memory-object" id="memoryPicture" aria-label="Picture">🎃</span></div>
+  <div class="controls" id="memoryReadyControls"><button type="button" id="memoryReady">I'm ready ▶</button></div>
+  <div id="memoryChoices" hidden>
+    <p class="instruction">Which picture did you see?</p>
+    <div class="memory-options"><button type="button" class="memory-option" id="memoryChoice0" aria-label="Left picture"></button><button type="button" class="memory-option" id="memoryChoice1" aria-label="Right picture"></button></div>
+  </div>
+  <div class="message" id="memoryMessage" aria-live="polite">Take your time to look.</div>
+  <div class="controls"><button type="button" id="memoryNext" hidden>Next picture →</button></div>
+  <div class="note">Adult guidance: let the child look, then ask them to tap “I'm ready”.<br>Hide the example before they choose. One picture to remember.</div>
  </section>
  <section id="gameScreen" class="screen" hidden>
  <button id="backHome" class="back" type="button">← Back to home</button>
@@ -169,6 +194,58 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('peekChoice1').addEventListener('click',()=>choosePeek(1));
  $('peekNext').addEventListener('click',()=>{peekRound=(peekRound+1)%peekRounds.length;renderPeek()});
 
+ // Activity 4: visual memory, Level 1. The reference disappears BEFORE the two options appear.
+ const memoryRounds=[
+  {seen:'🎃',other:'👻',correct:1,name:'pumpkin',otherName:'ghost'},
+  {seen:'👻',other:'🐈',correct:0,name:'ghost',otherName:'cat'},
+  {seen:'🐈',other:'🎃',correct:1,name:'cat',otherName:'pumpkin'},
+  {seen:'🦇',other:'⭐',correct:0,name:'bat',otherName:'star'}
+ ];
+ let memoryRound=0,memoryPhase='look';
+ function renderMemory(){
+  const r=memoryRounds[memoryRound];memoryPhase='look';
+  $('memoryCounter').textContent=`${memoryRound+1} of ${memoryRounds.length}`;
+  $('memoryInstruction').textContent='Look at the picture.';
+  $('memoryHint').textContent='Remember what you see.';
+  $('memoryPicture').textContent=r.seen;
+  $('memoryPicture').setAttribute('aria-label',r.name);
+  $('memoryDisplay').hidden=false;
+  $('memoryReadyControls').hidden=false;
+  $('memoryChoices').hidden=true;
+  $('memoryNext').hidden=true;
+  $('memoryMessage').textContent='Take your time to look.';
+  document.querySelectorAll('#memorySteps span').forEach((el,i)=>el.classList.toggle('current',i<=memoryRound));
+ }
+ $('startMemory').addEventListener('click',()=>{memoryRound=0;renderMemory();show('memoryScreen')});
+ $('memoryBack').addEventListener('click',()=>show('chooseScreen'));
+ $('memoryReady').addEventListener('click',()=>{
+  if(memoryPhase!=='look')return;
+  const r=memoryRounds[memoryRound];memoryPhase='choose';
+  $('memoryDisplay').hidden=true;$('memoryReadyControls').hidden=true;
+  $('memoryChoices').hidden=false;
+  $('memoryInstruction').textContent='Remember the picture.';
+  $('memoryHint').textContent='Tap the one you saw.';
+  for(let i=0;i<2;i++){
+   const btn=$('memoryChoice'+i),isCorrect=i===r.correct;
+   btn.textContent=isCorrect?r.seen:r.other;
+   btn.setAttribute('aria-label',isCorrect?r.name:r.otherName);
+   btn.className='memory-option';btn.disabled=false;
+  }
+  $('memoryMessage').textContent='Which picture did you see?';
+ });
+ function chooseMemory(i){
+  if(memoryPhase!=='choose')return;
+  const r=memoryRounds[memoryRound];
+  if(i!==r.correct){$('memoryMessage').textContent='Try remembering the picture again.';return;}
+  memoryPhase='done';$('memoryChoice'+i).classList.add('correct');
+  $('memoryChoice0').disabled=true;$('memoryChoice1').disabled=true;
+  $('memoryMessage').textContent=memoryRound===memoryRounds.length-1?'Great remembering! You finished all four!':'You remembered it!';
+  $('memoryNext').textContent=memoryRound===memoryRounds.length-1?'Play again ↻':'Next picture →';
+  $('memoryNext').hidden=false;
+ }
+ $('memoryChoice0').addEventListener('click',()=>chooseMemory(0));
+ $('memoryChoice1').addEventListener('click',()=>chooseMemory(1));
+ $('memoryNext').addEventListener('click',()=>{memoryRound=(memoryRound+1)%memoryRounds.length;renderMemory()});
 })();
 </script>
 </body>
