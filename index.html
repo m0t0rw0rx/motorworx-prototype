@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#faf7ff" />
+<title>Motorworx Play & Discover | Level 1 — Help the Ghost</title>
+<style>
+:root{font-family:ui-rounded,'Trebuchet MS',system-ui,sans-serif;color:#29394a;background:#f5f2fc;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}
+.game{width:min(100%,580px);background:#fff;border:2px solid #e9e1f4;border-radius:26px;padding:clamp(15px,4vw,27px);box-shadow:0 12px 40px #68559217}
+header{display:flex;justify-content:space-between;gap:10px;align-items:center}.eyebrow{color:#7855aa;font-size:clamp(11px,2.7vw,13px);font-weight:850;letter-spacing:.055em}.logo-slot{font-size:12px;color:#7e8492;margin-bottom:10px}h1{font-size:clamp(24px,6vw,31px);margin:7px 0 0;line-height:1.15}.counter{white-space:nowrap;color:#69449f;background:#eee6fa;border-radius:50px;padding:9px 12px;font-weight:800;font-size:13px}.steps{display:flex;gap:8px;margin:19px 0}.steps span{height:8px;flex:1;background:#e1d6f2;border-radius:20px}.steps span.current{background:#805db9}.instruction{text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,21px);margin:15px 0 5px}.hint{text-align:center;color:#68768b;font-size:14px;min-height:19px}svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;margin:4px 0}svg .guide{stroke:#eee6fb;stroke-width:68;stroke-linecap:round}svg .dots{stroke:#8f79b8;stroke-width:7;stroke-linecap:round;stroke-dasharray:1 21}svg .traced{stroke:#55bba6;stroke-width:9;stroke-linecap:round}#ghost{pointer-events:none}.message{min-height:28px;text-align:center;color:#477f70;font-size:16px;font-weight:800}.controls{display:flex;gap:10px;justify-content:center;margin:16px 0 0;flex-wrap:wrap}button{border:0;border-radius:16px;background:#7753b7;color:#fff;padding:14px 20px;min-height:48px;font-size:15px;font-weight:800;cursor:pointer}button.secondary{background:#e9e1f6;color:#6b4a9f}button:focus-visible{outline:3px solid #efb751;outline-offset:3px}.note{text-align:center;font-size:12px;color:#768093;margin:16px 0 0}.logo-note{font-size:11px;color:#8d879b;text-align:center;padding-top:4px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="game">
+ <div class="logo-slot" aria-label="Motorworx">Motorworx <span style="font-weight:400">· prototype</span></div>
+ <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Help the Ghost!</h1></div><div id="counter" class="counter">1 of 3</div></header>
+ <div class="steps" aria-hidden="true"><span class="current"></span><span></span><span></span></div>
+ <p class="instruction">Trace the path to the pumpkin.</p>
+ <p class="hint" id="hint">Touch the ghost and follow the dots.</p>
+ <svg id="board" viewBox="0 0 360 305" role="img" aria-label="Trace from the friendly ghost on the left to the pumpkin on the right">
+  <g id="trail"><line class="guide" x1="82" y1="155" x2="273" y2="155"/><line class="dots" x1="82" y1="155" x2="273" y2="155"/></g>
+  <line id="traced" class="traced" x1="82" y1="155" x2="82" y2="155" />
+  <g id="pumpkin" transform="translate(288 155)">
+   <path d="M0 -29 Q-4 -43 7 -48" fill="none" stroke="#497c48" stroke-width="6" stroke-linecap="round"/>
+   <path d="M0 -32 C-31 -48 -48 -22 -43 7 C-39 36 -14 43 0 36 C18 44 42 29 43 7 C48 -22 28 -47 0 -32Z" fill="#faac52" stroke="#cc763a" stroke-width="3"/>
+   <path d="M-13 -30 Q-29 0 -13 34 M13 -30 Q29 0 13 34" fill="none" stroke="#df8941" stroke-width="3"/><circle cx="-12" cy="-2" r="3.5" fill="#553949"/><circle cx="12" cy="-2" r="3.5" fill="#553949"/><path d="M-9 12 Q0 21 9 12" fill="none" stroke="#553949" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g id="ghost" transform="translate(68 155)">
+   <path d="M-24 28 V-5 C-24 -44 24 -44 24 -5 V28 L12 20 L0 29 L-12 20Z" fill="#fff" stroke="#70619b" stroke-width="3" stroke-linejoin="round"/><circle cx="-9" cy="-7" r="3.5" fill="#514368"/><circle cx="9" cy="-7" r="3.5" fill="#514368"/><path d="M-5 7 Q0 12 5 7" stroke="#514368" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="-17" cy="5" r="4" fill="#ffd1dc"/><circle cx="17" cy="5" r="4" fill="#ffd1dc"/>
+  </g>
+  <g id="sparkles" style="display:none" aria-hidden="true"><text x="155" y="80" font-size="28">⭐</text><text x="262" y="95" font-size="25">✨</text><text x="213" y="225" font-size="28">⭐</text></g>
+  <text id="feedback" x="180" y="269" text-anchor="middle" font-size="15" font-weight="800" fill="#7955a7">Start at the ghost!</text>
+ </svg>
+ <div id="message" class="message" aria-live="polite">Ready to trace?</div>
+ <div class="controls"><button id="reset" class="secondary">↻ Try again</button><button id="next" hidden>Next path →</button></div>
+ <div class="note">Touchscreen prototype · No timer · No score penalties</div>
+ <div class="logo-note">Temporary illustrations. Add the original Motorworx logo before publishing.</div>
+</main>
+<script>
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id), board=$('board'),ghost=$('ghost'),pumpkin=$('pumpkin'),trail=$('trail'),traced=$('traced'),feedback=$('feedback'),message=$('message'),reset=$('reset'),next=$('next');
+ const paths=[{y:155,a:82,b:273},{y:124,a:82,b:273},{y:185,a:82,b:273}];
+ let current=0,progress=0,drag=false,completed=false,pointerId=null;
+ const path=()=>paths[current];
+ function redraw(){let {y,a,b}=path();ghost.setAttribute('transform',`translate(${a-14+(b-a)*progress} ${y})`);pumpkin.setAttribute('transform',`translate(${b+15} ${y})`);trail.innerHTML=`<line class="guide" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/><line class="dots" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/>`;traced.setAttribute('x1',a);traced.setAttribute('x2',a+(b-a)*progress);traced.setAttribute('y1',y);traced.setAttribute('y2',y);$('sparkles').style.display=completed?'':'none';$('counter').textContent=`${current+1} of 3`;document.querySelectorAll('.steps span').forEach((s,i)=>s.classList.toggle('current',i<=current));}
+ function startOver(){progress=0;drag=false;completed=false;pointerId=null;next.hidden=true;reset.hidden=false;feedback.textContent='Start at the ghost!';message.textContent='Ready to trace?';redraw()}
+ function coordinates(e){let r=board.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*305/r.height};}
+ function down(e){if(completed)return;const p=coordinates(e),{y,a,b}=path(),ghostX=a-14+(b-a)*progress;if(Math.abs(p.x-ghostX)<37&&Math.abs(p.y-y)<44){drag=true;pointerId=e.pointerId;board.setPointerCapture(pointerId);feedback.textContent='Follow the dots!';message.textContent='Keep going!';e.preventDefault()}else{feedback.textContent='Touch the ghost first.';}}
+ function move(e){if(!drag||pointerId!==e.pointerId)return;e.preventDefault();const p=coordinates(e),{y,a,b}=path(),target=Math.max(0,Math.min(1,(p.x-a)/(b-a)));if(Math.abs(p.y-y)>35){drag=false;message.textContent='Try staying on the path.';feedback.textContent='Touch the ghost and try again.';return;}if(target<progress-0.075)return;if(target>progress+0.19){drag=false;message.textContent='Move slowly along the dots.';return;}progress=Math.max(progress,target);redraw();if(progress>=.97){progress=1;drag=false;completed=true;redraw();feedback.textContent='You did it!';message.textContent=current===2?'All three paths complete! Well done!':'Wonderful tracing!';next.textContent=current===2?'Play again ↻':'Next path →';next.hidden=false;reset.hidden=true;}}
+ board.addEventListener('pointerdown',down);board.addEventListener('pointermove',move);board.addEventListener('pointerup',()=>drag=false);board.addEventListener('pointercancel',()=>drag=false);board.addEventListener('lostpointercapture',()=>drag=false);reset.addEventListener('click',startOver);next.addEventListener('click',()=>{current=current===2?0:current+1;startOver()});startOver();
+})();
+</script>
+</body>
+</html>
