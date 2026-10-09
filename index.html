@@ -143,6 +143,23 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .choice-art{display:inline-flex;align-items:center;justify-content:center;line-height:1;pointer-events:none}
 .memory-option .choice-art,.diff-choice .choice-art{font-size:inherit}
 @media(prefers-reduced-motion:reduce){.object-yes,.object-no{animation:none}}
+
+/* V15: safari pictures maintain equal, comfortably spaced sizes on small devices.
+   Keep the three tap areas large, with the picture (not its button) animated. */
+.diff-choices{gap:clamp(4px,2vw,12px);grid-template-columns:repeat(3,minmax(0,1fr));align-items:center}
+.diff-choice{min-width:0;min-height:clamp(100px,27vw,146px);padding:5px 0;overflow:visible}
+.diff-choice .choice-art{font-size:clamp(39px,10.6vw,68px);line-height:1;max-width:100%;white-space:nowrap}
+@media(max-width:390px){.diff-choice{min-height:105px}.diff-choice .choice-art{font-size:clamp(37px,11vw,51px)}}
+/* Game 10: recognizable silhouette and two generously sized, unboxed objects. */
+#shadowScreen .theme-label{background:#e1f4fa;color:#327e99}
+.shadow-stage{background:#eaf9ff;border-radius:22px;max-width:340px;margin:18px auto 13px;padding:12px;text-align:center}
+.shadow-stage svg{height:165px;width:100%;max-width:225px;margin:0 auto;touch-action:manipulation}
+.shadow-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px auto 10px;max-width:410px}
+.shadow-choice{min-width:0;min-height:152px;background:transparent;border:0;border-radius:20px;padding:6px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.shadow-choice svg{width:100%;max-width:168px;height:auto;touch-action:manipulation;pointer-events:none}
+.shadow-choice:disabled{opacity:1}
+.shadow-choice svg{transform-origin:center;transform-box:fill-box}
+@media(max-width:390px){.shadow-choice{min-height:120px}.shadow-stage svg{height:135px}}
 </style>
 </head>
 <body>
@@ -155,7 +172,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Nine Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences and tracking.</p>
+  <p><strong>Ten Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking and shadow matching.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -175,6 +192,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true">🌈</div><strong>Follow the Pattern</strong><small>Colourful Discovery · Patterns</small></button>
      <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true">🦒</div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
      <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
+     <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -279,6 +297,24 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="message" id="diffMessage" aria-live="polite">Look carefully and choose the one that is different.</div>
   <div class="controls"><button type="button" id="diffNext" hidden>Next picture →</button></div>
   <div class="note">Four easy rounds · One clearly different picture each time · No timer</div>
+ </section>
+
+ <section id="shadowScreen" class="screen" hidden>
+  <button type="button" class="back" id="shadowBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Under the Sea</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Find My Shadow!</h1></div><div class="counter" id="shadowCounter">1 of 4</div></header>
+  <div class="steps" id="shadowSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction">Which sea friend matches?</p>
+  <p class="hint">Look at the shadow. Tap the matching picture.</p>
+  <div class="shadow-stage"><div class="target-title">Look at this shadow</div><div id="shadowTarget"></div></div>
+  <div class="shadow-choices">
+   <button type="button" class="shadow-choice" id="shadowChoice0" aria-label="First sea friend"></button>
+   <button type="button" class="shadow-choice" id="shadowChoice1" aria-label="Second sea friend"></button>
+  </div>
+  <div class="message" id="shadowMessage" aria-live="polite">Tap the picture with the matching shape.</div>
+  <div class="controls"><button id="shadowNext" type="button" hidden>Next shadow →</button></div>
+  <div class="note">Four simple rounds · Two distinct sea creatures · No timer</div>
  </section>
 
  <section id="starScreen" class="screen" hidden>
@@ -886,6 +922,61 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('starReplay').addEventListener('click',starWatch);
  $('starBack').addEventListener('click',()=>{starCancel();starPhase='away';show('chooseScreen')});
  $('starNext').addEventListener('click',()=>{if(!starComplete)return;starRound=(starRound+1)%starRounds.length;starWatch()});
+
+ // Game 10: match a large, solid sea-creature silhouette to one of two pictures.
+ // The silhouette uses the EXACT same shape as the correct picture.
+ const shadowRounds=[
+  {target:'fish',other:'starfish',correct:1},
+  {target:'turtle',other:'fish',correct:0},
+  {target:'starfish',other:'crab',correct:1},
+  {target:'crab',other:'turtle',correct:0}
+ ];
+ const shadowNames={fish:'fish',turtle:'turtle',starfish:'starfish',crab:'crab'};
+ // Draw as monochrome shadow or colourful creature without changing its outline.
+ function seaCreature(kind,silhouette){
+  const fill=silhouette?'#455b79':({fish:'#70cbd0',turtle:'#80c48b',starfish:'#f6b86e',crab:'#f18f88'})[kind];
+  const line=silhouette?'#455b79':({fish:'#3b929b',turtle:'#4c9264',starfish:'#d88b4d',crab:'#bc6667'})[kind];
+  const eye=silhouette?'':`<circle cx="110" cy="72" r="4.4" fill="#33445d"/>`;
+  const body={
+   fish:`<path d="M42 78 L15 53 L15 103Z" fill="${fill}" stroke="${line}" stroke-width="5" stroke-linejoin="round"/><ellipse cx="86" cy="78" rx="47" ry="34" fill="${fill}" stroke="${line}" stroke-width="5"/><path d="M72 46 L82 26 L100 46" fill="${fill}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>${eye}`,
+   turtle:`<ellipse cx="88" cy="81" rx="40" ry="32" fill="${fill}" stroke="${line}" stroke-width="5"/><circle cx="137" cy="79" r="19" fill="${fill}" stroke="${line}" stroke-width="5"/><ellipse cx="54" cy="47" rx="17" ry="13" fill="${fill}" stroke="${line}" stroke-width="4" transform="rotate(-26 54 47)"/><ellipse cx="55" cy="112" rx="17" ry="13" fill="${fill}" stroke="${line}" stroke-width="4" transform="rotate(26 55 112)"/><ellipse cx="111" cy="44" rx="17" ry="13" fill="${fill}" stroke="${line}" stroke-width="4" transform="rotate(26 111 44)"/><ellipse cx="113" cy="117" rx="17" ry="13" fill="${fill}" stroke="${line}" stroke-width="4" transform="rotate(-26 113 117)"/>${silhouette?'':`<circle cx="143" cy="75" r="3.5" fill="#33445d"/>`}`,
+   starfish:`<path d="M88 24 L104 59 L149 56 L120 83 L131 128 L88 103 L47 128 L57 83 L27 56 L72 59Z" fill="${fill}" stroke="${line}" stroke-width="5" stroke-linejoin="round"/>${silhouette?'':`<circle cx="78" cy="78" r="3.5" fill="#6a4b55"/><circle cx="98" cy="78" r="3.5" fill="#6a4b55"/>`}`,
+   crab:`<ellipse cx="87" cy="93" rx="43" ry="30" fill="${fill}" stroke="${line}" stroke-width="5"/><path d="M47 81 Q28 71 24 56 M127 81 Q145 71 149 56 M59 113 L43 130 M78 120 L68 138 M98 120 L110 138 M118 113 L132 130" fill="none" stroke="${line}" stroke-width="7" stroke-linecap="round"/><path d="M13 42 L13 21 L37 21 L37 42 Q25 54 13 42Z M139 42 L139 21 L163 21 L163 42 Q151 54 139 42Z" fill="${fill}" stroke="${line}" stroke-width="5" stroke-linejoin="round"/><path d="M74 65 V55 M102 65 V55" stroke="${line}" stroke-width="5" stroke-linecap="round"/>${silhouette?'':`<circle cx="74" cy="57" r="4" fill="#33445d"/><circle cx="102" cy="57" r="4" fill="#33445d"/>`}`
+  }[kind];
+  return `<svg viewBox="0 0 180 160" role="img" aria-label="${silhouette?shadowNames[kind]+' shadow':shadowNames[kind]}">${body}</svg>`;
+ }
+ let shadowRound=0,shadowDone=false;
+ function shadowRender(){
+  shadowDone=false;
+  const r=shadowRounds[shadowRound];
+  $('shadowCounter').textContent=`${shadowRound+1} of ${shadowRounds.length}`;
+  $('shadowTarget').innerHTML=seaCreature(r.target,true);
+  [0,1].forEach(i=>{
+   const b=$('shadowChoice'+i),kind=i===r.correct?r.target:r.other;
+   b.innerHTML=seaCreature(kind,false);b.disabled=false;b.setAttribute('aria-label',shadowNames[kind]);
+  });
+  document.querySelectorAll('#shadowSteps span').forEach((el,i)=>el.classList.toggle('current',i<=shadowRound));
+  $('shadowMessage').textContent='Tap the picture with the matching shape.';
+  $('shadowNext').hidden=true;
+ }
+ function shadowChoose(i){
+  if(shadowDone)return;
+  if(i!==shadowRounds[shadowRound].correct){
+   $('shadowMessage').textContent='Look for the sea friend shaped like the shadow.';
+   animateObject($('shadowChoice'+i),false);
+   window.motorworxFeedback?.('retry','shadow');return;
+  }
+  shadowDone=true;animateObject($('shadowChoice'+i),true);
+  window.motorworxFeedback?.('success','shadow');
+  [0,1].forEach(j=>$('shadowChoice'+j).disabled=true);
+  $('shadowMessage').textContent='Well done!';
+  $('shadowNext').textContent=shadowRound===shadowRounds.length-1?'Play again ↻':'Next shadow →';
+  $('shadowNext').hidden=false;
+ }
+ [0,1].forEach(i=>$('shadowChoice'+i).addEventListener('click',()=>shadowChoose(i)));
+ $('startShadow').addEventListener('click',()=>{shadowRound=0;shadowRender();show('shadowScreen')});
+ $('shadowBack').addEventListener('click',()=>show('chooseScreen'));
+ $('shadowNext').addEventListener('click',()=>{if(!shadowDone)return;shadowRound=(shadowRound+1)%shadowRounds.length;shadowRender()});
 })();
 </script>
 
@@ -904,7 +995,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   finishScreen:'Drag the missing piece into place. Choose the piece that fits.',
   patternScreen:'What comes next? Drag the next picture into the empty space.',
   diffScreen:'Which picture is different? Tap the picture that is not the same.',
-  starScreen:()=>document.getElementById('starInstruction').textContent==='Where did the star land?'?'Where did the star land? Tap the place where it stopped.':'Tap the star to start. Watch where it lands.'
+  starScreen:()=>document.getElementById('starInstruction').textContent==='Where did the star land?'?'Where did the star land? Tap the place where it stopped.':'Tap the star to start. Watch where it lands.',
+  shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -924,7 +1016,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   finish:['Well done!','Awesome!','Excellent work!','Fantastic!','Great job!'],
   pattern:['Great job!','Fantastic!','Awesome!','Well done!','Excellent work!'],
   diff:['Awesome!','Well done!','Great job!','Excellent work!','Fantastic!'],
-  star:['Well done!','Great job!','Awesome!','Excellent work!','Fantastic!']
+  star:['Well done!','Great job!','Awesome!','Excellent work!','Fantastic!'],
+  shadow:['Great job!','Fantastic!','Well done!','Awesome!','Excellent work!']
  };
  const encouragement={
   'trace-path':[
@@ -980,6 +1073,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Whoops! Which planet did the star land on?',
    'Oops! Try the other landing place.',
    'Have another look! Where did the star stop?'
+  ],
+  shadow:[
+   'Oops! Look for the matching sea friend.',
+   'Whoops! Which one has the same shape?',
+   'Have another look at the shadow.',
+   'Try the sea friend shaped like the shadow.'
   ],
   diff:[
    'Oops! Tap the picture that is different.',
@@ -1069,18 +1168,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  setControls();
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
