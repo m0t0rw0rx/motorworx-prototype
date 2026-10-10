@@ -160,6 +160,19 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .shadow-choice:disabled{opacity:1}
 .shadow-choice svg{transform-origin:center;transform-box:fill-box}
 @media(max-width:390px){.shadow-choice{min-height:120px}.shadow-stage svg{height:135px}}
+
+/* Game 11: Level 1 disappearance memory — only two unmistakable objects.
+   Choice artwork animates; invisible buttons remain large finger targets. */
+#disappearScreen .theme-label{background:#e6e9ff;color:#665bb0}
+.disappear-stage{margin:17px auto 12px;padding:15px 12px 12px;background:#f3f6ff;border-radius:23px;max-width:410px;text-align:center}
+.disappear-display{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:center;min-height:145px}
+.disappear-item{min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(59px,16vw,94px);line-height:1.4;min-height:125px}
+.disappear-item.vanished{font-size:clamp(44px,12vw,72px);color:#a695c2;outline:3px dashed #baabd5;outline-offset:-12px;border-radius:22px}
+.disappear-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:410px;margin:15px auto 11px}
+.disappear-choice{min-height:128px;background:transparent;border:none;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:clamp(64px,17vw,100px);padding:0;touch-action:manipulation}
+.disappear-choice .choice-art{font-size:inherit}
+.disappear-choice:disabled{opacity:1}
+@media(max-width:390px){.disappear-item{min-height:108px}.disappear-choice{min-height:112px}}
 </style>
 </head>
 <body>
@@ -172,7 +185,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Ten Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking and shadow matching.</p>
+  <p><strong>Eleven Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching and discovering what disappeared.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -193,6 +206,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true">🦒</div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
      <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
      <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
+     <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true">🚗</div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -317,6 +331,31 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="note">Four simple rounds · Two distinct sea creatures · No timer</div>
  </section>
 
+
+ <section id="disappearScreen" class="screen" hidden>
+  <button type="button" class="back" id="disappearBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Explorers</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>What's Gone?</h1></div><div class="counter" id="disappearCounter">1 of 4</div></header>
+  <div class="steps" id="disappearSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="disappearInstruction">Look at both pictures.</p>
+  <p class="hint" id="disappearHint">Remember what you see.</p>
+  <div class="disappear-stage">
+   <div class="target-title" id="disappearStageLabel">Look carefully</div>
+   <div class="disappear-display">
+    <div class="disappear-item" id="disappearItem0" aria-label="First object"></div>
+    <div class="disappear-item" id="disappearItem1" aria-label="Second object"></div>
+   </div>
+  </div>
+  <div class="controls" id="disappearReadyControls"><button type="button" id="disappearReady">I'm ready ▶</button></div>
+  <div id="disappearPick" hidden>
+   <p class="instruction">Which picture went away?</p>
+   <div class="disappear-choices"><button type="button" class="disappear-choice" id="disappearChoice0" aria-label="First choice"></button><button type="button" class="disappear-choice" id="disappearChoice1" aria-label="Second choice"></button></div>
+  </div>
+  <div class="message" id="disappearMessage" aria-live="polite">Look at the two pictures.</div>
+  <div class="controls"><button type="button" id="disappearNext" hidden>Next picture →</button></div>
+  <div class="note">Adult guidance: let the child see both pictures, then tap “I'm ready” to hide one. Ask the child to tap the picture that disappeared. Two large choices, no timer.</div>
+ </section>
  <section id="starScreen" class="screen" hidden>
   <button type="button" class="back" id="starBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
@@ -977,6 +1016,58 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('startShadow').addEventListener('click',()=>{shadowRound=0;shadowRender();show('shadowScreen')});
  $('shadowBack').addEventListener('click',()=>show('chooseScreen'));
  $('shadowNext').addEventListener('click',()=>{if(!shadowDone)return;shadowRound=(shadowRound+1)%shadowRounds.length;shadowRender()});
+
+ // Game 11 — Level 1 visual memory: two pictures, then one clearly disappears.
+ // Only the original two pictures are offered as choices, so one is unambiguous.
+ const disappearRounds=[
+  {items:['🚗','🧸'],missing:0,order:[1,0]},
+  {items:['⚽','🚂'],missing:1,order:[0,1]},
+  {items:['🪁','🚗'],missing:0,order:[0,1]},
+  {items:['🧸','⚽'],missing:1,order:[1,0]}
+ ];
+ let disappearRound=0,disappearPhase='look';
+ function disappearRender(){
+  const r=disappearRounds[disappearRound];disappearPhase='look';
+  $('disappearCounter').textContent=`${disappearRound+1} of ${disappearRounds.length}`;
+  document.querySelectorAll('#disappearSteps span').forEach((el,i)=>el.classList.toggle('current',i<=disappearRound));
+  $('disappearInstruction').textContent='Look at both pictures.';
+  $('disappearHint').textContent='Remember what you see.';
+  $('disappearStageLabel').textContent='Look carefully';
+  [0,1].forEach(i=>{const el=$('disappearItem'+i);el.textContent=r.items[i];el.classList.remove('vanished');el.setAttribute('aria-label',i===0?'First object':'Second object')});
+  $('disappearReadyControls').hidden=false;$('disappearPick').hidden=true;
+  $('disappearNext').hidden=true;$('disappearMessage').textContent='Look at the two pictures.';
+ }
+ function disappearHide(){
+  if(disappearPhase!=='look')return;
+  disappearPhase='choose';const r=disappearRounds[disappearRound];
+  const missing=$('disappearItem'+r.missing);missing.textContent='?';missing.classList.add('vanished');
+  $('disappearReadyControls').hidden=true;$('disappearPick').hidden=false;
+  $('disappearInstruction').textContent='Which picture went away?';
+  $('disappearHint').textContent='Tap the picture that disappeared.';
+  $('disappearStageLabel').textContent='One picture is missing';
+  r.order.forEach((itemIndex,i)=>{
+   const b=$('disappearChoice'+i);b.innerHTML=`<span class="choice-art" aria-hidden="true">${r.items[itemIndex]}</span>`;
+   b.disabled=false;b.setAttribute('aria-label',`Choice ${i+1}`);
+  });
+  $('disappearMessage').textContent='What is missing?';
+ }
+ function disappearChoose(i){
+  if(disappearPhase!=='choose')return;
+  const r=disappearRounds[disappearRound],correct=r.order[i]===r.missing;
+  animateObject($('disappearChoice'+i),correct);
+  if(!correct){$('disappearMessage').textContent='Have another look. Which one went away?';window.motorworxFeedback?.('retry','disappear');return}
+  disappearPhase='done';window.motorworxFeedback?.('success','disappear');
+  $('disappearItem'+r.missing).textContent=r.items[r.missing];$('disappearItem'+r.missing).classList.remove('vanished');
+  [0,1].forEach(j=>$('disappearChoice'+j).disabled=true);
+  $('disappearMessage').textContent='Well done!';
+  $('disappearNext').textContent=disappearRound===disappearRounds.length-1?'Play again ↻':'Next picture →';
+  $('disappearNext').hidden=false;
+ }
+ $('startDisappear').addEventListener('click',()=>{disappearRound=0;disappearRender();show('disappearScreen')});
+ $('disappearBack').addEventListener('click',()=>show('chooseScreen'));
+ $('disappearReady').addEventListener('click',disappearHide);
+ [0,1].forEach(i=>$('disappearChoice'+i).addEventListener('click',()=>disappearChoose(i)));
+ $('disappearNext').addEventListener('click',()=>{if(disappearPhase!=='done')return;disappearRound=(disappearRound+1)%disappearRounds.length;disappearRender()});
 })();
 </script>
 
@@ -996,7 +1087,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   patternScreen:'What comes next? Drag the next picture into the empty space.',
   diffScreen:'Which picture is different? Tap the picture that is not the same.',
   starScreen:()=>document.getElementById('starInstruction').textContent==='Where did the star land?'?'Where did the star land? Tap the place where it stopped.':'Tap the star to start. Watch where it lands.',
-  shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.'
+  shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.',
+  disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1017,7 +1109,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   pattern:['Great job!','Fantastic!','Awesome!','Well done!','Excellent work!'],
   diff:['Awesome!','Well done!','Great job!','Excellent work!','Fantastic!'],
   star:['Well done!','Great job!','Awesome!','Excellent work!','Fantastic!'],
-  shadow:['Great job!','Fantastic!','Well done!','Awesome!','Excellent work!']
+  shadow:['Great job!','Fantastic!','Well done!','Awesome!','Excellent work!'],
+  disappear:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!']
  };
  const encouragement={
   'trace-path':[
@@ -1079,6 +1172,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Whoops! Which one has the same shape?',
    'Have another look at the shadow.',
    'Try the sea friend shaped like the shadow.'
+  ],
+  disappear:[
+   'Oops! Which picture went away?',
+   'Oh dear! Think back to the two pictures.',
+   'Whoops! Look for the missing toy.',
+   'Have another think. What disappeared?'
   ],
   diff:[
    'Oops! Tap the picture that is different.',
@@ -1168,18 +1267,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  setControls();
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext'];
- [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay'].forEach(id=>{
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext'];
+ [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
