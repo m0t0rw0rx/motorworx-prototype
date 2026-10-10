@@ -173,6 +173,16 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .disappear-choice .choice-art{font-size:inherit}
 .disappear-choice:disabled{opacity:1}
 @media(max-width:390px){.disappear-item{min-height:108px}.disappear-choice{min-height:112px}}
+
+/* Game 12: one large stationary target per round; no timers, competing targets or score. */
+#bubbleScreen .theme-label{background:#e1f4fa;color:#327e99}
+.bubble-ocean{position:relative;height:280px;max-width:440px;margin:14px auto;background:linear-gradient(180deg,#edfaff,#d1f1f7);border-radius:24px;overflow:hidden}
+.bubble-ocean:after{content:"";position:absolute;bottom:0;left:0;right:0;height:27px;background:#d0eecf;border-radius:48% 48% 0 0;pointer-events:none}
+.bubble-object{position:absolute;display:flex;justify-content:center;align-items:center;width:120px;height:120px;padding:0;border:0;border-radius:50%;background:transparent;transform:translate(-50%,-50%);touch-action:manipulation;transition:opacity .2s ease}
+.bubble-circle{display:block;width:104px;height:104px;border:6px solid #75bddc;border-radius:50%;background:radial-gradient(circle at 29% 24%,#fff 0 8%,#d6f9ff 15%,#8bd3ee 60%,#70b8e0 100%);box-shadow:inset -9px -10px 0 #60b2d348,0 6px 9px #377e9a22;pointer-events:none}
+.bubble-object.popped .bubble-circle{animation:bubble-pop .44s ease-out both}
+@keyframes bubble-pop{0%{transform:scale(1);opacity:1}45%{transform:scale(1.25);opacity:.9}100%{transform:scale(.35);opacity:0}}
+@media(max-width:390px){.bubble-ocean{height:250px}.bubble-object{width:112px;height:112px}}
 </style>
 </head>
 <body>
@@ -185,7 +195,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Eleven Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching and discovering what disappeared.</p>
+  <p><strong>Twelve Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared and hand-eye coordination.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -207,6 +217,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
      <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
      <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true">🚗</div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
+     <button type="button" class="activity-tile" id="startBubble"><div class="tile-emoji" aria-hidden="true">🫧</div><strong>Pop the Bubble</strong><small>Under the Sea · Hand-eye coordination</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -332,6 +343,21 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
 
 
+ <section id="bubbleScreen" class="screen" hidden>
+  <button type="button" class="back" id="bubbleBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Under the Sea</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Pop the Bubble!</h1></div><div class="counter" id="bubbleCounter">1 of 4</div></header>
+  <div class="steps" id="bubbleSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
+  <p class="instruction">Tap the big bubble!</p>
+  <p class="hint">Find the bubble and pop it with your finger.</p>
+  <div class="bubble-ocean" id="bubbleOcean">
+   <button type="button" id="bubbleTarget" class="bubble-object" aria-label="Pop the bubble"><span class="bubble-circle"></span></button>
+  </div>
+  <div class="message" id="bubbleMessage" aria-live="polite">Tap the bubble!</div>
+  <div class="controls"><button type="button" id="bubbleNext" hidden>Next bubble →</button></div>
+  <div class="note">Four easy rounds · One big target at a time · No timer or penalty</div>
+ </section>
  <section id="disappearScreen" class="screen" hidden>
   <button type="button" class="back" id="disappearBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
@@ -1068,6 +1094,26 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('disappearReady').addEventListener('click',disappearHide);
  [0,1].forEach(i=>$('disappearChoice'+i).addEventListener('click',()=>disappearChoose(i)));
  $('disappearNext').addEventListener('click',()=>{if(disappearPhase!=='done')return;disappearRound=(disappearRound+1)%disappearRounds.length;disappearRender()});
+ // Game 12: simple spatial reaching with a single large target. Different positions, same difficulty.
+ const bubblePositions=[[50,43],[29,59],[72,37],[47,65]];
+ let bubbleRound=0,bubbleDone=false;
+ function bubbleRender(){
+  bubbleDone=false;
+  const target=$('bubbleTarget'),pos=bubblePositions[bubbleRound];
+  target.disabled=false;target.classList.remove('popped');target.style.left=pos[0]+'%';target.style.top=pos[1]+'%';
+  $('bubbleCounter').textContent=`${bubbleRound+1} of ${bubblePositions.length}`;
+  document.querySelectorAll('#bubbleSteps span').forEach((el,i)=>el.classList.toggle('current',i<=bubbleRound));
+  $('bubbleMessage').textContent='Tap the bubble!';$('bubbleNext').hidden=true;
+ }
+ $('startBubble').addEventListener('click',()=>{bubbleRound=0;bubbleRender();show('bubbleScreen')});
+ $('bubbleBack').addEventListener('click',()=>show('chooseScreen'));
+ $('bubbleTarget').addEventListener('click',()=>{
+  if(bubbleDone)return;bubbleDone=true;
+  $('bubbleTarget').classList.add('popped');$('bubbleTarget').disabled=true;
+  $('bubbleMessage').textContent='Pop! Well done!';window.motorworxFeedback?.('success','bubble');
+  $('bubbleNext').textContent=bubbleRound===bubblePositions.length-1?'Play again ↻':'Next bubble →';$('bubbleNext').hidden=false;
+ });
+ $('bubbleNext').addEventListener('click',()=>{if(!bubbleDone)return;bubbleRound=(bubbleRound+1)%bubblePositions.length;bubbleRender()});
 })();
 </script>
 
@@ -1088,7 +1134,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   diffScreen:'Which picture is different? Tap the picture that is not the same.',
   starScreen:()=>document.getElementById('starInstruction').textContent==='Where did the star land?'?'Where did the star land? Tap the place where it stopped.':'Tap the star to start. Watch where it lands.',
   shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.',
-  disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.'
+  disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.',
+  bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1110,7 +1157,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   diff:['Awesome!','Well done!','Great job!','Excellent work!','Fantastic!'],
   star:['Well done!','Great job!','Awesome!','Excellent work!','Fantastic!'],
   shadow:['Great job!','Fantastic!','Well done!','Awesome!','Excellent work!'],
-  disappear:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!']
+  disappear:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
+  bubble:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!']
  };
  const encouragement={
   'trace-path':[
@@ -1267,18 +1315,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  setControls();
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
