@@ -183,6 +183,15 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .bubble-object.popped .bubble-circle{animation:bubble-pop .44s ease-out both}
 @keyframes bubble-pop{0%{transform:scale(1);opacity:1}45%{transform:scale(1.25);opacity:.9}100%{transform:scale(.35);opacity:0}}
 @media(max-width:390px){.bubble-ocean{height:250px}.bubble-object{width:112px;height:112px}}
+
+/* Game 13: large, short L-shaped tracing with a wide touch corridor. */
+#turnScreen .theme-label{background:#e7f6e8;color:#397a58}
+.turn-board{width:100%;max-width:470px;margin:14px auto 4px;display:block;touch-action:none;user-select:none;overflow:hidden;border-radius:23px;background:#eff8ec;border:2px solid #d4e9d2}
+.turn-guide{stroke:#d6ecd5;stroke-width:58;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.turn-dots{stroke:#8e72b3;stroke-width:6;stroke-dasharray:1 19;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.turn-trace{stroke:#55bba6;stroke-width:10;stroke-linecap:round;fill:none;stroke-linejoin:round}
+.turn-symbol{font-size:46px;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.turn-board svg{touch-action:none}
 </style>
 </head>
 <body>
@@ -195,7 +204,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Twelve Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared and hand-eye coordination.</p>
+  <p><strong>Thirteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared hand-eye coordination and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -218,6 +227,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
      <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true">🚗</div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
      <button type="button" class="activity-tile" id="startBubble"><div class="tile-emoji" aria-hidden="true">🫧</div><strong>Pop the Bubble</strong><small>Under the Sea · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startTurn"><div class="tile-emoji" aria-hidden="true">🐥</div><strong>Follow the Little Trail</strong><small>Little Animal Adventures · Tracing turns</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -430,6 +440,27 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div id="spatialMessage" class="message" aria-live="polite">Touch the fish and drag it.</div>
   <div class="controls"><button type="button" id="spatialReset" class="secondary">↻ Try again</button><button type="button" id="spatialNext" hidden>Next place →</button></div>
   <div class="note">Adult guidance: read each instruction aloud. One move at a time. No timer.</div>
+ </section>
+
+ <section id="turnScreen" class="screen" hidden>
+  <button type="button" class="back" id="turnBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Animal Adventures</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Little Trail!</h1></div><div class="counter" id="turnCounter">1 of 3</div></header>
+  <div class="steps" id="turnSteps"><span></span><span></span><span></span></div>
+  <p class="instruction">Trace the dots to the pond.</p>
+  <p class="hint">Start at the duckling. Follow the path and turn the corner.</p>
+  <svg id="turnBoard" class="turn-board" viewBox="0 0 360 320" aria-label="Trace a wide L shaped trail from the duckling to the pond">
+   <rect x="0" y="0" width="360" height="320" rx="21" fill="#eff8ec"/>
+   <path id="turnWide" class="turn-guide"/>
+   <path id="turnDots" class="turn-dots"/>
+   <path id="turnProgress" class="turn-trace"/>
+   <text id="turnStart" class="turn-symbol">🐥</text>
+   <text id="turnEnd" class="turn-symbol">🪷</text>
+  </svg>
+  <div class="message" id="turnMessage" aria-live="polite">Touch the duckling to begin.</div>
+  <div class="controls"><button id="turnReset" class="secondary" type="button">↻ Try again</button><button id="turnNext" type="button" hidden>Next path →</button></div>
+  <div class="note">Three short L-shaped paths · One turn at a time · No timer</div>
  </section>
  <section id="gameScreen" class="screen" hidden>
  <button id="backHome" class="back" type="button">← Back to home</button>
@@ -1114,6 +1145,39 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   $('bubbleNext').textContent=bubbleRound===bubblePositions.length-1?'Play again ↻':'Next bubble →';$('bubbleNext').hidden=false;
  });
  $('bubbleNext').addEventListener('click',()=>{if(!bubbleDone)return;bubbleRound=(bubbleRound+1)%bubblePositions.length;bubbleRender()});
+
+ // Game 13 — controlled finger tracing with one simple corner per round.
+ const turnBoard=$('turnBoard');
+ const turnRounds=[
+   [[80,237],[213,237],[213,105]],
+   [[75,225],[204,225],[204,97]],
+   [[87,233],[217,233],[217,105]]
+ ];
+ let turnRound=0,turnDistance=0,turnDragging=false,turnPointer=null,turnDone=false;
+ const turnPts=()=>turnRounds[turnRound];
+ const turnLength=()=>Math.hypot(turnPts()[1][0]-turnPts()[0][0],turnPts()[1][1]-turnPts()[0][1])+Math.hypot(turnPts()[2][0]-turnPts()[1][0],turnPts()[2][1]-turnPts()[1][1]);
+ function turnPointAt(d){const p=turnPts(),first=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),whole=turnLength();d=Math.max(0,Math.min(whole,d));if(d<=first)return [p[0][0]+(p[1][0]-p[0][0])*d/first,p[0][1]+(p[1][1]-p[0][1])*d/first];const t=(d-first)/(whole-first);return [p[1][0]+(p[2][0]-p[1][0])*t,p[1][1]+(p[2][1]-p[1][1])*t];}
+ function turnPathTo(d){const a=turnPts()[0],b=turnPts()[1],len1=Math.hypot(b[0]-a[0],b[1]-a[1]);const mid=turnPointAt(d);return `M${a[0]} ${a[1]} ${d>len1?`L${b[0]} ${b[1]} `:''}L${mid[0]} ${mid[1]}`;}
+ function turnRender(){const p=turnPts(),base=`M${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]} L${p[2][0]} ${p[2][1]}`;
+  turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;
+  $('turnWide').setAttribute('d',base);$('turnDots').setAttribute('d',base);$('turnProgress').setAttribute('d',turnPathTo(0));
+  $('turnStart').setAttribute('x',p[0][0]-38);$('turnStart').setAttribute('y',p[0][1]);$('turnEnd').setAttribute('x',p[2][0]);$('turnEnd').setAttribute('y',p[2][1]-42);
+  $('turnCounter').textContent=`${turnRound+1} of ${turnRounds.length}`;
+  document.querySelectorAll('#turnSteps span').forEach((e,i)=>e.classList.toggle('current',i<=turnRound));
+  $('turnNext').hidden=true;$('turnReset').hidden=false;$('turnMessage').textContent='Touch the duckling to begin.';
+ }
+ function turnCoordinates(e){const r=turnBoard.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*320/r.height};}
+ function turnClosest(pos){const pts=turnPts();let best={dist:1e6,along:0},offset=0;
+  for(let j=0;j<2;j++){const a=pts[j],b=pts[j+1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),t=Math.min(1,Math.max(0,((pos.x-a[0])*dx+(pos.y-a[1])*dy)/(len*len))),x=a[0]+dx*t,y=a[1]+dy*t,dist=Math.hypot(pos.x-x,pos.y-y);if(dist<best.dist)best={dist,along:offset+t*len};offset+=len;}
+  return best;
+ }
+ turnBoard.addEventListener('pointerdown',e=>{if(turnDone)return;const p=turnCoordinates(e),start=turnPointAt(turnDistance);if(Math.hypot(p.x-start[0],p.y-start[1])>42){$('turnMessage').textContent='Start at the duckling or where you stopped.';return;}turnDragging=true;turnPointer=e.pointerId;turnBoard.setPointerCapture(e.pointerId);$('turnMessage').textContent='Follow the dots!';e.preventDefault()});
+ turnBoard.addEventListener('pointermove',e=>{if(!turnDragging||turnPointer!==e.pointerId)return;e.preventDefault();const near=turnClosest(turnCoordinates(e));if(near.dist>34){turnDragging=false;$('turnMessage').textContent='Stay on the wide path. Try again!';window.motorworxFeedback?.('retry','turn');return;}if(near.along<turnDistance-13)return;if(near.along>turnDistance+64){turnDragging=false;$('turnMessage').textContent='Move slowly along the dots.';window.motorworxFeedback?.('retry','turn');return;}turnDistance=Math.max(turnDistance,near.along);$('turnProgress').setAttribute('d',turnPathTo(turnDistance));if(turnDistance>=turnLength()-12){turnDistance=turnLength();turnDragging=false;turnDone=true;$('turnProgress').setAttribute('d',turnPathTo(turnDistance));$('turnMessage').textContent='Well done!';window.motorworxFeedback?.('success','turn');$('turnNext').textContent=turnRound===turnRounds.length-1?'Play again ↻':'Next path →';$('turnNext').hidden=false;$('turnReset').hidden=true;}});
+ ['pointerup','pointercancel','lostpointercapture'].forEach(event=>turnBoard.addEventListener(event,()=>{turnDragging=false;turnPointer=null}));
+ $('startTurn').addEventListener('click',()=>{turnRound=0;turnRender();show('turnScreen')});
+ $('turnBack').addEventListener('click',()=>{turnDragging=false;show('chooseScreen')});
+ $('turnReset').addEventListener('click',turnRender);
+ $('turnNext').addEventListener('click',()=>{if(!turnDone)return;turnRound=(turnRound+1)%turnRounds.length;turnRender()});
 })();
 </script>
 
@@ -1135,7 +1199,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   starScreen:()=>document.getElementById('starInstruction').textContent==='Where did the star land?'?'Where did the star land? Tap the place where it stopped.':'Tap the star to start. Watch where it lands.',
   shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.',
   disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.',
-  bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.'
+  bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.',
+  turnScreen:'Trace the dots to the pond. Start at the duckling and turn the corner.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1158,7 +1223,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   star:['Well done!','Great job!','Awesome!','Excellent work!','Fantastic!'],
   shadow:['Great job!','Fantastic!','Well done!','Awesome!','Excellent work!'],
   disappear:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
-  bubble:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!']
+  bubble:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!'],
+  turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!']
  };
  const encouragement={
   'trace-path':[
@@ -1315,18 +1381,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  setControls();
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext'];
- [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady'].forEach(id=>{
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext'];
+ [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
