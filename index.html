@@ -192,6 +192,16 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .turn-trace{stroke:#55bba6;stroke-width:10;stroke-linecap:round;fill:none;stroke-linejoin:round}
 .turn-symbol{font-size:46px;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
 .turn-board svg{touch-action:none}
+/* Automatic progression after success: no Next button between rounds. */
+/* Brief celebration floats above the game, without blocking touches. */
+.mw-celebration{position:fixed;inset:0;z-index:1500;pointer-events:none;display:grid;place-items:center;overflow:hidden}
+.mw-celebration .mw-celebration-core{font-size:clamp(76px,18vw,126px);filter:drop-shadow(0 8px 12px #55457533);animation:mw-cheer 1.55s ease-out both}
+.mw-celebration .mw-confetti{position:absolute;font-size:clamp(24px,6vw,43px);animation:mw-spark 1.5s ease-out both}
+@keyframes mw-cheer{0%{transform:scale(.15) rotate(-18deg);opacity:0}24%{transform:scale(1.3) rotate(8deg);opacity:1}47%{transform:scale(1) rotate(-3deg)}77%{transform:scale(1);opacity:1}100%{transform:scale(.8) translateY(-25px);opacity:0}}
+@keyframes mw-spark{0%{transform:translate(0,0) scale(.3);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(36deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.mw-celebration .mw-celebration-core,.mw-celebration .mw-confetti{animation:none;opacity:1}}
+.screen.auto-progressing .controls button[data-auto-next],
+.screen.auto-progressing .star-control-row button[data-auto-next]{display:none!important}
 </style>
 </head>
 <body>
@@ -365,7 +375,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    <button type="button" id="bubbleTarget" class="bubble-object" aria-label="Pop the bubble"><span class="bubble-circle"></span></button>
   </div>
   <div class="message" id="bubbleMessage" aria-live="polite">Tap the bubble!</div>
-  <div class="controls"><button type="button" id="bubbleNext" hidden>Next bubble →</button></div>
+  <div class="controls"><button type="button" id="bubbleNext" hidden>Play again ↻</button></div>
   <div class="note">Four easy rounds · One big target at a time · No timer or penalty</div>
  </section>
  <section id="disappearScreen" class="screen" hidden>
@@ -1127,53 +1137,137 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('disappearNext').addEventListener('click',()=>{if(disappearPhase!=='done')return;disappearRound=(disappearRound+1)%disappearRounds.length;disappearRender()});
  // Game 12: simple spatial reaching with a single large target. Different positions, same difficulty.
  const bubblePositions=[[50,43],[29,59],[72,37],[47,65]];
- let bubbleRound=0,bubbleDone=false;
+ let bubbleRound=0,bubbleDone=false,bubbleAdvanceTimer=null;
+ function cancelBubbleAdvance(){if(bubbleAdvanceTimer!==null){clearTimeout(bubbleAdvanceTimer);bubbleAdvanceTimer=null;}}
  function bubbleRender(){
-  bubbleDone=false;
+  cancelBubbleAdvance();bubbleDone=false;
   const target=$('bubbleTarget'),pos=bubblePositions[bubbleRound];
   target.disabled=false;target.classList.remove('popped');target.style.left=pos[0]+'%';target.style.top=pos[1]+'%';
   $('bubbleCounter').textContent=`${bubbleRound+1} of ${bubblePositions.length}`;
   document.querySelectorAll('#bubbleSteps span').forEach((el,i)=>el.classList.toggle('current',i<=bubbleRound));
   $('bubbleMessage').textContent='Tap the bubble!';$('bubbleNext').hidden=true;
  }
- $('startBubble').addEventListener('click',()=>{bubbleRound=0;bubbleRender();show('bubbleScreen')});
- $('bubbleBack').addEventListener('click',()=>show('chooseScreen'));
+ $('startBubble').addEventListener('click',()=>{cancelBubbleAdvance();bubbleRound=0;bubbleRender();show('bubbleScreen')});
+ $('bubbleBack').addEventListener('click',()=>{cancelBubbleAdvance();show('chooseScreen')});
  $('bubbleTarget').addEventListener('click',()=>{
   if(bubbleDone)return;bubbleDone=true;
   $('bubbleTarget').classList.add('popped');$('bubbleTarget').disabled=true;
   $('bubbleMessage').textContent='Pop! Well done!';window.motorworxFeedback?.('success','bubble');
-  $('bubbleNext').textContent=bubbleRound===bubblePositions.length-1?'Play again ↻':'Next bubble →';$('bubbleNext').hidden=false;
+  if(bubbleRound===bubblePositions.length-1){
+   $('bubbleMessage').textContent='All the bubbles popped! Well done!';
+   $('bubbleNext').textContent='Play again ↻';$('bubbleNext').hidden=false;
+  }else{
+   // Allow the pop animation and encouraging voice to finish before moving on.
+   bubbleAdvanceTimer=setTimeout(()=>{
+    bubbleAdvanceTimer=null;
+    if(!$('bubbleScreen').hidden&&bubbleDone){
+     bubbleRound++;bubbleRender();
+     window.motorworxSpeakInstruction?.('bubbleScreen');
+    }
+   },2300);
+  }
  });
- $('bubbleNext').addEventListener('click',()=>{if(!bubbleDone)return;bubbleRound=(bubbleRound+1)%bubblePositions.length;bubbleRender()});
+ $('bubbleNext').addEventListener('click',()=>{if(!bubbleDone)return;cancelBubbleAdvance();bubbleRound=0;bubbleRender()});
 
  // Game 13 — controlled finger tracing with one simple corner per round.
  const turnBoard=$('turnBoard');
+ // Repeat the same easy two-segment L skill, changing the direction and friend.
  const turnRounds=[
-   [[80,237],[213,237],[213,105]],
-   [[75,225],[204,225],[204,97]],
-   [[87,233],[217,233],[217,105]]
+   {points:[[80,237],[213,237],[213,105]],friend:'duckling',destination:'pond',start:'🐥',end:'🪷'},
+   {points:[[83,92],[230,92],[230,236]],friend:'bunny',destination:'carrot',start:'🐰',end:'🥕'},
+   {points:[[277,231],[107,231],[107,92]],friend:'puppy',destination:'bone',start:'🐶',end:'🦴'}
  ];
- let turnRound=0,turnDistance=0,turnDragging=false,turnPointer=null,turnDone=false;
- const turnPts=()=>turnRounds[turnRound];
+ let turnRound=0,turnDistance=0,turnDragging=false,turnPointer=null,turnDone=false,turnLastPos=null;
+ const turnPts=()=>turnRounds[turnRound].points;
  const turnLength=()=>Math.hypot(turnPts()[1][0]-turnPts()[0][0],turnPts()[1][1]-turnPts()[0][1])+Math.hypot(turnPts()[2][0]-turnPts()[1][0],turnPts()[2][1]-turnPts()[1][1]);
  function turnPointAt(d){const p=turnPts(),first=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),whole=turnLength();d=Math.max(0,Math.min(whole,d));if(d<=first)return [p[0][0]+(p[1][0]-p[0][0])*d/first,p[0][1]+(p[1][1]-p[0][1])*d/first];const t=(d-first)/(whole-first);return [p[1][0]+(p[2][0]-p[1][0])*t,p[1][1]+(p[2][1]-p[1][1])*t];}
  function turnPathTo(d){const a=turnPts()[0],b=turnPts()[1],len1=Math.hypot(b[0]-a[0],b[1]-a[1]);const mid=turnPointAt(d);return `M${a[0]} ${a[1]} ${d>len1?`L${b[0]} ${b[1]} `:''}L${mid[0]} ${mid[1]}`;}
  function turnRender(){const p=turnPts(),base=`M${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]} L${p[2][0]} ${p[2][1]}`;
-  turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;
+  turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;turnLastPos=null;
   $('turnWide').setAttribute('d',base);$('turnDots').setAttribute('d',base);$('turnProgress').setAttribute('d',turnPathTo(0));
-  $('turnStart').setAttribute('x',p[0][0]-38);$('turnStart').setAttribute('y',p[0][1]);$('turnEnd').setAttribute('x',p[2][0]);$('turnEnd').setAttribute('y',p[2][1]-42);
+  const r=turnRounds[turnRound];
+  $('turnStart').textContent=r.start;$('turnEnd').textContent=r.end;
+  $('turnStart').setAttribute('x',p[0][0]);$('turnStart').setAttribute('y',p[0][1]-42);
+  $('turnEnd').setAttribute('x',p[2][0]);$('turnEnd').setAttribute('y',p[2][1]-42);
+  $('turnScreen').querySelector('.instruction').textContent=`Trace the dots to the ${r.destination}.`;
+  $('turnScreen').querySelector('.hint').textContent=`Start at the ${r.friend}. Follow the dots and turn the corner.`;
+  turnBoard.setAttribute('aria-label',`Trace a wide L-shaped trail from the ${r.friend} to the ${r.destination}`);
   $('turnCounter').textContent=`${turnRound+1} of ${turnRounds.length}`;
   document.querySelectorAll('#turnSteps span').forEach((e,i)=>e.classList.toggle('current',i<=turnRound));
-  $('turnNext').hidden=true;$('turnReset').hidden=false;$('turnMessage').textContent='Touch the duckling to begin.';
+  $('turnNext').hidden=true;$('turnReset').hidden=false;$('turnMessage').textContent=`Touch the ${r.friend} to begin.`;
  }
  function turnCoordinates(e){const r=turnBoard.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*320/r.height};}
  function turnClosest(pos){const pts=turnPts();let best={dist:1e6,along:0},offset=0;
   for(let j=0;j<2;j++){const a=pts[j],b=pts[j+1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),t=Math.min(1,Math.max(0,((pos.x-a[0])*dx+(pos.y-a[1])*dy)/(len*len))),x=a[0]+dx*t,y=a[1]+dy*t,dist=Math.hypot(pos.x-x,pos.y-y);if(dist<best.dist)best={dist,along:offset+t*len};offset+=len;}
   return best;
  }
- turnBoard.addEventListener('pointerdown',e=>{if(turnDone)return;const p=turnCoordinates(e),start=turnPointAt(turnDistance);if(Math.hypot(p.x-start[0],p.y-start[1])>42){$('turnMessage').textContent='Start at the duckling or where you stopped.';return;}turnDragging=true;turnPointer=e.pointerId;turnBoard.setPointerCapture(e.pointerId);$('turnMessage').textContent='Follow the dots!';e.preventDefault()});
- turnBoard.addEventListener('pointermove',e=>{if(!turnDragging||turnPointer!==e.pointerId)return;e.preventDefault();const near=turnClosest(turnCoordinates(e));if(near.dist>34){turnDragging=false;$('turnMessage').textContent='Stay on the wide path. Try again!';window.motorworxFeedback?.('retry','turn');return;}if(near.along<turnDistance-13)return;if(near.along>turnDistance+64){turnDragging=false;$('turnMessage').textContent='Move slowly along the dots.';window.motorworxFeedback?.('retry','turn');return;}turnDistance=Math.max(turnDistance,near.along);$('turnProgress').setAttribute('d',turnPathTo(turnDistance));if(turnDistance>=turnLength()-12){turnDistance=turnLength();turnDragging=false;turnDone=true;$('turnProgress').setAttribute('d',turnPathTo(turnDistance));$('turnMessage').textContent='Well done!';window.motorworxFeedback?.('success','turn');$('turnNext').textContent=turnRound===turnRounds.length-1?'Play again ↻':'Next path →';$('turnNext').hidden=false;$('turnReset').hidden=true;}});
- ['pointerup','pointercancel','lostpointercapture'].forEach(event=>turnBoard.addEventListener(event,()=>{turnDragging=false;turnPointer=null}));
+ // Each genuine tracing attempt must be checked, including stopping early.
+ // After a mistake, keep the completed portion so the child can resume there.
+ function turnMistake(message){
+  $('turnMessage').textContent=message;
+  window.motorworxFeedback?.('retry','turn');
+ }
+ function turnStopAttempt(message){
+  turnDragging=false;turnPointer=null;turnLastPos=null;
+  turnMistake(message);
+ }
+ turnBoard.addEventListener('pointerdown',e=>{
+  if(turnDone)return;
+  const p=turnCoordinates(e),start=turnPointAt(turnDistance);
+  if(Math.hypot(p.x-start[0],p.y-start[1])>30){
+   turnMistake(`Touch the ${turnRounds[turnRound].friend} or the end of your traced line.`);
+   return;
+  }
+  turnDragging=true;turnPointer=e.pointerId;turnLastPos=p;
+  turnBoard.setPointerCapture(e.pointerId);
+  $('turnMessage').textContent='Follow the dots!';e.preventDefault();
+ });
+ turnBoard.addEventListener('pointermove',e=>{
+  if(!turnDragging||turnPointer!==e.pointerId)return;
+  e.preventDefault();
+  const pos=turnCoordinates(e),previous=turnLastPos||pos;
+  const travel=Math.hypot(pos.x-previous.x,pos.y-previous.y);
+  // Check all points along the actual cursor movement, not only the end point.
+  // This catches diagonals cutting off the L and trips away from the path.
+  const samples=Math.max(1,Math.ceil(travel/6));
+  let ahead=turnDistance;
+  for(let i=1;i<=samples;i++){
+   const t=i/samples;
+   const sample={x:previous.x+(pos.x-previous.x)*t,y:previous.y+(pos.y-previous.y)*t};
+   const near=turnClosest(sample);
+   if(near.dist>21){
+    turnStopAttempt('You moved off the dotted path. Try again!');return;
+   }
+   // Keep movements sequential and prevent jumping across the corner.
+   if(near.along<ahead-19){
+    turnStopAttempt('Follow the dots towards the end. Try again!');return;
+   }
+   if(near.along>ahead+35){
+    turnStopAttempt('Move slowly along the dots. Try again!');return;
+   }
+   ahead=Math.max(ahead,near.along);
+  }
+  turnLastPos=pos;
+  turnDistance=Math.max(turnDistance,ahead);
+  $('turnProgress').setAttribute('d',turnPathTo(turnDistance));
+  if(turnDistance>=turnLength()-12){
+   turnDistance=turnLength();turnDragging=false;turnDone=true;turnLastPos=null;turnPointer=null;
+   $('turnProgress').setAttribute('d',turnPathTo(turnDistance));
+   $('turnMessage').textContent='Well done!';
+   window.motorworxFeedback?.('success','turn');
+   $('turnNext').textContent=turnRound===turnRounds.length-1?'Play again ↻':'Next path →';
+   $('turnNext').hidden=false;$('turnReset').hidden=true;
+  }
+ });
+ turnBoard.addEventListener('pointerup',e=>{
+  if(turnPointer!==e.pointerId)return;
+  const wasDragging=turnDragging;
+  turnDragging=false;turnPointer=null;turnLastPos=null;
+  // Lifting off the path before reaching the destination is a missed attempt.
+  if(wasDragging&&!turnDone)turnMistake('Keep following the dots to the end. Try again!');
+ });
+ turnBoard.addEventListener('pointercancel',()=>{if(turnDragging&&!turnDone)turnStopAttempt('Try staying on the dotted path.');else{turnDragging=false;turnPointer=null;turnLastPos=null}});
+ turnBoard.addEventListener('lostpointercapture',()=>{if(turnDragging&&!turnDone)turnStopAttempt('Try staying on the dotted path.');else{turnDragging=false;turnPointer=null;turnLastPos=null}});
  $('startTurn').addEventListener('click',()=>{turnRound=0;turnRender();show('turnScreen')});
  $('turnBack').addEventListener('click',()=>{turnDragging=false;show('chooseScreen')});
  $('turnReset').addEventListener('click',turnRender);
@@ -1200,13 +1294,52 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.',
   disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.',
   bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.',
-  turnScreen:'Trace the dots to the pond. Start at the duckling and turn the corner.'
+  turnScreen:()=>document.getElementById('turnScreen').querySelector('.instruction').textContent+' '+document.getElementById('turnScreen').querySelector('.hint').textContent
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
  let soundOn=true;
  try{soundOn=localStorage.getItem('motorworx-voice-enabled')!=='false'}catch(e){}
  const bars=[];
+ // Move to the next puzzle automatically after encouragement. The existing Next
+ // handlers remain the single source of truth for advancing each game.
+ const autoNextByScreen={
+  gameScreen:'next',matchScreen:'matchNext',peekScreen:'peekNext',
+  memoryScreen:'memoryNext',spatialScreen:'spatialNext',
+  finishScreen:'finishNext',patternScreen:'patternNext',
+  diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
+  disappearScreen:'disappearNext',turnScreen:'turnNext'
+ };
+ let autoTimer=null,autoToken=0;
+ function cancelAutoNext(){
+  autoToken++;
+  if(autoTimer!==null){clearTimeout(autoTimer);autoTimer=null;}
+  document.querySelectorAll('.auto-progressing').forEach(el=>el.classList.remove('auto-progressing'));
+ }
+ function scheduleAutoNext(registerPraiseDone){
+  const screenId=current(),buttonId=autoNextByScreen[screenId];
+  if(!buttonId)return; // Pop the Bubble already handles automatic progression.
+  const token=++autoToken;
+  if(autoTimer!==null)clearTimeout(autoTimer);
+  // Success feedback happens before the round's Next button is revealed.
+  // A microtask waits for the current answer handler to finish updating it.
+  queueMicrotask(()=>{
+   if(token!==autoToken||current()!==screenId)return;
+   const screen=document.getElementById(screenId),button=document.getElementById(buttonId);
+   if(!button||button.hidden||/play again/i.test(button.textContent))return;
+   screen.classList.add('auto-progressing');
+   let praiseFinished=false,minimumFinished=false,advanced=false;
+   function maybeAdvance(){
+    if(advanced||!praiseFinished||!minimumFinished||token!==autoToken||current()!==screenId)return;
+    advanced=true;screen.classList.remove('auto-progressing');
+    button.click(); // next round begins after the full spoken praise
+   }
+   // Ensure the emoji is visible long enough; don't interrupt slower device voices.
+   autoTimer=setTimeout(()=>{autoTimer=null;minimumFinished=true;maybeAdvance()},2400);
+   registerPraiseDone(()=>{praiseFinished=true;maybeAdvance()});
+  });
+ }
+ Object.values(autoNextByScreen).forEach(id=>document.getElementById(id)?.setAttribute('data-auto-next',''));
  let activeId='';
  let lastRetryAt=0;
  // Child-friendly messages should always match what the child is doing.
@@ -1347,15 +1480,43 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakCurrent=()=>speak(current());
  // Feedback shared by every activity, without changing its game rules.
  // Gentle retries are rate-limited and only triggered by real attempts.
+ // Brief non-interactive celebration for every completed puzzle.
+ const celebrationIcons=['🎉','🌟','🥳','✨','👏'];
+ let celebrationIndex=0,celebrationTimer=null;
+ function celebrate(){
+  document.querySelector('.mw-celebration')?.remove();
+  if(celebrationTimer!==null)clearTimeout(celebrationTimer);
+  const layer=document.createElement('div');layer.className='mw-celebration';layer.setAttribute('aria-hidden','true');
+  const main=document.createElement('span');main.className='mw-celebration-core';
+  main.textContent=celebrationIcons[celebrationIndex++%celebrationIcons.length];
+  layer.appendChild(main);
+  [['🎉','-110px','-88px'],['⭐','108px','-92px'],['✨','-135px','68px'],['🎊','127px','87px']].forEach(([emoji,dx,dy])=>{
+   const spark=document.createElement('span');spark.className='mw-confetti';spark.textContent=emoji;
+   spark.style.setProperty('--dx',dx);spark.style.setProperty('--dy',dy);
+   layer.appendChild(spark);
+  });
+  document.body.appendChild(layer);
+  celebrationTimer=setTimeout(()=>{layer.remove();celebrationTimer=null},1600);
+ }
  window.motorworxFeedback=function(type,activity){
+  if(type==='success'){
+   celebrate();
+   let voiceDone=false,notifyVoiceDone=null;
+   scheduleAutoNext(done=>{notifyVoiceDone=done;if(voiceDone)done()});
+   let fallback=null;
+   const finished=()=>{if(voiceDone)return;voiceDone=true;if(fallback!==null)clearTimeout(fallback);notifyVoiceDone?.()};
+   if(!soundOn||!supported){finished();return;}
+   // Some mobile browsers never fire speech end; avoid trapping the child forever.
+   fallback=setTimeout(finished,8000);
+   say(nextPhrase(praise,activity),finished);
+   return;
+  }
   if(!soundOn||!supported)return;
   if(type==='retry'){
    const now=Date.now();
    if(now-lastRetryAt<1600)return;
    lastRetryAt=now;
    say(nextPhrase(encouragement,activity));
-  }else if(type==='success'){
-   say(nextPhrase(praise,activity));
   }
  };
  Object.keys(activities).forEach(id=>{
@@ -1379,24 +1540,25 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   bars.push({button,status:bar.querySelector('.voice-status')});
  });
  setControls();
+ window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
  const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn'];
  const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
-  button.addEventListener('click',()=>{const screen=current();if(screen)speak(screen)});
+  button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
  ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','play'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',()=>{stop()});
+  document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
  ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
- document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
- window.addEventListener('pagehide',stop);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
+ window.addEventListener('pagehide',()=>{cancelAutoNext();stop()});
 })();
 </script>
 </body>
