@@ -217,6 +217,20 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 @keyframes which-wiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
 @media(max-width:390px){.which-choices{gap:9px;min-height:260px}.which-choice{min-height:122px}.which-picture{font-size:75px}}
 #whichScreen .theme-label{background:#e6e9ff;color:#665bb0}
+
+/* Game 15 — one large draggable food, one obvious large bowl. */
+#feedScreen .theme-label{background:#e7f6e8;color:#397a58}
+.feed-board{position:relative;max-width:460px;margin:18px auto 10px;min-height:340px;border-radius:25px;background:#edf9ed;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none}
+.feed-animal{font-size:clamp(88px,22vw,117px);line-height:1.1;text-align:center;padding-top:8px}
+.feed-ground{position:absolute;left:0;right:0;bottom:0;height:32px;background:#d6eecb}
+.feed-bowl{position:absolute;top:146px;left:50%;transform:translateX(-50%);width:154px;height:108px;display:flex;align-items:center;justify-content:center}
+.feed-bowl svg{width:154px;height:108px;overflow:visible;pointer-events:none}
+.feed-bowl.success{animation:feed-bounce .65s ease}
+.feed-food{position:absolute;left:32px;top:258px;transform:translate(-50%,-50%);width:100px;height:95px;display:flex;align-items:center;justify-content:center;font-size:72px;line-height:1;cursor:grab;touch-action:none;z-index:3;user-select:none}
+.feed-food.dragging{cursor:grabbing;filter:drop-shadow(0 8px 9px #54724c44)}
+.feed-food.wiggle{animation:which-wiggle .42s ease}
+@keyframes feed-bounce{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.13)}}
+@media(max-width:390px){.feed-board{min-height:310px}.feed-animal{font-size:86px}.feed-bowl{top:125px}.feed-food{font-size:65px;top:235px}}
 </style>
 </head>
 <body>
@@ -229,7 +243,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Fourteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared hand-eye coordination and turning corners.</p>
+  <p><strong>Fifteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -254,6 +268,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startBubble"><div class="tile-emoji" aria-hidden="true">🫧</div><strong>Pop the Bubble</strong><small>Under the Sea · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startTurn"><div class="tile-emoji" aria-hidden="true">🐥</div><strong>Follow the Little Trail</strong><small>Little Animal Adventures · Tracing turns</small></button>
      <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
+     <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -483,6 +498,27 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div id="whichMessage" class="message" aria-live="polite">Choose one picture.</div>
   <div class="controls"><button type="button" id="whichNext" hidden>Next picture →</button></div>
   <div class="note">Adult guidance: ask one position at a time. Two large identical pictures are shown, one above the other. Pointing is acceptable.</div>
+ </section>
+
+ <section id="feedScreen" class="screen" hidden>
+  <button type="button" class="back" id="feedBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Animal Adventures</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Feed the Animal!</h1></div><div class="counter" id="feedCounter">1 of 4</div></header>
+  <div class="steps" id="feedSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="feedInstruction">Give the bunny the carrot.</p>
+  <p class="hint">Drag the food into the big bowl.</p>
+  <div class="feed-board" id="feedBoard">
+    <div class="feed-ground"></div>
+    <div class="feed-animal" id="feedAnimal">🐰</div>
+    <div class="feed-bowl" id="feedBowl" aria-label="Food bowl">
+      <svg viewBox="0 0 154 108" role="img" aria-label="Large food bowl"><path d="M13 25 Q77 10 141 25 L124 84 Q77 105 30 84Z" fill="#f4caa6" stroke="#bc886b" stroke-width="5" stroke-linejoin="round"/><ellipse cx="77" cy="26" rx="64" ry="17" fill="#fff7f0" stroke="#bc886b" stroke-width="5"/></svg>
+    </div>
+    <div id="feedFood" class="feed-food" role="button" tabindex="0" aria-label="Drag the carrot into the bowl">🥕</div>
+  </div>
+  <div id="feedMessage" class="message" aria-live="polite">Touch the food and move it to the bowl.</div>
+  <div class="controls"><button type="button" id="feedNext" hidden>Next animal →</button></div>
+  <div class="note">Adult guidance: one food and one large destination. Show how to drag if needed. No timer.</div>
  </section>
  <section id="turnScreen" class="screen" hidden>
   <button type="button" class="back" id="turnBack">← Choose a game</button>
@@ -1384,6 +1420,63 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('whichBack').addEventListener('click',()=>show('chooseScreen'));
  $('whichNext').addEventListener('click',()=>{if(!whichDone)return;whichRound=(whichRound+1)%whichRounds.length;whichRender()});
 
+ // Game 15: repeated supported hand-eye movement, with one food and one bowl.
+ const feedRounds=[
+  {animal:'🐰',name:'bunny',food:'🥕',foodName:'carrot'},
+  {animal:'🐶',name:'puppy',food:'🦴',foodName:'bone'},
+  {animal:'🐵',name:'monkey',food:'🍌',foodName:'banana'},
+  {animal:'🐭',name:'mouse',food:'🧀',foodName:'cheese'}
+ ];
+ let feedRound=0,feedDone=false,feedDragging=false,feedPointer=null,feedStart=null;
+ const feedBoard=$('feedBoard'),feedFood=$('feedFood');
+ function feedHome(){feedFood.style.left='24%';feedFood.style.top=feedBoard.clientWidth<=390?'235px':'258px'}
+ function feedRender(){
+  const r=feedRounds[feedRound];feedDone=false;feedDragging=false;feedPointer=null;
+  $('feedCounter').textContent=`${feedRound+1} of ${feedRounds.length}`;
+  $('feedAnimal').textContent=r.animal;feedFood.textContent=r.food;
+  $('feedInstruction').textContent=`Give the ${r.name} the ${r.foodName}.`;
+  feedFood.setAttribute('aria-label',`Drag the ${r.foodName} into the bowl`);
+  feedFood.className='feed-food';feedFood.style.visibility='visible';
+  $('feedBowl').classList.remove('success');feedHome();
+  $('feedNext').hidden=true;$('feedMessage').textContent='Drag the food into the bowl.';
+  [...$('feedSteps').children].forEach((el,i)=>el.classList.toggle('current',i<=feedRound));
+ }
+ function feedPosition(clientX,clientY){
+  const b=feedBoard.getBoundingClientRect();
+  feedFood.style.left=Math.max(48,Math.min(b.width-48,clientX-b.left))+'px';
+  feedFood.style.top=Math.max(48,Math.min(b.height-44,clientY-b.top))+'px';
+ }
+ function feedDrop(clientX,clientY){
+  const b=$('feedBowl').getBoundingClientRect();
+  return clientX>=b.left-20&&clientX<=b.right+20&&clientY>=b.top-22&&clientY<=b.bottom+22;
+ }
+ function feedSuccess(){
+  if(feedDone)return;feedDone=true;
+  const b=$('feedBowl').getBoundingClientRect();feedPosition(b.left+b.width/2,b.top+b.height/2);
+  $('feedBowl').classList.add('success');feedFood.style.visibility='hidden';
+  $('feedMessage').textContent='Well done!';
+  $('feedNext').textContent=feedRound===feedRounds.length-1?'Play again ↻':'Next animal →';
+  $('feedNext').hidden=false;window.motorworxFeedback?.('success','feed');
+ }
+ feedFood.addEventListener('pointerdown',e=>{
+  if(feedDone||feedDragging||(e.button!==undefined&&e.button!==0))return;
+  e.preventDefault();feedDragging=true;feedPointer=e.pointerId;feedStart={x:e.clientX,y:e.clientY};
+  feedFood.classList.add('dragging');feedFood.setPointerCapture(e.pointerId);
+ });
+ feedFood.addEventListener('pointermove',e=>{
+  if(!feedDragging||feedPointer!==e.pointerId)return;e.preventDefault();feedPosition(e.clientX,e.clientY);
+ });
+ feedFood.addEventListener('pointerup',e=>{
+  if(!feedDragging||feedPointer!==e.pointerId)return;e.preventDefault();feedDragging=false;feedFood.classList.remove('dragging');
+  if(feedDrop(e.clientX,e.clientY))feedSuccess();
+  else{feedFood.classList.remove('wiggle');void feedFood.offsetWidth;feedFood.classList.add('wiggle');$('feedMessage').textContent='Oops! Put the food in the bowl.';window.motorworxFeedback?.('retry','feed');feedHome()}
+ });
+ feedFood.addEventListener('pointercancel',()=>{feedDragging=false;feedFood.classList.remove('dragging');feedHome()});
+ feedFood.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!feedDone){e.preventDefault();feedSuccess()}});
+ $('startFeed').addEventListener('click',()=>{feedRound=0;feedRender();show('feedScreen')});
+ $('feedBack').addEventListener('click',()=>{feedDragging=false;show('chooseScreen')});
+ $('feedNext').addEventListener('click',()=>{if(!feedDone)return;feedRound=(feedRound+1)%feedRounds.length;feedRender()});
+
 })();
 </script>
 
@@ -1407,7 +1500,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.',
   bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.',
   turnScreen:()=>document.getElementById('turnScreen').querySelector('.instruction').textContent+' '+document.getElementById('turnScreen').querySelector('.hint').textContent,
-  whichScreen:()=>document.getElementById('whichInstruction').textContent
+  whichScreen:()=>document.getElementById('whichInstruction').textContent,
+  feedScreen:()=>document.getElementById('feedInstruction').textContent+' Drag the food into the bowl.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1421,7 +1515,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1471,9 +1565,11 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   disappear:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
   bubble:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!'],
   turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!'],
-  which:['Awesome!','Well done!','Great job!','Fantastic!','Excellent work!']
+  which:['Awesome!','Well done!','Great job!','Fantastic!','Excellent work!'],
+  feed:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!']
  };
  const encouragement={
+  feed:['Oops! Put the food in the bowl.','Whoops! Try moving the food into the bowl.','Almost! Drag the food to the bowl.','Let’s put the food in the bowl.'],
   which:['Oops! Look for the picture in the right place.','Have another look! Is it at the top or bottom?','Whoops! Try the other picture.','Let’s look again. Find the picture in the right place.'],
   'trace-path':[
    'Oops! Stay on the dotted path. Try again!',
@@ -1667,18 +1763,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
