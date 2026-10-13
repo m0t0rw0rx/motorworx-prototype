@@ -204,6 +204,19 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .screen.auto-progressing .star-control-row button[data-auto-next]{display:none!important}
 #turnMessage.turn-error{color:#ad4865;background:#fff0f3;border-radius:13px;padding:9px 8px;animation:turnNudge .27s ease-in-out}
 @keyframes turnNudge{0%,100%{transform:translateX(0)}30%{transform:translateX(-5px)}65%{transform:translateX(5px)}}
+
+/* Game 14 — one clear top/bottom position, identical large objects, generous taps. */
+.which-choices{display:grid;grid-template-columns:1fr;gap:15px;max-width:340px;margin:17px auto 17px;min-height:295px}
+.which-choice{display:flex;align-items:center;justify-content:center;min-height:142px;min-width:0;background:transparent!important;border:0!important;border-radius:18px;padding:3px;touch-action:manipulation;box-shadow:none!important}
+.which-picture{font-size:88px;line-height:1.2;display:inline-block;transform-origin:center;transition:transform .18s ease;pointer-events:none}
+
+.which-choice:focus-visible{outline:3px dashed #8a6bb2;outline-offset:2px}
+.which-choice.celebrate .which-picture{animation:which-bounce .65s ease-in-out}
+.which-choice.try-again .which-picture{animation:which-wiggle .42s ease-in-out}
+@keyframes which-bounce{0%,100%{transform:scale(1)}40%{transform:translateY(-18px) scale(1.14)}70%{transform:translateY(-6px) scale(1.06)}}
+@keyframes which-wiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+@media(max-width:390px){.which-choices{gap:9px;min-height:260px}.which-choice{min-height:122px}.which-picture{font-size:75px}}
+#whichScreen .theme-label{background:#e6e9ff;color:#665bb0}
 </style>
 </head>
 <body>
@@ -216,7 +229,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Thirteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared hand-eye coordination and turning corners.</p>
+  <p><strong>Fourteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared hand-eye coordination and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -240,6 +253,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true">🚗</div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
      <button type="button" class="activity-tile" id="startBubble"><div class="tile-emoji" aria-hidden="true">🫧</div><strong>Pop the Bubble</strong><small>Under the Sea · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startTurn"><div class="tile-emoji" aria-hidden="true">🐥</div><strong>Follow the Little Trail</strong><small>Little Animal Adventures · Tracing turns</small></button>
+     <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -454,6 +468,22 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="note">Adult guidance: read each instruction aloud. One move at a time. No timer.</div>
  </section>
 
+ <section id="whichScreen" class="screen" hidden>
+  <button type="button" class="back" id="whichBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Explorers</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Top or Bottom?</h1></div><div class="counter" id="whichCounter">1 of 4</div></header>
+  <div class="steps" id="whichSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="whichInstruction">Tap the teddy at the TOP.</p>
+  <p class="hint">Look at the pictures. Tap the one at the top or bottom.</p>
+  <div class="which-choices" id="whichChoices">
+   <button class="which-choice" type="button" id="whichChoice0" aria-label="First picture"><span class="which-picture">🧸</span></button>
+   <button class="which-choice" type="button" id="whichChoice1" aria-label="Second picture"><span class="which-picture">🧸</span></button>
+  </div>
+  <div id="whichMessage" class="message" aria-live="polite">Choose one picture.</div>
+  <div class="controls"><button type="button" id="whichNext" hidden>Next picture →</button></div>
+  <div class="note">Adult guidance: ask one position at a time. Two large identical pictures are shown, one above the other. Pointing is acceptable.</div>
+ </section>
  <section id="turnScreen" class="screen" hidden>
   <button type="button" class="back" id="turnBack">← Choose a game</button>
   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
@@ -1311,6 +1341,49 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('turnBack').addEventListener('click',()=>{turnDragging=false;show('chooseScreen')});
  $('turnReset').addEventListener('click',turnRender);
  $('turnNext').addEventListener('click',()=>{if(!turnDone)return;turnRound=(turnRound+1)%turnRounds.length;turnRender()});
+
+ // Game 14 — Level 1 spatial awareness. Repeat only TOP and BOTTOM, one at a time.
+ // Both pictures are deliberately identical and equally large; only position differs.
+ const whichRounds=[
+   {pic:'🧸',name:'teddy',place:'TOP',correct:0},
+   {pic:'🚗',name:'car',place:'BOTTOM',correct:1},
+   {pic:'🎈',name:'balloon',place:'TOP',correct:0},
+   {pic:'⭐',name:'star',place:'BOTTOM',correct:1}
+ ];
+ let whichRound=0,whichDone=false;
+ function whichRender(){
+   const r=whichRounds[whichRound];whichDone=false;
+   $('whichCounter').textContent=`${whichRound+1} of ${whichRounds.length}`;
+   $('whichInstruction').textContent=`Tap the ${r.name} at the ${r.place}.`;
+   for(let i=0;i<2;i++){
+     const b=$('whichChoice'+i),picture=b.querySelector('.which-picture');
+     b.disabled=false;b.className='which-choice';picture.textContent=r.pic;
+     picture.className='which-picture';
+     b.setAttribute('aria-label',`${r.name} at the ${i===0?'top':'bottom'}`);
+   }
+   $('whichMessage').textContent='Choose the right place.';
+   $('whichNext').hidden=true;
+   [...$('whichSteps').children].forEach((e,i)=>e.classList.toggle('current',i<=whichRound));
+ }
+ function whichPick(i){
+   if(whichDone)return;
+   const r=whichRounds[whichRound],b=$('whichChoice'+i);
+   b.classList.remove('try-again','celebrate');void b.offsetWidth;
+   if(i!==r.correct){
+     b.classList.add('try-again');$('whichMessage').textContent=`Oops! Find the ${r.name} at the ${r.place.toLowerCase()}.`;
+     window.motorworxFeedback?.('retry','which');return;
+   }
+   whichDone=true;b.classList.add('celebrate');
+   $('whichChoice0').disabled=true;$('whichChoice1').disabled=true;
+   $('whichMessage').textContent='Well done!';
+   $('whichNext').textContent=whichRound===whichRounds.length-1?'Play again ↻':'Next picture →';
+   $('whichNext').hidden=false;window.motorworxFeedback?.('success','which');
+ }
+ [0,1].forEach(i=>$('whichChoice'+i).addEventListener('click',()=>whichPick(i)));
+ $('startWhich').addEventListener('click',()=>{whichRound=0;whichRender();show('whichScreen')});
+ $('whichBack').addEventListener('click',()=>show('chooseScreen'));
+ $('whichNext').addEventListener('click',()=>{if(!whichDone)return;whichRound=(whichRound+1)%whichRounds.length;whichRender()});
+
 })();
 </script>
 
@@ -1333,7 +1406,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   shadowScreen:'Look at the shadow. Tap the sea friend that matches the shadow.',
   disappearScreen:()=>document.getElementById('disappearPick').hidden?'Look at both pictures. Remember what you see. Tap I’m ready when you are ready.':'Which picture went away? Tap the missing picture.',
   bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.',
-  turnScreen:()=>document.getElementById('turnScreen').querySelector('.instruction').textContent+' '+document.getElementById('turnScreen').querySelector('.hint').textContent
+  turnScreen:()=>document.getElementById('turnScreen').querySelector('.instruction').textContent+' '+document.getElementById('turnScreen').querySelector('.hint').textContent,
+  whichScreen:()=>document.getElementById('whichInstruction').textContent
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1347,7 +1421,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1396,9 +1470,11 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   shadow:['Great job!','Fantastic!','Well done!','Awesome!','Excellent work!'],
   disappear:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
   bubble:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!'],
-  turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!']
+  turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!'],
+  which:['Awesome!','Well done!','Great job!','Fantastic!','Excellent work!']
  };
  const encouragement={
+  which:['Oops! Look for the picture in the right place.','Have another look! Is it at the top or bottom?','Whoops! Try the other picture.','Let’s look again. Find the picture in the right place.'],
   'trace-path':[
    'Oops! Stay on the dotted path. Try again!',
    'Oh dear! Let’s follow the dots together.',
@@ -1591,18 +1667,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
