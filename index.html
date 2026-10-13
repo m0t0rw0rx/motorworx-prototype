@@ -202,6 +202,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 @media(prefers-reduced-motion:reduce){.mw-celebration .mw-celebration-core,.mw-celebration .mw-confetti{animation:none;opacity:1}}
 .screen.auto-progressing .controls button[data-auto-next],
 .screen.auto-progressing .star-control-row button[data-auto-next]{display:none!important}
+#turnMessage.turn-error{color:#ad4865;background:#fff0f3;border-radius:13px;padding:9px 8px;animation:turnNudge .27s ease-in-out}
+@keyframes turnNudge{0%,100%{transform:translateX(0)}30%{transform:translateX(-5px)}65%{transform:translateX(5px)}}
 </style>
 </head>
 <body>
@@ -1177,13 +1179,13 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    {points:[[83,92],[230,92],[230,236]],friend:'bunny',destination:'carrot',start:'🐰',end:'🥕'},
    {points:[[277,231],[107,231],[107,92]],friend:'puppy',destination:'bone',start:'🐶',end:'🦴'}
  ];
- let turnRound=0,turnDistance=0,turnDragging=false,turnPointer=null,turnDone=false,turnLastPos=null;
+ let turnRound=0,turnDistance=0,turnDragging=false,turnPointer=null,turnDone=false,turnLastPos=null,turnApproaching=false;
  const turnPts=()=>turnRounds[turnRound].points;
  const turnLength=()=>Math.hypot(turnPts()[1][0]-turnPts()[0][0],turnPts()[1][1]-turnPts()[0][1])+Math.hypot(turnPts()[2][0]-turnPts()[1][0],turnPts()[2][1]-turnPts()[1][1]);
  function turnPointAt(d){const p=turnPts(),first=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),whole=turnLength();d=Math.max(0,Math.min(whole,d));if(d<=first)return [p[0][0]+(p[1][0]-p[0][0])*d/first,p[0][1]+(p[1][1]-p[0][1])*d/first];const t=(d-first)/(whole-first);return [p[1][0]+(p[2][0]-p[1][0])*t,p[1][1]+(p[2][1]-p[1][1])*t];}
  function turnPathTo(d){const a=turnPts()[0],b=turnPts()[1],len1=Math.hypot(b[0]-a[0],b[1]-a[1]);const mid=turnPointAt(d);return `M${a[0]} ${a[1]} ${d>len1?`L${b[0]} ${b[1]} `:''}L${mid[0]} ${mid[1]}`;}
  function turnRender(){const p=turnPts(),base=`M${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]} L${p[2][0]} ${p[2][1]}`;
-  turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;turnLastPos=null;
+  turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;turnLastPos=null;turnApproaching=false;
   $('turnWide').setAttribute('d',base);$('turnDots').setAttribute('d',base);$('turnProgress').setAttribute('d',turnPathTo(0));
   const r=turnRounds[turnRound];
   $('turnStart').textContent=r.start;$('turnEnd').textContent=r.end;
@@ -1194,66 +1196,100 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   turnBoard.setAttribute('aria-label',`Trace a wide L-shaped trail from the ${r.friend} to the ${r.destination}`);
   $('turnCounter').textContent=`${turnRound+1} of ${turnRounds.length}`;
   document.querySelectorAll('#turnSteps span').forEach((e,i)=>e.classList.toggle('current',i<=turnRound));
-  $('turnNext').hidden=true;$('turnReset').hidden=false;$('turnMessage').textContent=`Touch the ${r.friend} to begin.`;
+  $('turnNext').hidden=true;$('turnReset').hidden=false;$('turnMessage').classList.remove('turn-error');$('turnMessage').textContent=`Start on the ${r.friend}.`;
  }
  function turnCoordinates(e){const r=turnBoard.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*320/r.height};}
  function turnClosest(pos){const pts=turnPts();let best={dist:1e6,along:0},offset=0;
   for(let j=0;j<2;j++){const a=pts[j],b=pts[j+1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),t=Math.min(1,Math.max(0,((pos.x-a[0])*dx+(pos.y-a[1])*dy)/(len*len))),x=a[0]+dx*t,y=a[1]+dy*t,dist=Math.hypot(pos.x-x,pos.y-y);if(dist<best.dist)best={dist,along:offset+t*len};offset+=len;}
   return best;
  }
- // Each genuine tracing attempt must be checked, including stopping early.
- // After a mistake, keep the completed portion so the child can resume there.
+ // A child must begin on the animal, then trace the visible dotted line.
+ // Reset on mistakes to prevent accidental success through skipped sections.
+ function turnStartLabel(){return `Start on the ${turnRounds[turnRound].friend}.`;}
+ function turnResetAttempt(){
+  turnDragging=false;turnPointer=null;turnLastPos=null;turnDistance=0;turnApproaching=false;
+  $('turnProgress').setAttribute('d',turnPathTo(0));
+ }
  function turnMistake(message){
+  turnResetAttempt();
   $('turnMessage').textContent=message;
+  const area=$('turnMessage');
+  area.classList.remove('turn-error');void area.offsetWidth;area.classList.add('turn-error');
   window.motorworxFeedback?.('retry','turn');
  }
- function turnStopAttempt(message){
-  turnDragging=false;turnPointer=null;turnLastPos=null;
-  turnMistake(message);
+ // Use the SVG's real transformation matrix: border/scaling can otherwise
+ // cause the finger position to differ from the drawn trail on mobile.
+ function turnCoordinatesAccurate(e){
+  const pt=turnBoard.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;
+  const ctm=turnBoard.getScreenCTM();
+  if(ctm){const local=pt.matrixTransform(ctm.inverse());return {x:local.x,y:local.y};}
+  return turnCoordinates(e);
+ }
+ function turnIsAtAnimal(pos){
+  const a=turnPts()[0];
+  // Emoji is drawn 42px above the path; both animal and immediate path
+  // start count as a valid touch target for Level 1.
+  return Math.hypot(pos.x-a[0],pos.y-(a[1]-49))<=32
+    || Math.hypot(pos.x-a[0],pos.y-a[1])<=24;
  }
  turnBoard.addEventListener('pointerdown',e=>{
   if(turnDone)return;
-  const p=turnCoordinates(e),start=turnPointAt(turnDistance);
-  if(Math.hypot(p.x-start[0],p.y-start[1])>30){
-   turnMistake(`Touch the ${turnRounds[turnRound].friend} or the end of your traced line.`);
+  e.preventDefault();
+  const p=turnCoordinatesAccurate(e);
+  if(!turnIsAtAnimal(p)){
+   turnMistake(turnStartLabel());
    return;
   }
-  turnDragging=true;turnPointer=e.pointerId;turnLastPos=p;
-  turnBoard.setPointerCapture(e.pointerId);
-  $('turnMessage').textContent='Follow the dots!';e.preventDefault();
+  turnResetAttempt();
+  turnDragging=true;turnPointer=e.pointerId;
+  // The animal sits above the line. Allow a straight move down onto the
+  // initial dot, but never let it skip along the trail.
+  const a=turnPts()[0];turnApproaching=Math.hypot(p.x-a[0],p.y-a[1])>14;
+  turnLastPos={x:a[0],y:a[1]};
+  try{turnBoard.setPointerCapture(e.pointerId)}catch(_){}
+  $('turnMessage').classList.remove('turn-error');
+  $('turnMessage').textContent='Follow the dots!';
  });
  turnBoard.addEventListener('pointermove',e=>{
-  if(!turnDragging||turnPointer!==e.pointerId)return;
+  if(!turnDragging||turnPointer!==e.pointerId||turnDone)return;
   e.preventDefault();
-  const pos=turnCoordinates(e),previous=turnLastPos||pos;
+  const pos=turnCoordinatesAccurate(e),previous=turnLastPos||pos;
+  if(turnApproaching){
+   const a=turnPts()[0];
+   if(Math.abs(pos.x-a[0])>23 || pos.y<a[1]-86 || pos.y>a[1]+18){
+    turnMistake('Stay near the starting dots. '+turnStartLabel());return;
+   }
+   if(Math.hypot(pos.x-a[0],pos.y-a[1])>14)return;
+   turnApproaching=false;turnLastPos={x:a[0],y:a[1]};
+   return;
+  }
+  // A small cushion permits Level 1 finger imprecision without accepting
+  // visible departures from the dotted pathway or diagonal shortcuts.
+  const tolerance=14;
   const travel=Math.hypot(pos.x-previous.x,pos.y-previous.y);
-  // Check all points along the actual cursor movement, not only the end point.
-  // This catches diagonals cutting off the L and trips away from the path.
-  const samples=Math.max(1,Math.ceil(travel/6));
+  const samples=Math.max(1,Math.ceil(travel/3));
   let ahead=turnDistance;
   for(let i=1;i<=samples;i++){
    const t=i/samples;
    const sample={x:previous.x+(pos.x-previous.x)*t,y:previous.y+(pos.y-previous.y)*t};
    const near=turnClosest(sample);
-   if(near.dist>21){
-    turnStopAttempt('You moved off the dotted path. Try again!');return;
+   if(near.dist>tolerance){
+    turnMistake('Off the dotted path! '+turnStartLabel());return;
    }
-   // Keep movements sequential and prevent jumping across the corner.
-   if(near.along<ahead-19){
-    turnStopAttempt('Follow the dots towards the end. Try again!');return;
+   if(near.along<ahead-15){
+    turnMistake('Follow the dots forwards. '+turnStartLabel());return;
    }
-   if(near.along>ahead+35){
-    turnStopAttempt('Move slowly along the dots. Try again!');return;
+   if(near.along>ahead+23){
+    turnMistake('Stay on the dots. '+turnStartLabel());return;
    }
    ahead=Math.max(ahead,near.along);
   }
-  turnLastPos=pos;
-  turnDistance=Math.max(turnDistance,ahead);
+  turnLastPos=pos;turnDistance=Math.max(turnDistance,ahead);
   $('turnProgress').setAttribute('d',turnPathTo(turnDistance));
-  if(turnDistance>=turnLength()-12){
+  if(turnDistance>=turnLength()-10){
    turnDistance=turnLength();turnDragging=false;turnDone=true;turnLastPos=null;turnPointer=null;
    $('turnProgress').setAttribute('d',turnPathTo(turnDistance));
-   $('turnMessage').textContent='Well done!';
+   $('turnMessage').classList.remove('turn-error');$('turnMessage').textContent='Well done!';
    window.motorworxFeedback?.('success','turn');
    $('turnNext').textContent=turnRound===turnRounds.length-1?'Play again ↻':'Next path →';
    $('turnNext').hidden=false;$('turnReset').hidden=true;
@@ -1261,13 +1297,15 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  });
  turnBoard.addEventListener('pointerup',e=>{
   if(turnPointer!==e.pointerId)return;
-  const wasDragging=turnDragging;
-  turnDragging=false;turnPointer=null;turnLastPos=null;
-  // Lifting off the path before reaching the destination is a missed attempt.
-  if(wasDragging&&!turnDone)turnMistake('Keep following the dots to the end. Try again!');
+  if(turnDragging&&!turnDone)turnMistake('Keep your finger on the path. '+turnStartLabel());
+  else{turnDragging=false;turnPointer=null;turnLastPos=null;}
  });
- turnBoard.addEventListener('pointercancel',()=>{if(turnDragging&&!turnDone)turnStopAttempt('Try staying on the dotted path.');else{turnDragging=false;turnPointer=null;turnLastPos=null}});
- turnBoard.addEventListener('lostpointercapture',()=>{if(turnDragging&&!turnDone)turnStopAttempt('Try staying on the dotted path.');else{turnDragging=false;turnPointer=null;turnLastPos=null}});
+ turnBoard.addEventListener('pointercancel',()=>{
+  if(turnDragging&&!turnDone)turnMistake('Try again. '+turnStartLabel());
+ });
+ turnBoard.addEventListener('lostpointercapture',()=>{
+  if(turnDragging&&!turnDone)turnMistake('Try again. '+turnStartLabel());
+ });
  $('startTurn').addEventListener('click',()=>{turnRound=0;turnRender();show('turnScreen')});
  $('turnBack').addEventListener('click',()=>{turnDragging=false;show('chooseScreen')});
  $('turnReset').addEventListener('click',turnRender);
@@ -1426,6 +1464,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Whoops! Look for the missing toy.',
    'Have another think. What disappeared?'
   ],
+  turn:[
+   'Oops! Stay on the dotted path. Start on the animal and try again.',
+   'Whoops! Follow the dots all the way. Try again!',
+   'Nearly! Keep your finger on the dots and try again.',
+   'Try again from the animal. Follow the dotted line.'
+  ],
   diff:[
    'Oops! Tap the picture that is different.',
    'Oh dear! Which one is not the same?',
@@ -1514,9 +1558,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   if(!soundOn||!supported)return;
   if(type==='retry'){
    const now=Date.now();
-   if(now-lastRetryAt<1600)return;
+   if(now-lastRetryAt<(activity==='turn'?450:1600))return;
    lastRetryAt=now;
-   say(nextPhrase(encouragement,activity));
+   if(activity==='turn'){
+    // Read the specific error including this round's animal name.
+    say(document.getElementById('turnMessage').textContent);
+   }else say(nextPhrase(encouragement,activity));
   }
  };
  Object.keys(activities).forEach(id=>{
