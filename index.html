@@ -1183,13 +1183,14 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const turnPts=()=>turnRounds[turnRound].points;
  const turnLength=()=>Math.hypot(turnPts()[1][0]-turnPts()[0][0],turnPts()[1][1]-turnPts()[0][1])+Math.hypot(turnPts()[2][0]-turnPts()[1][0],turnPts()[2][1]-turnPts()[1][1]);
  function turnPointAt(d){const p=turnPts(),first=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),whole=turnLength();d=Math.max(0,Math.min(whole,d));if(d<=first)return [p[0][0]+(p[1][0]-p[0][0])*d/first,p[0][1]+(p[1][1]-p[0][1])*d/first];const t=(d-first)/(whole-first);return [p[1][0]+(p[2][0]-p[1][0])*t,p[1][1]+(p[2][1]-p[1][1])*t];}
+ function turnMoveFriend(){const spot=turnPointAt(turnDistance);$('turnStart').setAttribute('x',spot[0]);$('turnStart').setAttribute('y',spot[1]);}
  function turnPathTo(d){const a=turnPts()[0],b=turnPts()[1],len1=Math.hypot(b[0]-a[0],b[1]-a[1]);const mid=turnPointAt(d);return `M${a[0]} ${a[1]} ${d>len1?`L${b[0]} ${b[1]} `:''}L${mid[0]} ${mid[1]}`;}
  function turnRender(){const p=turnPts(),base=`M${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]} L${p[2][0]} ${p[2][1]}`;
   turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;turnLastPos=null;turnApproaching=false;
   $('turnWide').setAttribute('d',base);$('turnDots').setAttribute('d',base);$('turnProgress').setAttribute('d',turnPathTo(0));
   const r=turnRounds[turnRound];
   $('turnStart').textContent=r.start;$('turnEnd').textContent=r.end;
-  $('turnStart').setAttribute('x',p[0][0]);$('turnStart').setAttribute('y',p[0][1]-42);
+  turnMoveFriend();
   $('turnEnd').setAttribute('x',p[2][0]);$('turnEnd').setAttribute('y',p[2][1]-42);
   $('turnScreen').querySelector('.instruction').textContent=`Trace the dots to the ${r.destination}.`;
   $('turnScreen').querySelector('.hint').textContent=`Start at the ${r.friend}. Follow the dots and turn the corner.`;
@@ -1203,22 +1204,21 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   for(let j=0;j<2;j++){const a=pts[j],b=pts[j+1],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),t=Math.min(1,Math.max(0,((pos.x-a[0])*dx+(pos.y-a[1])*dy)/(len*len))),x=a[0]+dx*t,y=a[1]+dy*t,dist=Math.hypot(pos.x-x,pos.y-y);if(dist<best.dist)best={dist,along:offset+t*len};offset+=len;}
   return best;
  }
- // A child must begin on the animal, then trace the visible dotted line.
- // Reset on mistakes to prevent accidental success through skipped sections.
+ // Keep every successfully traced segment when the child leaves the dots.
+ // On a retry, the child resumes at the green line's end, not at the animal.
  function turnStartLabel(){return `Start on the ${turnRounds[turnRound].friend}.`;}
- function turnResetAttempt(){
-  turnDragging=false;turnPointer=null;turnLastPos=null;turnDistance=0;turnApproaching=false;
-  $('turnProgress').setAttribute('d',turnPathTo(0));
+ function turnResumeLabel(){return turnDistance>3?`Touch the ${turnRounds[turnRound].friend} to keep going.`:turnStartLabel();}
+ function turnPauseAttempt(){
+  turnDragging=false;turnPointer=null;turnLastPos=null;turnApproaching=false;
+  // Deliberately do not change turnDistance or the green progress path.
  }
  function turnMistake(message){
-  turnResetAttempt();
+  turnPauseAttempt();
   $('turnMessage').textContent=message;
   const area=$('turnMessage');
   area.classList.remove('turn-error');void area.offsetWidth;area.classList.add('turn-error');
   window.motorworxFeedback?.('retry','turn');
  }
- // Use the SVG's real transformation matrix: border/scaling can otherwise
- // cause the finger position to differ from the drawn trail on mobile.
  function turnCoordinatesAccurate(e){
   const pt=turnBoard.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;
   const ctm=turnBoard.getScreenCTM();
@@ -1227,25 +1227,29 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  }
  function turnIsAtAnimal(pos){
   const a=turnPts()[0];
-  // Emoji is drawn 42px above the path; both animal and immediate path
-  // start count as a valid touch target for Level 1.
-  return Math.hypot(pos.x-a[0],pos.y-(a[1]-49))<=32
-    || Math.hypot(pos.x-a[0],pos.y-a[1])<=24;
+  return Math.hypot(pos.x-a[0],pos.y-a[1])<=32;
+ }
+ function turnResumePoint(){const xy=turnPointAt(turnDistance);return {x:xy[0],y:xy[1]};}
+ function turnValidResumeTouch(pos){
+  if(turnDistance<=3)return turnIsAtAnimal(pos);
+  // A toddler-friendly touch target around the last green dot.
+  const end=turnResumePoint();
+  return Math.hypot(pos.x-end.x,pos.y-end.y)<=32;
  }
  turnBoard.addEventListener('pointerdown',e=>{
   if(turnDone)return;
   e.preventDefault();
   const p=turnCoordinatesAccurate(e);
-  if(!turnIsAtAnimal(p)){
-   turnMistake(turnStartLabel());
+  if(!turnValidResumeTouch(p)){
+   // A misplaced touch is guidance, not a loss of completed tracing.
+   turnMistake(turnResumeLabel());
    return;
   }
-  turnResetAttempt();
   turnDragging=true;turnPointer=e.pointerId;
-  // The animal sits above the line. Allow a straight move down onto the
-  // initial dot, but never let it skip along the trail.
-  const a=turnPts()[0];turnApproaching=Math.hypot(p.x-a[0],p.y-a[1])>14;
-  turnLastPos={x:a[0],y:a[1]};
+  const a=turnPts()[0];
+  // The moving animal is centred on the currently traced endpoint.
+  turnApproaching=false;
+  turnLastPos=turnResumePoint();
   try{turnBoard.setPointerCapture(e.pointerId)}catch(_){}
   $('turnMessage').classList.remove('turn-error');
   $('turnMessage').textContent='Follow the dots!';
@@ -1257,38 +1261,35 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   if(turnApproaching){
    const a=turnPts()[0];
    if(Math.abs(pos.x-a[0])>23 || pos.y<a[1]-86 || pos.y>a[1]+18){
-    turnMistake('Stay near the starting dots. '+turnStartLabel());return;
+    turnMistake('Oops, stay on the path! '+turnStartLabel());return;
    }
    if(Math.hypot(pos.x-a[0],pos.y-a[1])>14)return;
    turnApproaching=false;turnLastPos={x:a[0],y:a[1]};
    return;
   }
-  // A small cushion permits Level 1 finger imprecision without accepting
-  // visible departures from the dotted pathway or diagonal shortcuts.
   const tolerance=14;
   const travel=Math.hypot(pos.x-previous.x,pos.y-previous.y);
   const samples=Math.max(1,Math.ceil(travel/3));
   let ahead=turnDistance;
+  let error=null;
   for(let i=1;i<=samples;i++){
    const t=i/samples;
    const sample={x:previous.x+(pos.x-previous.x)*t,y:previous.y+(pos.y-previous.y)*t};
    const near=turnClosest(sample);
-   if(near.dist>tolerance){
-    turnMistake('Off the dotted path! '+turnStartLabel());return;
-   }
-   if(near.along<ahead-15){
-    turnMistake('Follow the dots forwards. '+turnStartLabel());return;
-   }
-   if(near.along>ahead+23){
-    turnMistake('Stay on the dots. '+turnStartLabel());return;
-   }
+   if(near.dist>tolerance){error='Oops, stay on the path!';break;}
+   if(near.along<ahead-15){error='Oops, follow the dots forwards!';break;}
+   if(near.along>ahead+23){error='Oops, follow the dotted path!';break;}
    ahead=Math.max(ahead,near.along);
   }
-  turnLastPos=pos;turnDistance=Math.max(turnDistance,ahead);
+  // Preserve valid progress up to the exact place the finger went wrong.
+  turnDistance=Math.max(turnDistance,ahead);
   $('turnProgress').setAttribute('d',turnPathTo(turnDistance));
+  turnMoveFriend();
+  if(error){turnMistake(error+' '+turnResumeLabel());return;}
+  turnLastPos=pos;
   if(turnDistance>=turnLength()-10){
    turnDistance=turnLength();turnDragging=false;turnDone=true;turnLastPos=null;turnPointer=null;
-   $('turnProgress').setAttribute('d',turnPathTo(turnDistance));
+   $('turnProgress').setAttribute('d',turnPathTo(turnDistance));turnMoveFriend();
    $('turnMessage').classList.remove('turn-error');$('turnMessage').textContent='Well done!';
    window.motorworxFeedback?.('success','turn');
    $('turnNext').textContent=turnRound===turnRounds.length-1?'Play again ↻':'Next path →';
@@ -1297,14 +1298,14 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  });
  turnBoard.addEventListener('pointerup',e=>{
   if(turnPointer!==e.pointerId)return;
-  if(turnDragging&&!turnDone)turnMistake('Keep your finger on the path. '+turnStartLabel());
-  else{turnDragging=false;turnPointer=null;turnLastPos=null;}
+  if(turnDragging&&!turnDone)turnMistake('Keep your finger on the path. '+turnResumeLabel());
+  else turnPauseAttempt();
  });
  turnBoard.addEventListener('pointercancel',()=>{
-  if(turnDragging&&!turnDone)turnMistake('Try again. '+turnStartLabel());
+  if(turnDragging&&!turnDone)turnMistake('Follow the dots. '+turnResumeLabel());
  });
  turnBoard.addEventListener('lostpointercapture',()=>{
-  if(turnDragging&&!turnDone)turnMistake('Try again. '+turnStartLabel());
+  if(turnDragging&&!turnDone)turnMistake('Follow the dots. '+turnResumeLabel());
  });
  $('startTurn').addEventListener('click',()=>{turnRound=0;turnRender();show('turnScreen')});
  $('turnBack').addEventListener('click',()=>{turnDragging=false;show('chooseScreen')});
@@ -1465,10 +1466,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Have another think. What disappeared?'
   ],
   turn:[
-   'Oops! Stay on the dotted path. Start on the animal and try again.',
-   'Whoops! Follow the dots all the way. Try again!',
-   'Nearly! Keep your finger on the dots and try again.',
-   'Try again from the animal. Follow the dotted line.'
+   'Oops, stay on the path!',
+   'Whoops! Keep following the dots.',
+   'Almost! Stay on the dotted trail.',
+   'Oops! Follow the dots with your finger.'
   ],
   diff:[
    'Oops! Tap the picture that is different.',
