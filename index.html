@@ -231,6 +231,23 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .feed-food.wiggle{animation:which-wiggle .42s ease}
 @keyframes feed-bounce{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.13)}}
 @media(max-width:390px){.feed-board{min-height:310px}.feed-animal{font-size:86px}.feed-bowl{top:125px}.feed-food{font-size:65px;top:235px}}
+
+/* Game 16 — broad finger swipes reveal a sea creature; no precision targets. */
+#wipeScreen .theme-label{background:#e1f4fa;color:#327e99}
+.wipe-stage{position:relative;width:100%;max-width:420px;aspect-ratio:1.3;margin:18px auto 10px;background:linear-gradient(180deg,#c4eff9,#e8fbfc);border-radius:24px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;border:2px solid #c4e9ef}
+.wipe-animal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-size:clamp(115px,32vw,165px);line-height:1;pointer-events:none}
+.wipe-stage canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+/* The creature stays anchored to its original position while gently jiggling. */
+.wipe-stage.finished .wipe-animal{animation:wipe-found-jiggle .55s ease-in-out both}
+@keyframes wipe-found-jiggle{
+  0%,100%{transform:translate(-50%,-50%) rotate(0deg)}
+  20%{transform:translate(-50%,-50%) rotate(-9deg)}
+  40%{transform:translate(-50%,-50%) rotate(9deg)}
+  65%{transform:translate(-50%,-50%) rotate(-7deg)}
+  85%{transform:translate(-50%,-50%) rotate(5deg)}
+}
+@media(prefers-reduced-motion:reduce){.wipe-stage.finished .wipe-animal{animation:none}}
+.wipe-stage .wipe-bubbles{position:absolute;bottom:12px;right:14px;pointer-events:none;font-size:22px;opacity:.5}
 </style>
 </head>
 <body>
@@ -243,7 +260,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Fifteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
+  <p><strong>Sixteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -269,6 +286,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startTurn"><div class="tile-emoji" aria-hidden="true">🐥</div><strong>Follow the Little Trail</strong><small>Little Animal Adventures · Tracing turns</small></button>
      <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
      <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true">🦀</div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -573,6 +591,24 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <div class="note">Touchscreen prototype · No timer · No score penalties</div>
  <div class="logo-note">Temporary illustrations. Add the original Motorworx logo before publishing.</div>
 </section>
+
+ <section id="wipeScreen" class="screen" hidden>
+  <button type="button" class="back" id="wipeBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Under the Sea</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Clean the Ocean Window</h1></div><div class="counter" id="wipeCounter">1 of 4</div></header>
+  <div class="steps" id="wipeSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction">Find the sea creature by wiping the window.</p>
+  <p class="hint">Rub over the creature to uncover it.</p>
+  <div id="wipeStage" class="wipe-stage" aria-label="Cloudy window. Rub across it to reveal a sea animal.">
+    <div id="wipeAnimal" class="wipe-animal" aria-hidden="true">🦀</div>
+    <canvas id="wipeCanvas" width="420" height="324" aria-label="Rub here with your finger"></canvas>
+    <span class="wipe-bubbles" aria-hidden="true">🫧</span>
+  </div>
+  <div class="message" id="wipeMessage" aria-live="polite">Rub the window with your finger.</div>
+  <div class="controls"><button type="button" id="wipeNext" hidden>Next sea friend →</button></div>
+  <div class="note">Adult guidance: demonstrate a broad wiping motion if needed. No time limit or penalties.</div>
+ </section>
 </main>
 <script>
 (()=>{
@@ -1477,6 +1513,88 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('feedBack').addEventListener('click',()=>{feedDragging=false;show('chooseScreen')});
  $('feedNext').addEventListener('click',()=>{if(!feedDone)return;feedRound=(feedRound+1)%feedRounds.length;feedRender()});
 
+ // Game 16: broad finger movements reveal one large sea animal at a time.
+ const wipeRounds=[{animal:'🦀',name:'crab',x:30,y:34},{animal:'🐙',name:'octopus',x:69,y:35},{animal:'🐠',name:'fish',x:34,y:68},{animal:'🐢',name:'turtle',x:68,y:67}];
+ let wipeRound=0,wipeDone=false,wipeDrawing=false,wipePointer=null;
+ const wipeCanvas=$('wipeCanvas'),wipeCtx=wipeCanvas.getContext('2d'),wipeStage=$('wipeStage');
+ let lastWipePoint=null;
+ // Only the area occupied by the sea creature needs to be uncovered.
+ // Coordinates are expressed in the canvas's 420 × 324 drawing space.
+ // An oval provides a generous Level 1 target corresponding to the large emoji.
+ const CREATURE_REVEAL_FRACTION=0.998; // 99.8% of the creature area, not the full window
+ function creatureClearedFraction(){
+  const r=wipeRounds[wipeRound];
+  const cx=420*r.x/100,cy=324*r.y/100;
+  const rx=62,ry=59; // Fit the large rendered sea creature more closely
+  const left=Math.max(0,Math.floor(cx-rx)),top=Math.max(0,Math.floor(cy-ry));
+  const right=Math.min(420,Math.ceil(cx+rx)),bottom=Math.min(324,Math.ceil(cy+ry));
+  const w=right-left,h=bottom-top;
+  const pixels=wipeCtx.getImageData(left,top,w,h).data;
+  let revealed=0,total=0;
+  for(let y=2;y<h;y+=4){
+   for(let x=2;x<w;x+=4){
+    const px=left+x,py=top+y;
+    if(((px-cx)/rx)**2+((py-cy)/ry)**2>1)continue;
+    total++;
+    if(pixels[(y*w+x)*4+3]<32)revealed++;
+   }
+  }
+  return total?revealed/total:0;
+ }
+ // Placeholder sea-creature artwork will be replaced with final branded artwork.
+ function wipeReset(){
+  wipeDone=false;wipeDrawing=false;wipePointer=null;lastWipePoint=null;
+  wipeCanvas.style.pointerEvents='auto';
+  const r=wipeRounds[wipeRound];$('wipeAnimal').textContent=r.animal;
+  $('wipeAnimal').style.left=r.x+'%';$('wipeAnimal').style.top=r.y+'%';
+  $('wipeCounter').textContent=`${wipeRound+1} of ${wipeRounds.length}`;
+  wipeStage.classList.remove('finished');
+  wipeCtx.globalCompositeOperation='source-over';wipeCtx.clearRect(0,0,420,324);
+  wipeCtx.fillStyle='#a8d9e3';wipeCtx.fillRect(0,0,420,324);
+  // Broad fog/cloud streaks create an obviously wipeable window.
+  wipeCtx.strokeStyle='#d8f4f5';wipeCtx.lineWidth=22;wipeCtx.lineCap='round';
+  for(let i=0;i<5;i++){wipeCtx.beginPath();wipeCtx.moveTo(20,35+i*61);wipeCtx.lineTo(390,25+i*61);wipeCtx.stroke()}
+  $('wipeMessage').textContent='Rub the window with your finger.';$('wipeNext').hidden=true;
+  document.querySelectorAll('#wipeSteps span').forEach((el,i)=>el.classList.toggle('current',i<=wipeRound));
+ }
+ function wipeCoords(e){const b=wipeCanvas.getBoundingClientRect();return{x:(e.clientX-b.left)*420/b.width,y:(e.clientY-b.top)*324/b.height}}
+ function wipeMark(x,y){
+  wipeCtx.globalCompositeOperation='destination-out';wipeCtx.beginPath();wipeCtx.arc(x,y,31,0,Math.PI*2);wipeCtx.fill();
+ }
+ function wipeAt(e){
+  if(wipeDone)return; // Do not erase anything after the reveal threshold is reached.
+  const pt=wipeCoords(e);if(lastWipePoint){const steps=Math.max(1,Math.ceil(Math.hypot(pt.x-lastWipePoint.x,pt.y-lastWipePoint.y)/13));
+   for(let i=1;i<=steps;i++){const a=i/steps;wipeMark(lastWipePoint.x+(pt.x-lastWipePoint.x)*a,lastWipePoint.y+(pt.y-lastWipePoint.y)*a)}
+  }else wipeMark(pt.x,pt.y);
+  lastWipePoint=pt;
+  if(!wipeDone&&creatureClearedFraction()>=CREATURE_REVEAL_FRACTION){
+   // Finish after at least 99.8% of the creature area is uncovered.
+   wipeDone=true;wipeDrawing=false;lastWipePoint=null;
+   if(wipePointer!==null){try{wipeCanvas.releasePointerCapture(wipePointer)}catch(e){}}
+   wipePointer=null;wipeCanvas.style.pointerEvents='none';
+   wipeCtx.globalCompositeOperation='destination-out';wipeCtx.fillRect(0,0,420,324);
+   wipeStage.classList.add('finished'); // Jiggle only; preserve the animal's location.
+   $('wipeMessage').textContent='You found your sea friend! Well done!';
+   $('wipeNext').textContent=wipeRound===wipeRounds.length-1?'Play again ↻':'Next sea friend →';
+   $('wipeNext').hidden=false;
+   // Shared success system supplies spoken congratulations, but NO emoji
+   // overlay for this specific activity. The animal itself jiggles.
+   window.motorworxFeedback?.('success','wipe');
+  }
+ }
+ wipeCanvas.addEventListener('pointerdown',e=>{
+  if(wipeDone||(e.button!==undefined&&e.button!==0))return;
+  e.preventDefault();wipeDrawing=true;wipePointer=e.pointerId;lastWipePoint=null;
+  wipeCanvas.setPointerCapture(e.pointerId);wipeAt(e);
+ });
+ wipeCanvas.addEventListener('pointermove',e=>{if(!wipeDrawing||wipePointer!==e.pointerId||wipeDone)return;e.preventDefault();wipeAt(e)});
+ function wipeStop(){wipeDrawing=false;lastWipePoint=null;wipePointer=null}
+ wipeCanvas.addEventListener('pointerup',wipeStop);wipeCanvas.addEventListener('pointercancel',wipeStop);wipeCanvas.addEventListener('lostpointercapture',wipeStop);
+ $('startWipe').addEventListener('click',()=>{wipeRound=0;wipeCanvas.style.pointerEvents='auto';wipeReset();show('wipeScreen')});
+ $('wipeBack').addEventListener('click',()=>{wipeStop();show('chooseScreen')});
+ $('wipeNext').addEventListener('click',()=>{if(!wipeDone)return;wipeRound=(wipeRound+1)%wipeRounds.length;wipeCanvas.style.pointerEvents='auto';wipeReset()});
+
+
 })();
 </script>
 
@@ -1501,7 +1619,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   bubbleScreen:'Tap the big bubble! Find it and pop it with your finger.',
   turnScreen:()=>document.getElementById('turnScreen').querySelector('.instruction').textContent+' '+document.getElementById('turnScreen').querySelector('.hint').textContent,
   whichScreen:()=>document.getElementById('whichInstruction').textContent,
-  feedScreen:()=>document.getElementById('feedInstruction').textContent+' Drag the food into the bowl.'
+  feedScreen:()=>document.getElementById('feedInstruction').textContent+' Drag the food into the bowl.',
+  wipeScreen:'Find the sea creature by wiping the window.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1515,7 +1634,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1541,8 +1660,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     advanced=true;screen.classList.remove('auto-progressing');
     button.click(); // next round begins after the full spoken praise
    }
-   // Ensure the emoji is visible long enough; don't interrupt slower device voices.
-   autoTimer=setTimeout(()=>{autoTimer=null;minimumFinished=true;maybeAdvance()},2400);
+   // Wiping uses a short jiggle; all games wait for spoken praise before progressing.
+   autoTimer=setTimeout(()=>{autoTimer=null;minimumFinished=true;maybeAdvance()},screenId==='wipeScreen'?650:2400);
    registerPraiseDone(()=>{praiseFinished=true;maybeAdvance()});
   });
  }
@@ -1566,7 +1685,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   bubble:['Awesome!','Well done!','Fantastic!','Great job!','Excellent work!'],
   turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!'],
   which:['Awesome!','Well done!','Great job!','Fantastic!','Excellent work!'],
-  feed:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!']
+  feed:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
+  wipe:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!']
  };
  const encouragement={
   feed:['Oops! Put the food in the bowl.','Whoops! Try moving the food into the bowl.','Almost! Drag the food to the bowl.','Let’s put the food in the bowl.'],
@@ -1717,7 +1837,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  }
  window.motorworxFeedback=function(type,activity){
   if(type==='success'){
-   celebrate();
+   if(activity!=='wipe')celebrate();
    let voiceDone=false,notifyVoiceDone=null;
    scheduleAutoNext(done=>{notifyVoiceDone=done;if(voiceDone)done()});
    let fallback=null;
@@ -1763,18 +1883,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
