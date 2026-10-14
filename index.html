@@ -287,6 +287,19 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 @keyframes sizeBounce{0%,100%{transform:scale(1)}45%{transform:translateY(-13px) scale(1.08)}}
 @keyframes sizeShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}65%{transform:translateX(8px)}}
 @media(max-width:390px){.size-board{gap:4px;min-height:255px;padding:10px 4px}.size-option{height:212px}}
+
+/* Game 20 — large, gently travelling target for early visual tracking. */
+#butterflyScreen .theme-label{background:#ffe8f1;color:#99527b}
+.butterfly-field{position:relative;max-width:460px;height:340px;margin:16px auto;background:linear-gradient(#e4f6ff 0%,#eefbe9 75%,#bce6ae 75%);border-radius:26px;overflow:hidden;touch-action:manipulation}
+.butterfly-flower{position:absolute;bottom:5%;font-size:49px;pointer-events:none;opacity:.9}
+.butterfly-target{position:absolute;left:20%;top:35%;width:115px;height:115px;transform:translate(-50%,-50%);border:0;background:transparent;padding:0;display:flex;align-items:center;justify-content:center;font-size:86px;cursor:pointer;touch-action:manipulation;z-index:2;filter:drop-shadow(0 5px 3px #74648a44);animation:butterflyTravel 5s ease-in-out infinite alternate}
+.butterfly-target .butterfly-art{display:block;line-height:1;pointer-events:none}
+.butterfly-target.found{animation:none!important;pointer-events:none}
+.butterfly-target.found .butterfly-art{animation:butterflyHappy .6s ease-in-out}
+@keyframes butterflyTravel{from{left:var(--butterfly-from-x);top:var(--butterfly-from-y)}to{left:var(--butterfly-to-x);top:var(--butterfly-to-y)}}
+@keyframes butterflyHappy{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-14deg) scale(1.12)}70%{transform:rotate(14deg) scale(1.12)}}
+@media(max-width:390px){.butterfly-field{height:295px}.butterfly-target{width:110px;height:110px;font-size:80px}.butterfly-flower{font-size:39px}}
+@media(prefers-reduced-motion:reduce){.butterfly-target{animation-duration:9s}}
 </style>
 </head>
 <body>
@@ -329,6 +342,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startPark"><div class="tile-emoji" aria-hidden="true">🚙</div><strong>Little Parking Spots</strong><small>Little Explorers · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startSize"><div class="tile-emoji" aria-hidden="true">🐘</div><strong>Big or Small?</strong><small>Safari Explorers · Size perception</small></button>
      <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startButterfly"><div class="tile-emoji" aria-hidden="true">🦋</div><strong>Catch the Butterfly!</strong><small>Garden Adventure · Visual tracking</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -700,6 +714,22 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="message" id="sizeMessage" aria-live="polite">Tap the big elephant!</div>
   <div class="controls"><button id="sizeNext" type="button" hidden>Next picture →</button></div>
   <div class="note">Adult guidance: the two pictures show the same animal in clearly different sizes. Pointing is fine.</div>
+ </section>
+ <section id="butterflyScreen" class="screen" hidden>
+  <button type="button" class="back" id="butterflyBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Garden Adventure</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Catch the Butterfly!</h1></div><div class="counter" id="butterflyCounter">1 of 4</div></header>
+  <div class="steps" id="butterflySteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="butterflyInstruction">Tap the butterfly!</p>
+  <p class="hint">Watch it move. Tap it with your finger.</p>
+  <div class="butterfly-field" id="butterflyField" aria-label="Garden with one moving butterfly">
+   <span class="butterfly-flower" style="left:5%" aria-hidden="true">🌼</span><span class="butterfly-flower" style="right:5%" aria-hidden="true">🌷</span>
+   <button class="butterfly-target" id="butterflyTarget" type="button" aria-label="Tap the butterfly"><span class="butterfly-art">🦋</span></button>
+  </div>
+  <div class="message" id="butterflyMessage" aria-live="polite">Tap the butterfly!</div>
+  <div class="controls"><button type="button" id="butterflyNext" hidden>Next butterfly →</button></div>
+  <div class="note">Adult guidance: there is only one large butterfly. Allow pointing or a gentle tap; no need to chase quickly.</div>
  </section>
 </main>
 <script>
@@ -1801,6 +1831,50 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('sizeBack').addEventListener('click',()=>show('chooseScreen'));
  $('sizeNext').addEventListener('click',()=>{if(!sizeDone)return;sizeRound=(sizeRound+1)%sizeRounds.length;sizeRender()});
 
+ // Game 20: follow one large butterfly with the eyes, then touch it.
+ const butterflyRounds=[
+  {from:[23,34],to:[73,34],duration:6.2,flowers:['🌼','🌷']},
+  {from:[73,45],to:[28,45],duration:6.5,flowers:['🌻','🌼']},
+  {from:[37,27],to:[37,63],duration:6.8,flowers:['🌷','🌻']},
+  {from:[68,62],to:[68,28],duration:6.8,flowers:['🌸','🌼']}
+ ];
+ let butterflyRound=0,butterflyFound=false;
+ const butterflyTarget=$('butterflyTarget'),butterflyField=$('butterflyField');
+ function butterflyRender(){
+  butterflyFound=false;
+  const r=butterflyRounds[butterflyRound];
+  $('butterflyCounter').textContent=`${butterflyRound+1} of ${butterflyRounds.length}`;
+  $('butterflyInstruction').textContent='Tap the butterfly!';
+  $('butterflyMessage').textContent='Tap the butterfly!';
+  $('butterflyNext').hidden=true;
+  [...$('butterflySteps').children].forEach((el,i)=>el.classList.toggle('current',i<=butterflyRound));
+  butterflyTarget.classList.remove('found');butterflyTarget.disabled=false;
+  butterflyTarget.style.removeProperty('left');butterflyTarget.style.removeProperty('top');
+  butterflyTarget.style.setProperty('--butterfly-from-x',r.from[0]+'%');
+  butterflyTarget.style.setProperty('--butterfly-from-y',r.from[1]+'%');
+  butterflyTarget.style.setProperty('--butterfly-to-x',r.to[0]+'%');
+  butterflyTarget.style.setProperty('--butterfly-to-y',r.to[1]+'%');
+  butterflyTarget.style.animationDuration=r.duration+'s';
+  butterflyTarget.style.animationDelay='0s';
+  butterflyField.querySelectorAll('.butterfly-flower').forEach((el,i)=>el.textContent=r.flowers[i]);
+ }
+ butterflyTarget.addEventListener('click',e=>{
+  e.stopPropagation();if(butterflyFound)return;
+  butterflyFound=true;
+  // Freeze at the actual on-screen position before the happy wing jiggle.
+  const fieldRect=butterflyField.getBoundingClientRect(),targetRect=butterflyTarget.getBoundingClientRect();
+  const x=targetRect.left+targetRect.width/2-fieldRect.left,y=targetRect.top+targetRect.height/2-fieldRect.top;
+  butterflyTarget.style.left=x+'px';butterflyTarget.style.top=y+'px';
+  butterflyTarget.classList.add('found');butterflyTarget.disabled=true;
+  $('butterflyNext').textContent=butterflyRound===butterflyRounds.length-1?'Play again ↻':'Next butterfly →';
+  $('butterflyNext').hidden=false;
+  window.motorworxFeedback?.('success','butterfly');
+ });
+ butterflyField.addEventListener('click',e=>{if(butterflyFound||e.target.closest('#butterflyTarget'))return;window.motorworxFeedback?.('retry','butterfly')});
+ $('startButterfly').addEventListener('click',()=>{butterflyRound=0;butterflyRender();show('butterflyScreen')});
+ $('butterflyBack').addEventListener('click',()=>show('chooseScreen'));
+ $('butterflyNext').addEventListener('click',()=>{if(!butterflyFound)return;butterflyRound=(butterflyRound+1)%butterflyRounds.length;butterflyRender()});
+
 })();
 </script>
 
@@ -1829,7 +1903,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   wipeScreen:'Find the sea creature by wiping the window.',
   towerScreen:()=>document.getElementById('towerInstruction').textContent+' Drag it into the dotted space.',
   parkScreen:()=>document.getElementById('parkInstruction').textContent+' Drag it into the parking space.',
-  sizeScreen:()=>document.getElementById('sizeInstruction').textContent
+  sizeScreen:()=>document.getElementById('sizeInstruction').textContent,
+  butterflyScreen:'Tap the butterfly!'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1843,7 +1918,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext',parkScreen:'parkNext',sizeScreen:'sizeNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext',parkScreen:'parkNext',sizeScreen:'sizeNext',butterflyScreen:'butterflyNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1898,9 +1973,11 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   park:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
   tower:['Well done!','Great job!','Excellent work!','Awesome!','Fantastic!'],
   wipe:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!'],
-  size:['Well done!','Fantastic!','Great job!','Awesome!','Excellent work!']
+  size:['Well done!','Fantastic!','Great job!','Awesome!','Excellent work!'],
+  butterfly:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!']
  };
  const encouragement={
+  butterfly:['Oops! Tap the butterfly. Try again!','Look for the moving butterfly. Try again!'],
   size:['Oops! Look for the other size. Try again!','Look again! Which picture is the right size?','Almost! Have another look. Try again!'],
   feed:['Oops! Put the food in the bowl.','Whoops! Try moving the food into the bowl.','Almost! Drag the food to the bowl.','Let’s put the food in the bowl.'],
   which:['Oops! Look for the picture in the right place.','Have another look! Is it at the top or bottom?','Whoops! Try the other picture.','Let’s look again. Find the picture in the right place.'],
@@ -1987,7 +2064,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const feedbackMessages={trace:'message',match:'matchMessage',peek:'peekMessage',memory:'memoryMessage',
   spatial:'spatialMessage',finish:'finishMessage',pattern:'patternMessage',diff:'diffMessage',
   star:'starMessage',shadow:'shadowMessage',disappear:'disappearMessage',bubble:'bubbleMessage',
-  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage',park:'parkMessage',size:'sizeMessage'};
+  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage',park:'parkMessage',size:'sizeMessage',butterfly:'butterflyMessage'};
  function showFeedback(activity,phrase){
   const el=document.getElementById(feedbackMessages[activity]);
   if(!el||!phrase)return;
@@ -2122,18 +2199,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower','startPark','startSize'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext','parkNext','sizeNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower','startPark','startSize','startButterfly'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext','parkNext','sizeNext','butterflyNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','sizeBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','sizeBack','butterflyBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','sizeBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','sizeBack','butterflyBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
