@@ -275,6 +275,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 @keyframes parkWiggle{0%,100%{transform:translate(-50%,-50%) rotate(0)}25%{transform:translate(-50%,-50%) rotate(-8deg)}75%{transform:translate(-50%,-50%) rotate(8deg)}}
 @keyframes parkPop{0%{transform:translate(-50%,-50%) scale(.85)}55%{transform:translate(-50%,-50%) scale(1.12)}100%{transform:translate(-50%,-50%) scale(1)}}
 @media(max-width:390px){.park-stage{height:290px}.park-garage{width:104px;height:106px}.park-car{width:90px;height:83px;font-size:57px}}
+
+/* Game 19 — size discrimination, with just two very different choices. */
+#sizeScreen .theme-label{background:#fff0d9;color:#8b5d38}
+.size-board{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center;max-width:460px;min-height:300px;margin:16px auto;background:#fff8ee;border-radius:26px;padding:18px 12px}
+.size-option{height:240px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;cursor:pointer;border-radius:20px;touch-action:manipulation}
+.size-option:focus-visible{outline:3px dashed #866dc0;outline-offset:2px}
+.size-art{display:inline-block;line-height:1;transform-origin:50% 75%;transition:transform .18s ease;pointer-events:none;filter:drop-shadow(0 5px 2px #8c754020)}
+.size-option.correct .size-art{animation:sizeBounce .65s ease}
+.size-option.incorrect .size-art{animation:sizeShake .42s ease}
+@keyframes sizeBounce{0%,100%{transform:scale(1)}45%{transform:translateY(-13px) scale(1.08)}}
+@keyframes sizeShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}65%{transform:translateX(8px)}}
+@media(max-width:390px){.size-board{gap:4px;min-height:255px;padding:10px 4px}.size-option{height:212px}}
 </style>
 </head>
 <body>
@@ -287,7 +299,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Eighteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
+  <p><strong>Nineteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -315,6 +327,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true">🦀</div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
      <button type="button" class="activity-tile" id="startPark"><div class="tile-emoji" aria-hidden="true">🚙</div><strong>Little Parking Spots</strong><small>Little Explorers · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startSize"><div class="tile-emoji" aria-hidden="true">🐘</div><strong>Big or Small?</strong><small>Safari Explorers · Size perception</small></button>
      <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
@@ -671,6 +684,22 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="message" id="parkMessage" aria-live="polite">Park the car.</div>
   <div class="controls"><button type="button" id="parkNext" hidden>Next car →</button></div>
   <div class="note">Adult guidance: help with one short drag if needed. The parking space moves each round.</div>
+ </section>
+ <section id="sizeScreen" class="screen" hidden>
+  <button type="button" class="back" id="sizeBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Safari Explorers</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Big or Small?</h1></div><div class="counter" id="sizeCounter">1 of 4</div></header>
+  <div class="steps" id="sizeSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="sizeInstruction">Tap the big elephant!</p>
+  <p class="hint">Look at the two pictures.</p>
+  <div class="size-board" id="sizeBoard">
+   <button type="button" class="size-option" id="sizeChoice0" aria-label="First picture"><span class="size-art"></span></button>
+   <button type="button" class="size-option" id="sizeChoice1" aria-label="Second picture"><span class="size-art"></span></button>
+  </div>
+  <div class="message" id="sizeMessage" aria-live="polite">Tap the big elephant!</div>
+  <div class="controls"><button id="sizeNext" type="button" hidden>Next picture →</button></div>
+  <div class="note">Adult guidance: the two pictures show the same animal in clearly different sizes. Pointing is fine.</div>
  </section>
 </main>
 <script>
@@ -1732,6 +1761,46 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('parkBack').addEventListener('click',()=>{parkDragging=false;show('chooseScreen')});
  $('parkNext').addEventListener('click',()=>{if(!parkDone)return;parkRound=(parkRound+1)%parkRounds.length;parkRender()});
 
+ // Game 19: recognise BIG or SMALL — one obvious visual difference at a time.
+ const sizeRounds=[
+  {animal:'elephant',emoji:'🐘'},
+  {animal:'giraffe',emoji:'🦒'},
+  {animal:'lion',emoji:'🦁'},
+  {animal:'monkey',emoji:'🐒'}
+ ];
+ // Re-randomise the requested size and the side holding the big picture every
+ // time a round starts, including when the child chooses Play again.
+ let sizeRound=0,sizeDone=false,sizeCurrent=null;
+ const sizeChoices=[$('sizeChoice0'),$('sizeChoice1')];
+ function sizeRender(){
+  const animal=sizeRounds[sizeRound];
+  sizeCurrent={...animal,ask:Math.random()<0.5?'big':'small',bigSide:Math.random()<0.5?0:1};
+  const r=sizeCurrent;sizeDone=false;
+  $('sizeCounter').textContent=`${sizeRound+1} of ${sizeRounds.length}`;
+  $('sizeInstruction').textContent=`Tap the ${r.ask} ${r.animal}!`;
+  $('sizeMessage').textContent=$('sizeInstruction').textContent;
+  $('sizeNext').hidden=true;
+  [...$('sizeSteps').children].forEach((step,i)=>step.classList.toggle('active',i<=sizeRound));
+  sizeChoices.forEach((button,i)=>{
+   button.disabled=false;button.classList.remove('correct','incorrect');
+   const big=i===r.bigSide;
+   button.querySelector('.size-art').textContent=r.emoji;
+   button.querySelector('.size-art').style.fontSize=big?'clamp(100px,27vw,153px)':'clamp(52px,13vw,76px)';
+   button.setAttribute('aria-label',`${big?'Big':'Small'} ${r.animal}`);
+  });
+ }
+ sizeChoices.forEach((button,i)=>button.addEventListener('click',()=>{
+  if(sizeDone)return;
+  const r=sizeCurrent,correct=r.ask==='big'?r.bigSide:1-r.bigSide;
+  if(i!==correct){button.classList.remove('incorrect');void button.offsetWidth;button.classList.add('incorrect');window.motorworxFeedback?.('retry','size');return;}
+  sizeDone=true;button.classList.add('correct');sizeChoices.forEach(b=>b.disabled=true);
+  $('sizeNext').textContent=sizeRound===sizeRounds.length-1?'Play again ↻':'Next picture →';$('sizeNext').hidden=false;
+  window.motorworxFeedback?.('success','size');
+ }));
+ $('startSize').addEventListener('click',()=>{sizeRound=0;sizeRender();show('sizeScreen')});
+ $('sizeBack').addEventListener('click',()=>show('chooseScreen'));
+ $('sizeNext').addEventListener('click',()=>{if(!sizeDone)return;sizeRound=(sizeRound+1)%sizeRounds.length;sizeRender()});
+
 })();
 </script>
 
@@ -1759,7 +1828,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   feedScreen:()=>document.getElementById('feedInstruction').textContent+' Drag the food into the bowl.',
   wipeScreen:'Find the sea creature by wiping the window.',
   towerScreen:()=>document.getElementById('towerInstruction').textContent+' Drag it into the dotted space.',
-  parkScreen:()=>document.getElementById('parkInstruction').textContent+' Drag it into the parking space.'
+  parkScreen:()=>document.getElementById('parkInstruction').textContent+' Drag it into the parking space.',
+  sizeScreen:()=>document.getElementById('sizeInstruction').textContent
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1773,7 +1843,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext',parkScreen:'parkNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext',parkScreen:'parkNext',sizeScreen:'sizeNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1827,9 +1897,11 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   feed:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
   park:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
   tower:['Well done!','Great job!','Excellent work!','Awesome!','Fantastic!'],
-  wipe:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!']
+  wipe:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!'],
+  size:['Well done!','Fantastic!','Great job!','Awesome!','Excellent work!']
  };
  const encouragement={
+  size:['Oops! Look for the other size. Try again!','Look again! Which picture is the right size?','Almost! Have another look. Try again!'],
   feed:['Oops! Put the food in the bowl.','Whoops! Try moving the food into the bowl.','Almost! Drag the food to the bowl.','Let’s put the food in the bowl.'],
   which:['Oops! Look for the picture in the right place.','Have another look! Is it at the top or bottom?','Whoops! Try the other picture.','Let’s look again. Find the picture in the right place.'],
   'trace-path':[
@@ -1915,7 +1987,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const feedbackMessages={trace:'message',match:'matchMessage',peek:'peekMessage',memory:'memoryMessage',
   spatial:'spatialMessage',finish:'finishMessage',pattern:'patternMessage',diff:'diffMessage',
   star:'starMessage',shadow:'shadowMessage',disappear:'disappearMessage',bubble:'bubbleMessage',
-  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage',park:'parkMessage'};
+  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage',park:'parkMessage',size:'sizeMessage'};
  function showFeedback(activity,phrase){
   const el=document.getElementById(feedbackMessages[activity]);
   if(!el||!phrase)return;
@@ -2050,18 +2122,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower','startPark'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext','parkNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower','startPark','startSize'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext','parkNext','sizeNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','sizeBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','sizeBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
