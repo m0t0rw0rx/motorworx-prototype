@@ -195,8 +195,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 /* Automatic progression after success: no Next button between rounds. */
 /* Celebration elements use separate, permanent screen positions. */
 .mw-celebration{position:absolute;inset:0;z-index:1500;pointer-events:none;overflow:hidden;isolation:isolate}
-.mw-celebration .mw-celebration-core{position:absolute;left:50%;top:50%;display:block;line-height:1.2;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-size:clamp(66px,17vw,108px);transform:translate(-50%,-50%);filter:drop-shadow(0 8px 12px #55457533);animation:mw-cheer 1.4s ease-out both}
-.mw-celebration .mw-confetti{position:absolute;left:var(--left);top:var(--top);display:block;line-height:1.2;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-size:clamp(24px,5vw,36px);transform:translate(-50%,-50%);animation:mw-spark 1.4s ease-out both}
+.mw-celebration .mw-celebration-core{position:absolute;left:50%;top:50%;display:block;line-height:1;color:#f6c33b;font-family:Arial, Helvetica, sans-serif;font-size:clamp(66px,17vw,108px);font-weight:900;transform:translate(-50%,-50%);text-shadow:0 6px 10px rgba(85,69,117,.18);animation:mw-cheer 1.4s ease-out both}
+.mw-celebration .mw-confetti{position:absolute;left:var(--left);top:var(--top);display:block;line-height:1;color:var(--color,#ffd96a);font-family:Arial, Helvetica, sans-serif;font-size:clamp(24px,5vw,36px);font-weight:900;transform:translate(-50%,-50%);text-shadow:0 4px 7px rgba(85,69,117,.14);animation:mw-spark 1.4s ease-out both}
 @keyframes mw-cheer{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}25%{transform:translate(-50%,-50%) scale(1.15);opacity:1}70%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-60%) scale(.9);opacity:0}}
 @keyframes mw-spark{0%{transform:translate(-50%,-30%) scale(.65);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}70%{transform:translate(-50%,-60%) scale(1);opacity:1}100%{transform:translate(-50%,-95%) scale(.85);opacity:0}}
 @media(prefers-reduced-motion:reduce){.mw-celebration .mw-celebration-core,.mw-celebration .mw-confetti{animation:none;opacity:1}}
@@ -2119,7 +2119,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  // Feedback shared by every activity, without changing its game rules.
  // Gentle retries are rate-limited and only triggered by real attempts.
  // Brief non-interactive celebration for every completed puzzle.
- const celebrationIcons=['🎉','🌟','🥳','✨','👏'];
+ const celebrationIcons=['★','★','★','★'];
  let celebrationIndex=0,celebrationTimer=null;
  function celebrate(){
   document.querySelector('.mw-celebration')?.remove();
@@ -2128,10 +2128,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   const main=document.createElement('span');main.className='mw-celebration-core';
   main.textContent=celebrationIcons[celebrationIndex++%celebrationIcons.length];
   layer.appendChild(main);
-  // Each small emoji has its own visible position from the first frame.
-  [['🎉','38%','43%'],['⭐','62%','43%'],['✨','38%','57%'],['🎊','62%','57%']].forEach(([emoji,left,top])=>{
-   const spark=document.createElement('span');spark.className='mw-confetti';spark.textContent=emoji;
-   spark.style.setProperty('--left',left);spark.style.setProperty('--top',top);
+  // One large star in the middle with smaller stars around it.
+  [['✦','42%','43%','#ffd96a'],['★','58%','43%','#ffe79a'],['✦','42%','57%','#ffe79a'],['★','58%','57%','#ffd96a']].forEach(([symbol,left,top,color])=>{
+   const spark=document.createElement('span');spark.className='mw-confetti';spark.textContent=symbol;
+   spark.style.setProperty('--left',left);spark.style.setProperty('--top',top);spark.style.setProperty('--color',color);
    layer.appendChild(spark);
   });
   document.querySelector('.game').appendChild(layer);
