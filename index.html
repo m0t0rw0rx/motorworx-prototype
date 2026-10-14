@@ -8,7 +8,7 @@
 <style>
 :root{font-family:ui-rounded,'Trebuchet MS',system-ui,sans-serif;color:#29394a;background:#f5f2fc;font-synthesis:none}
 *[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(29px,7vw,39px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
-.game{width:min(100%,580px);background:#fff;border:2px solid #e9e1f4;border-radius:26px;padding:clamp(15px,4vw,27px);box-shadow:0 12px 40px #68559217}
+.game{position:relative;isolation:isolate;width:min(100%,580px);background:#fff;border:2px solid #e9e1f4;border-radius:26px;padding:clamp(15px,4vw,27px);box-shadow:0 12px 40px #68559217}
 header{display:flex;justify-content:space-between;gap:10px;align-items:center}.eyebrow{color:#7855aa;font-size:clamp(11px,2.7vw,13px);font-weight:850;letter-spacing:.055em}.logo-slot{font-size:12px;color:#7e8492;margin-bottom:10px}h1{font-size:clamp(24px,6vw,31px);margin:7px 0 0;line-height:1.15}.counter{white-space:nowrap;color:#69449f;background:#eee6fa;border-radius:50px;padding:9px 12px;font-weight:800;font-size:13px}.steps{display:flex;gap:8px;margin:19px 0}.steps span{height:8px;flex:1;background:#e1d6f2;border-radius:20px}.steps span.current{background:#805db9}.instruction{text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,21px);margin:15px 0 5px}.hint{text-align:center;color:#68768b;font-size:14px;min-height:19px}svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;margin:4px 0}svg .guide{stroke:#eee6fb;stroke-width:68;stroke-linecap:round}svg .dots{stroke:#8f79b8;stroke-width:7;stroke-linecap:round;stroke-dasharray:1 21}svg .traced{stroke:#55bba6;stroke-width:9;stroke-linecap:round}#ghost{pointer-events:none}.message{min-height:28px;text-align:center;color:#477f70;font-size:16px;font-weight:800}.controls{display:flex;gap:10px;justify-content:center;margin:16px 0 0;flex-wrap:wrap}button{border:0;border-radius:16px;background:#7753b7;color:#fff;padding:14px 20px;min-height:48px;font-size:15px;font-weight:800;cursor:pointer}button.secondary{background:#e9e1f6;color:#6b4a9f}button:focus-visible{outline:3px solid #efb751;outline-offset:3px}.note{text-align:center;font-size:12px;color:#768093;margin:16px 0 0}.logo-note{font-size:11px;color:#8d879b;text-align:center;padding-top:4px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 /* Activity chooser and Level 1 matching */
@@ -193,12 +193,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .turn-symbol{font-size:46px;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
 .turn-board svg{touch-action:none}
 /* Automatic progression after success: no Next button between rounds. */
-/* Brief celebration floats above the game, without blocking touches. */
-.mw-celebration{position:fixed;inset:0;z-index:1500;pointer-events:none;display:grid;place-items:center;overflow:hidden}
-.mw-celebration .mw-celebration-core{font-size:clamp(76px,18vw,126px);filter:drop-shadow(0 8px 12px #55457533);animation:mw-cheer 1.55s ease-out both}
-.mw-celebration .mw-confetti{position:absolute;font-size:clamp(24px,6vw,43px);animation:mw-spark 1.5s ease-out both}
-@keyframes mw-cheer{0%{transform:scale(.15) rotate(-18deg);opacity:0}24%{transform:scale(1.3) rotate(8deg);opacity:1}47%{transform:scale(1) rotate(-3deg)}77%{transform:scale(1);opacity:1}100%{transform:scale(.8) translateY(-25px);opacity:0}}
-@keyframes mw-spark{0%{transform:translate(0,0) scale(.3);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(36deg);opacity:0}}
+/* Celebration elements use separate, permanent screen positions. */
+.mw-celebration{position:absolute;inset:0;z-index:1500;pointer-events:none;overflow:hidden;isolation:isolate}
+.mw-celebration .mw-celebration-core{position:absolute;left:50%;top:50%;display:block;line-height:1.2;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-size:clamp(66px,17vw,108px);transform:translate(-50%,-50%);filter:drop-shadow(0 8px 12px #55457533);animation:mw-cheer 1.4s ease-out both}
+.mw-celebration .mw-confetti{position:absolute;left:var(--left);top:var(--top);display:block;line-height:1.2;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-size:clamp(24px,5vw,36px);transform:translate(-50%,-50%);animation:mw-spark 1.4s ease-out both}
+@keyframes mw-cheer{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}25%{transform:translate(-50%,-50%) scale(1.15);opacity:1}70%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-60%) scale(.9);opacity:0}}
+@keyframes mw-spark{0%{transform:translate(-50%,-30%) scale(.65);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}70%{transform:translate(-50%,-60%) scale(1);opacity:1}100%{transform:translate(-50%,-95%) scale(.85);opacity:0}}
 @media(prefers-reduced-motion:reduce){.mw-celebration .mw-celebration-core,.mw-celebration .mw-confetti{animation:none;opacity:1}}
 .screen.auto-progressing .controls button[data-auto-next],
 .screen.auto-progressing .star-control-row button[data-auto-next]{display:none!important}
@@ -248,6 +248,19 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 }
 @media(prefers-reduced-motion:reduce){.wipe-stage.finished .wipe-animal{animation:none}}
 .wipe-stage .wipe-bubbles{position:absolute;bottom:12px;right:14px;pointer-events:none;font-size:22px;opacity:.5}
+
+/* Game 17: large single-piece block placement, independent of final illustrations */
+#towerScreen .theme-label{background:#fff0d9;color:#946d38}
+.tower-stage{position:relative;max-width:430px;height:325px;margin:18px auto 12px;background:linear-gradient(#eaf6ff,#fff8e9);border-radius:24px;overflow:hidden;touch-action:none;user-select:none}
+.tower-floor{position:absolute;bottom:25px;left:6%;right:6%;height:8px;background:#b7d9bd;border-radius:12px}
+.tower-stack{position:absolute;left:66%;bottom:33px;transform:translateX(-50%);width:100px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tower-fixed{height:57px;width:100px;border:4px solid #7d77ac;border-radius:11px;background:#a5d3f3;box-shadow:inset 0 6px 0 #ffffff55}
+.tower-target{height:57px;width:100px;border:4px dashed #9279b8;border-radius:11px;background:#d5c9ee55;box-sizing:border-box}
+.tower-piece{position:absolute;width:100px;height:57px;left:25%;top:69%;transform:translate(-50%,-50%);border:4px solid #806d98;border-radius:11px;background:#f5c562;box-shadow:inset 0 6px 0 #fff8;touch-action:none;cursor:grab;z-index:5}
+.tower-piece.dragging{cursor:grabbing;z-index:8}.tower-piece.wiggle{animation:towerWiggle .42s}
+.tower-target.filled{border-style:solid;background:#f5c562}
+@keyframes towerWiggle{0%,100%{transform:translate(-50%,-50%) rotate(0deg)}25%{transform:translate(-50%,-50%) rotate(-8deg)}75%{transform:translate(-50%,-50%) rotate(8deg)}}
+@media(max-width:390px){.tower-stage{height:290px}.tower-fixed,.tower-target,.tower-piece{width:86px;height:54px}.tower-stack{width:86px}}
 </style>
 </head>
 <body>
@@ -260,7 +273,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Sixteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
+  <p><strong>Seventeen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -287,6 +300,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
      <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true">🦀</div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
+     <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
  </section>
@@ -608,6 +622,23 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="message" id="wipeMessage" aria-live="polite">Rub the window with your finger.</div>
   <div class="controls"><button type="button" id="wipeNext" hidden>Next sea friend →</button></div>
   <div class="note">Adult guidance: demonstrate a broad wiping motion if needed. No time limit or penalties.</div>
+ </section>
+ <section id="towerScreen" class="screen" hidden>
+  <button type="button" class="back" id="towerBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Colourful Discovery</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Build a Tower!</h1></div><div class="counter" id="towerCounter">1 of 4</div></header>
+  <div class="steps" id="towerSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="towerInstruction">Put the yellow block on top.</p>
+  <p class="hint">Drag the big block into the dotted space.</p>
+  <div id="towerStage" class="tower-stage">
+   <div class="tower-floor"></div>
+   <div class="tower-stack"><div id="towerTarget" class="tower-target"></div><div id="towerFixed" class="tower-fixed"></div></div>
+   <div id="towerPiece" class="tower-piece" role="button" tabindex="0" aria-label="Drag the block onto the tower"></div>
+  </div>
+  <div id="towerMessage" class="message" aria-live="polite">Put the block on top of the tower.</div>
+  <div class="controls"><button id="towerNext" hidden type="button">Next block →</button></div>
+  <div class="note">Adult guidance: demonstrate one short drag if needed. One block at a time, no timer.</div>
  </section>
 </main>
 <script>
@@ -1595,6 +1626,43 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('wipeNext').addEventListener('click',()=>{if(!wipeDone)return;wipeRound=(wipeRound+1)%wipeRounds.length;wipeCanvas.style.pointerEvents='auto';wipeReset()});
 
 
+ // Game 17: one large move onto a short tower; repeated without increasing difficulty.
+ const towerRounds=[
+  {piece:'#f5c562',name:'yellow',fixed:'#a5d3f3',stackX:74,startX:22,startY:73},
+  {piece:'#f5a7ba',name:'pink',fixed:'#a9d9b2',stackX:32,startX:77,startY:73},
+  {piece:'#98d9d1',name:'green',fixed:'#e6b4ec',stackX:64,startX:19,startY:69},
+  {piece:'#bcaaf1',name:'purple',fixed:'#f3c68a',stackX:37,startX:79,startY:67}
+ ];
+ let towerRound=0,towerDone=false,towerPointer=null,towerDragging=false;
+ const towerStage=$('towerStage'),towerPiece=$('towerPiece');
+ function towerPlace(x,y){const r=towerStage.getBoundingClientRect();towerPiece.style.left=Math.max(55,Math.min(r.width-55,x-r.left))+'px';towerPiece.style.top=Math.max(35,Math.min(r.height-35,y-r.top))+'px'}
+ function towerHome(){const r=towerStage.getBoundingClientRect(),d=towerRounds[towerRound];towerPlace(r.left+r.width*d.startX/100,r.top+r.height*d.startY/100)}
+ function towerRender(){const d=towerRounds[towerRound];towerDone=false;towerDragging=false;towerPointer=null;
+  $('towerCounter').textContent=`${towerRound+1} of ${towerRounds.length}`;
+  towerPiece.style.background=d.piece;$('towerFixed').style.background=d.fixed;
+  towerStage.querySelector('.tower-stack').style.left=d.stackX+'%';
+  $('towerInstruction').textContent=`Put the ${d.name} block on top.`;
+  towerPiece.setAttribute('aria-label',`Drag the ${d.name} block onto the tower`);
+  $('towerTarget').classList.remove('filled');$('towerTarget').style.background='#d5c9ee55';$('towerTarget').style.borderStyle='dashed';
+  towerPiece.hidden=false;towerPiece.classList.remove('wiggle','dragging');towerHome();
+  $('towerMessage').textContent=`Move the ${d.name} block to the dotted space.`;$('towerNext').hidden=true;
+  [...$('towerSteps').children].forEach((el,i)=>el.classList.toggle('current',i<=towerRound));
+ }
+ function towerDrop(x,y){const r=$('towerTarget').getBoundingClientRect();return x>=r.left-24&&x<=r.right+24&&y>=r.top-25&&y<=r.bottom+25}
+ function towerSuccess(){if(towerDone)return;towerDone=true;towerDragging=false;
+  towerPiece.hidden=true;$('towerTarget').style.background=towerRounds[towerRound].piece;$('towerTarget').style.borderStyle='solid';$('towerTarget').classList.add('filled');
+  $('towerMessage').textContent='Well done!';$('towerNext').textContent=towerRound===towerRounds.length-1?'Play again ↻':'Next block →';$('towerNext').hidden=false;
+  window.motorworxFeedback?.('success','tower');
+ }
+ towerPiece.addEventListener('pointerdown',e=>{if(towerDone||towerDragging||(e.button!==undefined&&e.button!==0))return;e.preventDefault();towerDragging=true;towerPointer=e.pointerId;towerPiece.classList.add('dragging');towerPiece.setPointerCapture(e.pointerId)});
+ towerPiece.addEventListener('pointermove',e=>{if(!towerDragging||towerPointer!==e.pointerId)return;e.preventDefault();towerPlace(e.clientX,e.clientY)});
+ towerPiece.addEventListener('pointerup',e=>{if(!towerDragging||towerPointer!==e.pointerId)return;e.preventDefault();towerDragging=false;towerPiece.classList.remove('dragging');if(towerDrop(e.clientX,e.clientY))towerSuccess();else{towerPiece.classList.remove('wiggle');void towerPiece.offsetWidth;towerPiece.classList.add('wiggle');$('towerMessage').textContent=`Oops! Put the ${towerRounds[towerRound].name} block on top.`;window.motorworxFeedback?.('retry','tower');towerHome()}});
+ towerPiece.addEventListener('pointercancel',()=>{towerDragging=false;towerPiece.classList.remove('dragging');towerHome()});
+ towerPiece.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!towerDone){e.preventDefault();towerSuccess()}});
+ $('startTower').addEventListener('click',()=>{towerRound=0;towerRender();show('towerScreen')});
+ $('towerBack').addEventListener('click',()=>{towerDragging=false;show('chooseScreen')});
+ $('towerNext').addEventListener('click',()=>{if(!towerDone)return;towerRound=(towerRound+1)%towerRounds.length;towerRender()});
+
 })();
 </script>
 
@@ -1620,7 +1688,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   turnScreen:()=>document.getElementById('turnScreen').querySelector('.instruction').textContent+' '+document.getElementById('turnScreen').querySelector('.hint').textContent,
   whichScreen:()=>document.getElementById('whichInstruction').textContent,
   feedScreen:()=>document.getElementById('feedInstruction').textContent+' Drag the food into the bowl.',
-  wipeScreen:'Find the sea creature by wiping the window.'
+  wipeScreen:'Find the sea creature by wiping the window.',
+  towerScreen:()=>document.getElementById('towerInstruction').textContent+' Drag it to the dotted space.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1634,7 +1703,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1686,6 +1755,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!'],
   which:['Awesome!','Well done!','Great job!','Fantastic!','Excellent work!'],
   feed:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
+  tower:['Well done!','Great job!','Excellent work!','Awesome!','Fantastic!'],
   wipe:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!']
  };
  const encouragement={
@@ -1770,6 +1840,17 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    'Have another look! Which picture is different?'
   ]
  };
+ // One child-facing message for both speech and on-screen feedback.
+ const feedbackMessages={trace:'message',match:'matchMessage',peek:'peekMessage',memory:'memoryMessage',
+  spatial:'spatialMessage',finish:'finishMessage',pattern:'patternMessage',diff:'diffMessage',
+  star:'starMessage',shadow:'shadowMessage',disappear:'disappearMessage',bubble:'bubbleMessage',
+  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage'};
+ function showFeedback(activity,phrase){
+  const el=document.getElementById(feedbackMessages[activity]);
+  if(!el||!phrase)return;
+  // Some game handlers set text after calling feedback; override once they finish.
+  queueMicrotask(()=>{if(!el.closest('.screen')?.hidden)el.textContent=phrase});
+ }
  const indices={};
  function nextPhrase(group,key){const options=group[key]||[];if(!options.length)return '';
   const id=(group===praise?'praise:':'retry:')+key;
@@ -1827,36 +1908,49 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   const main=document.createElement('span');main.className='mw-celebration-core';
   main.textContent=celebrationIcons[celebrationIndex++%celebrationIcons.length];
   layer.appendChild(main);
-  [['🎉','-110px','-88px'],['⭐','108px','-92px'],['✨','-135px','68px'],['🎊','127px','87px']].forEach(([emoji,dx,dy])=>{
+  // Each small emoji has its own visible position from the first frame.
+  [['🎉','38%','43%'],['⭐','62%','43%'],['✨','38%','57%'],['🎊','62%','57%']].forEach(([emoji,left,top])=>{
    const spark=document.createElement('span');spark.className='mw-confetti';spark.textContent=emoji;
-   spark.style.setProperty('--dx',dx);spark.style.setProperty('--dy',dy);
+   spark.style.setProperty('--left',left);spark.style.setProperty('--top',top);
    layer.appendChild(spark);
   });
-  document.body.appendChild(layer);
+  document.querySelector('.game').appendChild(layer);
   celebrationTimer=setTimeout(()=>{layer.remove();celebrationTimer=null},1600);
  }
  window.motorworxFeedback=function(type,activity){
   if(type==='success'){
    if(activity!=='wipe')celebrate();
+   const phrase=nextPhrase(praise,activity)||'Well done!';
+   showFeedback(activity,phrase);
    let voiceDone=false,notifyVoiceDone=null;
    scheduleAutoNext(done=>{notifyVoiceDone=done;if(voiceDone)done()});
    let fallback=null;
    const finished=()=>{if(voiceDone)return;voiceDone=true;if(fallback!==null)clearTimeout(fallback);notifyVoiceDone?.()};
    if(!soundOn||!supported){finished();return;}
-   // Some mobile browsers never fire speech end; avoid trapping the child forever.
    fallback=setTimeout(finished,8000);
-   say(nextPhrase(praise,activity),finished);
+   say(phrase,finished);
    return;
   }
-  if(!soundOn||!supported)return;
   if(type==='retry'){
-   const now=Date.now();
-   if(now-lastRetryAt<(activity==='turn'?450:1600))return;
-   lastRetryAt=now;
+   let phrase='Oops! Try again!';
    if(activity==='turn'){
-    // Read the specific error including this round's animal name.
-    say(document.getElementById('turnMessage').textContent);
-   }else say(nextPhrase(encouragement,activity));
+    // The tracing game already knows the correct animal and resume point.
+    phrase=document.getElementById('turnMessage')?.textContent||'Oops, stay on the path!';
+   }else if(activity==='tower'){
+    const round=document.getElementById('towerInstruction')?.textContent||'';
+    const color=(round.match(/\b(yellow|pink|green|purple)\b/i)||[])[0];
+    phrase=color?`Oops! Put the ${color} block on top. Try again!`:'Oops! Put the block on top. Try again!';
+   }else{
+    phrase=nextPhrase(encouragement,activity)||'Oops! Try again!';
+   }
+   showFeedback(activity,phrase);
+   if(!soundOn||!supported)return;
+   const now=Date.now();
+   // Prevent repeated speech from continuous stray finger movement, but
+   // do not suppress the next deliberate try as the old 1.6-second gate did.
+   if(now-lastRetryAt<450)return;
+   lastRetryAt=now;
+   say(phrase);
   }
  };
  Object.keys(activities).forEach(id=>{
@@ -1883,18 +1977,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
