@@ -261,6 +261,20 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .tower-target.filled{border-style:solid;background:#f5c562}
 @keyframes towerWiggle{0%,100%{transform:translate(-50%,-50%) rotate(0deg)}25%{transform:translate(-50%,-50%) rotate(-8deg)}75%{transform:translate(-50%,-50%) rotate(8deg)}}
 @media(max-width:390px){.tower-stage{height:290px}.tower-fixed,.tower-target,.tower-piece{width:86px;height:54px}.tower-stack{width:86px}}
+
+/* Game 18: large vehicle and roomy destination, one drag per round. */
+#parkScreen .theme-label{background:#e2f4ff;color:#235c91}
+.park-stage{position:relative;max-width:430px;height:330px;margin:16px auto;background:#eaf5ec;border-radius:24px;overflow:hidden;touch-action:none;user-select:none}
+.park-road{position:absolute;left:5%;right:5%;top:47%;height:46px;background:#bac5c9;border-radius:28px;opacity:.65}
+.park-road:before{content:'';position:absolute;left:12%;right:12%;top:21px;border-top:4px dashed #fff}
+.park-garage{position:absolute;width:120px;height:118px;transform:translate(-50%,-50%);border:5px dashed #7392b9;border-radius:18px;background:#fffdf9d9;display:flex;align-items:center;justify-content:center;font-size:56px;box-sizing:border-box;pointer-events:none}
+.park-garage:after{content:'PARK';font-weight:800;font-size:12px;letter-spacing:2px;position:absolute;bottom:6px;color:#54718f}
+.park-car{position:absolute;left:22%;top:70%;transform:translate(-50%,-50%);width:108px;height:94px;border-radius:22px;background:#fff9;display:flex;justify-content:center;align-items:center;font-size:68px;touch-action:none;cursor:grab;z-index:5;filter:drop-shadow(0 5px 3px #39576a25)}
+.park-car.dragging{cursor:grabbing;z-index:8}.park-car.wiggle{animation:parkWiggle .38s ease}
+.park-car.parked{animation:parkPop .55s ease-out both;pointer-events:none}
+@keyframes parkWiggle{0%,100%{transform:translate(-50%,-50%) rotate(0)}25%{transform:translate(-50%,-50%) rotate(-8deg)}75%{transform:translate(-50%,-50%) rotate(8deg)}}
+@keyframes parkPop{0%{transform:translate(-50%,-50%) scale(.85)}55%{transform:translate(-50%,-50%) scale(1.12)}100%{transform:translate(-50%,-50%) scale(1)}}
+@media(max-width:390px){.park-stage{height:290px}.park-garage{width:104px;height:106px}.park-car{width:90px;height:83px;font-size:57px}}
 </style>
 </head>
 <body>
@@ -273,7 +287,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Seventeen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
+  <p><strong>Eighteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
   <button id="play" class="start">Choose a game ▶</button>
   <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
  </section>
@@ -300,6 +314,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
      <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true">🦀</div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
+     <button type="button" class="activity-tile" id="startPark"><div class="tile-emoji" aria-hidden="true">🚙</div><strong>Little Parking Spots</strong><small>Little Explorers · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
    </div>
    <div class="note">Temporary artwork · No scores or timers</div>
@@ -639,6 +654,23 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div id="towerMessage" class="message" aria-live="polite">Put the block on top of the tower.</div>
   <div class="controls"><button id="towerNext" hidden type="button">Next block →</button></div>
   <div class="note">Adult guidance: demonstrate one short drag if needed. One block at a time, no timer.</div>
+ </section>
+ <section id="parkScreen" class="screen" hidden>
+  <button type="button" class="back" id="parkBack">← Choose a game</button>
+  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="theme-label">Little Explorers</div>
+  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Little Parking Spots</h1></div><div class="counter" id="parkCounter">1 of 4</div></header>
+  <div class="steps" id="parkSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="instruction" id="parkInstruction">Park the red car!</p>
+  <p class="hint">Drag the car into the parking space.</p>
+  <div class="park-stage" id="parkStage">
+   <div class="park-road"></div>
+   <div class="park-garage" id="parkGarage" aria-hidden="true">🏠</div>
+   <div class="park-car" id="parkCar" role="button" tabindex="0" aria-label="Drag the car into the parking space">🚗</div>
+  </div>
+  <div class="message" id="parkMessage" aria-live="polite">Park the car.</div>
+  <div class="controls"><button type="button" id="parkNext" hidden>Next car →</button></div>
+  <div class="note">Adult guidance: help with one short drag if needed. The parking space moves each round.</div>
  </section>
 </main>
 <script>
@@ -1663,6 +1695,43 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  $('towerBack').addEventListener('click',()=>{towerDragging=false;show('chooseScreen')});
  $('towerNext').addEventListener('click',()=>{if(!towerDone)return;towerRound=(towerRound+1)%towerRounds.length;towerRender()});
 
+ // Game 18: one easy drag into a large space, varied spatial arrangements.
+ const parkRounds=[
+  {name:'red',car:'🚗',x:73,y:29,fromX:23,fromY:74},
+  {name:'blue',car:'🚙',x:27,y:72,fromX:76,fromY:29},
+  {name:'yellow',car:'🚕',x:73,y:72,fromX:23,fromY:28},
+  {name:'green',car:'🚜',x:28,y:27,fromX:76,fromY:73}
+ ];
+ let parkRound=0,parkDone=false,parkDragging=false,parkPointer=null;
+ const parkStage=$('parkStage'),parkCar=$('parkCar'),parkGarage=$('parkGarage');
+ function parkPlace(x,y){const r=parkStage.getBoundingClientRect();parkCar.style.left=Math.max(48,Math.min(r.width-48,x-r.left))+'px';parkCar.style.top=Math.max(44,Math.min(r.height-44,y-r.top))+'px'}
+ function parkHome(){const r=parkStage.getBoundingClientRect(),d=parkRounds[parkRound];parkPlace(r.left+r.width*d.fromX/100,r.top+r.height*d.fromY/100)}
+ function parkRender(){const d=parkRounds[parkRound];parkDone=false;parkDragging=false;parkPointer=null;
+  $('parkCounter').textContent=`${parkRound+1} of ${parkRounds.length}`;
+  $('parkInstruction').textContent=`Park the ${d.name} ${d.car==='🚜'?'tractor':'car'}!`;
+  parkCar.textContent=d.car;parkCar.setAttribute('aria-label',`Park the ${d.name} vehicle`);
+  parkGarage.style.left=d.x+'%';parkGarage.style.top=d.y+'%';
+  parkCar.classList.remove('parked','dragging','wiggle');parkCar.hidden=false;
+  $('parkNext').hidden=true;$('parkMessage').textContent=$('parkInstruction').textContent;
+  [...$('parkSteps').children].forEach((el,i)=>el.classList.toggle('active',i<=parkRound));
+  requestAnimationFrame(parkHome);
+ }
+ function parkHit(x,y){const r=parkGarage.getBoundingClientRect();return x>=r.left-12&&x<=r.right+12&&y>=r.top-12&&y<=r.bottom+12}
+ function parkSuccess(){if(parkDone)return;parkDone=true;parkDragging=false;parkCar.classList.remove('dragging');
+  const target=parkGarage.getBoundingClientRect(),stage=parkStage.getBoundingClientRect();parkPlace(target.left+target.width/2,target.top+target.height/2);
+  parkCar.classList.add('parked');
+  $('parkNext').textContent=parkRound===parkRounds.length-1?'Play again ↻':'Next parking spot →';$('parkNext').hidden=false;
+  window.motorworxFeedback?.('success','park');
+ }
+ parkCar.addEventListener('pointerdown',e=>{if(parkDone||parkDragging||(e.button!==undefined&&e.button!==0))return;e.preventDefault();parkDragging=true;parkPointer=e.pointerId;parkCar.classList.add('dragging');parkCar.setPointerCapture(e.pointerId)});
+ parkCar.addEventListener('pointermove',e=>{if(!parkDragging||parkPointer!==e.pointerId)return;e.preventDefault();parkPlace(e.clientX,e.clientY)});
+ parkCar.addEventListener('pointerup',e=>{if(!parkDragging||parkPointer!==e.pointerId)return;e.preventDefault();parkDragging=false;parkCar.classList.remove('dragging');if(parkHit(e.clientX,e.clientY))parkSuccess();else{parkCar.classList.remove('wiggle');void parkCar.offsetWidth;parkCar.classList.add('wiggle');parkHome();window.motorworxFeedback?.('retry','park')}});
+ parkCar.addEventListener('pointercancel',()=>{parkDragging=false;parkCar.classList.remove('dragging');parkHome()});
+ parkCar.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!parkDone){e.preventDefault();parkSuccess()}});
+ $('startPark').addEventListener('click',()=>{parkRound=0;parkRender();show('parkScreen')});
+ $('parkBack').addEventListener('click',()=>{parkDragging=false;show('chooseScreen')});
+ $('parkNext').addEventListener('click',()=>{if(!parkDone)return;parkRound=(parkRound+1)%parkRounds.length;parkRender()});
+
 })();
 </script>
 
@@ -1689,7 +1758,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   whichScreen:()=>document.getElementById('whichInstruction').textContent,
   feedScreen:()=>document.getElementById('feedInstruction').textContent+' Drag the food into the bowl.',
   wipeScreen:'Find the sea creature by wiping the window.',
-  towerScreen:()=>document.getElementById('towerInstruction').textContent+' Drag it to the dotted space.'
+  towerScreen:()=>document.getElementById('towerInstruction').textContent+' Drag it into the dotted space.',
+  parkScreen:()=>document.getElementById('parkInstruction').textContent+' Drag it into the parking space.'
  };
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
@@ -1703,7 +1773,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   memoryScreen:'memoryNext',spatialScreen:'spatialNext',
   finishScreen:'finishNext',patternScreen:'patternNext',
   diffScreen:'diffNext',starScreen:'starNext',shadowScreen:'shadowNext',
-  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext'
+  disappearScreen:'disappearNext',turnScreen:'turnNext',whichScreen:'whichNext',feedScreen:'feedNext',wipeScreen:'wipeNext',towerScreen:'towerNext',parkScreen:'parkNext'
  };
  let autoTimer=null,autoToken=0;
  function cancelAutoNext(){
@@ -1755,6 +1825,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   turn:['Well done!','Great job!','Fantastic!','Excellent work!','Awesome!'],
   which:['Awesome!','Well done!','Great job!','Fantastic!','Excellent work!'],
   feed:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
+  park:['Well done!','Great job!','Fantastic!','Awesome!','Excellent work!'],
   tower:['Well done!','Great job!','Excellent work!','Awesome!','Fantastic!'],
   wipe:['Great job!','Well done!','Fantastic!','Awesome!','Excellent work!']
  };
@@ -1844,7 +1915,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const feedbackMessages={trace:'message',match:'matchMessage',peek:'peekMessage',memory:'memoryMessage',
   spatial:'spatialMessage',finish:'finishMessage',pattern:'patternMessage',diff:'diffMessage',
   star:'starMessage',shadow:'shadowMessage',disappear:'disappearMessage',bubble:'bubbleMessage',
-  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage'};
+  turn:'turnMessage',which:'whichMessage',feed:'feedMessage',wipe:'wipeMessage',tower:'towerMessage',park:'parkMessage'};
  function showFeedback(activity,phrase){
   const el=document.getElementById(feedbackMessages[activity]);
   if(!el||!phrase)return;
@@ -1936,6 +2007,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    if(activity==='turn'){
     // The tracing game already knows the correct animal and resume point.
     phrase=document.getElementById('turnMessage')?.textContent||'Oops, stay on the path!';
+   }else if(activity==='park'){
+    phrase=`Oops! ${document.getElementById('parkInstruction')?.textContent||'Park the car!'} Try again!`;
    }else if(activity==='tower'){
     const round=document.getElementById('towerInstruction')?.textContent||'';
     const color=(round.match(/\b(yellow|pink|green|purple)\b/i)||[])[0];
@@ -1977,18 +2050,18 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxSpeakInstruction = speak;
  // Existing game handlers execute first; these additional handlers only read the
  // active screen and speak. They do not alter game navigation or touch behaviour.
- const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower'];
- const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext'];
+ const startIds=['startTrace','startMatch','startPeek','startMemory','startSpatial','startFinish','startPattern','startDiff','startStar','startShadow','startDisappear','startBubble','startTurn','startWhich','startFeed','startWipe','startTower','startPark'];
+ const nextIds=['next','matchNext','peekNext','memoryNext','spatialNext','finishNext','patternNext','diffNext','starNext','shadowNext','disappearNext','bubbleNext','turnNext','whichNext','feedNext','wipeNext','towerNext','parkNext'];
  [...startIds,...nextIds,'reset','spatialReset','memoryReady','starReplay','disappearReady','turnReset'].forEach(id=>{
   const button=document.getElementById(id);
   button.addEventListener('click',()=>{cancelAutoNext();const screen=current();if(screen)speak(screen)});
  });
- ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','play'].forEach(id=>{
+ ['chooseBack','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack','play'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>{cancelAutoNext();stop()});
  });
  // The home Play button and Back to Game Menu actions are deliberate taps,
  // so they can also unlock mobile speech synthesis for the chooser prompt.
- ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack'].forEach(id=>{
+ ['play','backHome','matchBack','peekBack','memoryBack','spatialBack','finishBack','patternBack','diffBack','starBack','shadowBack','disappearBack','bubbleBack','turnBack','whichBack','feedBack','wipeBack','towerBack','parkBack'].forEach(id=>{
   document.getElementById(id).addEventListener('click',()=>speak('chooseScreen'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAutoNext();stop()}});
