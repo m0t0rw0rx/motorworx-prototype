@@ -322,6 +322,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .diff-choice .choice-art{display:flex;width:100%;height:clamp(82px,22vw,112px);align-items:center;justify-content:center}
 .diff-choice .choice-art img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
 .size-art img{display:block;width:1em;height:1em;object-fit:contain;pointer-events:none}
+
+/* Coherent toy pictures across memory, position, patterns and red-car rounds. */
+.toy-art{display:inline-block;width:1.1em;height:1.1em;object-fit:contain;vertical-align:middle;pointer-events:none;user-select:none}
+.toy-menu-art{display:block;width:86px;height:72px;object-fit:contain;pointer-events:none}
+.memory-object .toy-art{width:1.3em;height:1.3em}
+.activity-menu-art{display:block;width:110px;height:88px;object-fit:contain;pointer-events:none}.tile-emoji{display:flex;align-items:center;justify-content:center;height:92px}
 </style>
 </head>
 <body>
@@ -346,28 +352,28 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    <h1>Choose a Game</h1>
    <p class="choose-intro">Choose any of the 20 activities. Play at your own pace!</p>
    <div class="activity-grid">
-     <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">🐰</div><strong>Help the Bunny</strong><small>Little Animal Adventures · Tracing</small></button>
-     <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">🎈</div><strong>Find My Match</strong><small>Colourful Discovery · Matching</small></button>
-     <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/lion.png" alt="" class="safari-menu-art"></div><strong>Who’s Hiding?</strong><small>Safari Explorers · Finding</small></button>
-     <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>What’s Missing?</strong><small>Little Explorers · Memory</small></button>
-     <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Where Does It Go?</strong><small>Under the Sea · Placing</small></button>
-     <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true">🧩</div><strong>Finish the Picture</strong><small>Little Animal Adventures · Completing</small></button>
-     <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true">🌈</div><strong>Follow the Pattern</strong><small>Colourful Discovery · Patterns</small></button>
-     <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/giraffe.png" alt="" class="safari-menu-art"></div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
-     <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
-     <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
-     <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true">🚗</div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
-     <button type="button" class="activity-tile" id="startBubble"><div class="tile-emoji" aria-hidden="true">🫧</div><strong>Pop the Bubble</strong><small>Under the Sea · Hand-eye coordination</small></button>
-     <button type="button" class="activity-tile" id="startTurn"><div class="tile-emoji" aria-hidden="true">🐥</div><strong>Follow the Little Trail</strong><small>Little Animal Adventures · Tracing turns</small></button>
-     <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
-     <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
-     <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true">🦀</div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
-     <button type="button" class="activity-tile" id="startPark"><div class="tile-emoji" aria-hidden="true">🚙</div><strong>Little Parking Spots</strong><small>Little Explorers · Hand-eye coordination</small></button>
-     <button type="button" class="activity-tile" id="startSize"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/elephant.png" alt="" class="safari-menu-art"></div><strong>Big or Small?</strong><small>Safari Explorers · Size perception</small></button>
-     <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
-     <button type="button" class="activity-tile" id="startButterfly"><div class="tile-emoji" aria-hidden="true">🦋</div><strong>Catch the Butterfly!</strong><small>Garden Adventure · Visual tracking</small></button>
+     <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true"><img src="graphics/animals/bunny.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Help the Bunny</strong><small>Little Animal Adventures · Tracing</small></button>
+     <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true"><img src="graphics/menu/balloon.svg?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Find My Match</strong><small>Colourful Discovery · Matching</small></button>
+     <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/lion.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Who’s Hiding?</strong><small>Safari Explorers · Finding</small></button>
+     <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true"><img src="graphics/objects/teddy.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>What’s Missing?</strong><small>Little Explorers · Memory</small></button>
+     <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true"><img src="graphics/ocean/fish.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Where Does It Go?</strong><small>Under the Sea · Placing</small></button>
+     <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true"><img src="graphics/animals/monkey.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Finish the Picture</strong><small>Little Animal Adventures · Completing</small></button>
+     <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true"><img src="graphics/menu/pattern.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Follow the Pattern</strong><small>Colourful Discovery · Patterns</small></button>
+     <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/giraffe.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
+     <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true"><img src="graphics/rewards/follow-star-gold.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
+     <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true"><img src="graphics/ocean/turtle.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
+     <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true"><img src="graphics/objects/car.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
+     <button type="button" class="activity-tile" id="startBubble"><div class="tile-emoji" aria-hidden="true"><img src="graphics/menu/bubbles.svg?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Pop the Bubble</strong><small>Under the Sea · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startTurn"><div class="tile-emoji" aria-hidden="true"><img src="graphics/animals/duckling.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Follow the Little Trail</strong><small>Little Animal Adventures · Tracing turns</small></button>
+     <button type="button" class="activity-tile" id="startWhich"><div class="tile-emoji" aria-hidden="true"><img src="graphics/objects/teddy.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Top or Bottom?</strong><small>Little Explorers · Spatial awareness</small></button>
+     <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true"><img src="graphics/objects/carrot.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true"><img src="graphics/ocean/octopus.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
+     <button type="button" class="activity-tile" id="startPark"><div class="tile-emoji" aria-hidden="true"><img src="graphics/objects/car.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Little Parking Spots</strong><small>Little Explorers · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startSize"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/elephant.png?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Big or Small?</strong><small>Safari Explorers · Size perception</small></button>
+     <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true"><img src="graphics/menu/blocks.svg?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
+     <button type="button" class="activity-tile" id="startButterfly"><div class="tile-emoji" aria-hidden="true"><img src="graphics/menu/butterfly.svg?v=20261016-menu2" alt="" class="activity-menu-art" draggable="false"></div><strong>Catch the Butterfly!</strong><small>Garden Adventure · Visual tracking</small></button>
    </div>
-   <div class="note">No time limits. Children can replay their favourites as often as they like.</div>
+   <div class="note">No time limits. Children can replay their favourites as often as they like.<br><small>Graphics version: 16 Oct · Menu 2</small></div>
  </section>
  <section id="matchScreen" class="screen" hidden>
   <button type="button" class="back" id="matchBack">← Choose a game</button>
@@ -412,7 +418,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="steps" id="memorySteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
   <p class="instruction" id="memoryInstruction">Look at the picture.</p>
   <p class="hint" id="memoryHint">Remember what you see.</p>
-  <div class="memory-display" id="memoryDisplay"><span class="memory-object" id="memoryPicture" aria-label="Picture">🎃</span></div>
+  <div class="memory-display" id="memoryDisplay"><span class="memory-object" id="memoryPicture" aria-label="Picture"><img class="toy-art" src="graphics/objects/teddy.png" alt="teddy bear"></span></div>
   <div class="controls" id="memoryReadyControls"><button type="button" id="memoryReady">I'm ready ▶</button></div>
   <div id="memoryChoices" hidden>
     <p class="instruction">Which picture did you see?</p>
@@ -546,7 +552,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
     <circle cx="338" cy="123" r="2" fill="#fff" opacity=".62"/><circle cx="21" cy="136" r="2" fill="#fff" opacity=".64"/>
     <g id="starLeftArt"></g>
     <g id="starRightArt"></g>
-    <g id="movingStar" transform="translate(180 59)"><path d="M0 -27 L8 -9 L28 -8 L12 6 L17 27 L0 17 L-17 27 L-12 6 L-28 -8 L-8 -9Z" fill="#ffda6d" stroke="#f6ae42" stroke-width="3" stroke-linejoin="round"/></g>
+    <g id="movingStar" transform="translate(180 59)"><image href="graphics/rewards/follow-star-gold.png?v=20261016-menu2" x="-31" y="-31" width="62" height="62" preserveAspectRatio="xMidYMid meet"/></g>
    </svg>
    <button type="button" class="star-launch" id="starLaunch" aria-label="Tap the star to start the movement" disabled></button>
    <button type="button" class="star-stop left" id="starChoice0" aria-label="Tap the left space object" disabled></button>
@@ -585,8 +591,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <p class="instruction" id="whichInstruction">Tap the teddy at the TOP.</p>
   <p class="hint">Look at the pictures. Tap the one at the top or bottom.</p>
   <div class="which-choices" id="whichChoices">
-   <button class="which-choice" type="button" id="whichChoice0" aria-label="First picture"><span class="which-picture">🧸</span></button>
-   <button class="which-choice" type="button" id="whichChoice1" aria-label="Second picture"><span class="which-picture">🧸</span></button>
+   <button class="which-choice" type="button" id="whichChoice0" aria-label="First picture"><span class="which-picture"><img class="toy-art" src="graphics/objects/teddy.png" alt="teddy bear"></span></button>
+   <button class="which-choice" type="button" id="whichChoice1" aria-label="Second picture"><span class="which-picture"><img class="toy-art" src="graphics/objects/teddy.png" alt="teddy bear"></span></button>
   </div>
   <div id="whichMessage" class="message" aria-live="polite">Choose one picture.</div>
   <div class="controls"><button type="button" id="whichNext" hidden>Next picture →</button></div>
@@ -737,8 +743,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="note">Adult guidance: there is only one large butterfly. Allow pointing or a gentle tap; no need to chase quickly.</div>
  </section>
 </main>
-<script src="activities/game.js"></script>
+<script src="activities/game.js?v=20261016-menu2"></script>
 
-<script src="audio/voice.js"></script>
+<script src="audio/voice.js?v=20261016-menu2"></script>
 </body>
 </html>

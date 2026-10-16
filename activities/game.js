@@ -78,6 +78,8 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
  $('peekNext').addEventListener('click',()=>{peekRound=(peekRound+1)%peekRounds.length;renderPeek()});
 
  // Activity 4: visual memory, Level 1. The reference disappears BEFORE the two options appear.
+ const motorworxToyGraphics={"⭐":{"src":"graphics/rewards/star.png","name":"star"},"🧸":{"src":"graphics/objects/teddy.png","name":"teddy bear"},"🚗":{"src":"graphics/objects/car.png","name":"toy car"},"⚽":{"src":"graphics/objects/ball.png","name":"ball"},"🪁":{"src":"graphics/objects/kite.png","name":"kite"},"🚂":{"src":"graphics/objects/train.png","name":"toy train"}};
+ function motorworxToyArt(symbol){const a=motorworxToyGraphics[symbol];return a?`<img class="toy-art" src="${a.src}" alt="${a.name}" draggable="false">`:symbol;}
  const memoryRounds=[
   {seen:'🧸',other:'🚗',correct:1,name:'teddy bear',otherName:'toy car'},
   {seen:'🚗',other:'⚽',correct:0,name:'toy car',otherName:'ball'},
@@ -90,7 +92,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
   $('memoryCounter').textContent=`${memoryRound+1} of ${memoryRounds.length}`;
   $('memoryInstruction').textContent='Look at the picture.';
   $('memoryHint').textContent='Remember what you see.';
-  $('memoryPicture').textContent=r.seen;
+  $('memoryPicture').innerHTML=motorworxToyArt(r.seen);
   $('memoryPicture').setAttribute('aria-label',r.name);
   $('memoryDisplay').hidden=false;
   $('memoryReadyControls').hidden=false;
@@ -110,7 +112,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
   $('memoryHint').textContent='Tap the one you saw.';
   for(let i=0;i<2;i++){
    const btn=$('memoryChoice'+i),isCorrect=i===r.correct;
-   btn.innerHTML=`<span class="choice-art">${isCorrect?r.seen:r.other}</span>`;
+   btn.innerHTML=`<span class="choice-art">${motorworxToyArt(isCorrect?r.seen:r.other)}</span>`;
    btn.setAttribute('aria-label',isCorrect?r.name:r.otherName);
    btn.className='memory-option';btn.disabled=false;
   }
@@ -342,9 +344,9 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
    patternClearDrag();
    const r=patternRounds[patternIndex];patternComplete=false;
    $('patternCounter').textContent=`${patternIndex+1} of ${patternRounds.length}`;
-   $('patternExample').innerHTML=r.items.map((pic,i)=>`<div class="pattern-unit" aria-label="Picture ${i+1}: ${pic}">${pic}</div>`).join('')+'<div class="pattern-unit missing" id="patternMissing" aria-label="Empty position">?</div>';
+   $('patternExample').innerHTML=r.items.map((pic,i)=>`<div class="pattern-unit" aria-label="Picture ${i+1}: ${pic}">${motorworxToyArt(pic)}</div>`).join('')+'<div class="pattern-unit missing" id="patternMissing" aria-label="Empty position">?</div>';
    for(let i=0;i<2;i++){
-     const b=$('patternChoice'+i);b.innerHTML=`<span class="choice-art">${r.choices[i]}</span>`;b.classList.remove('correct','dragging');b.disabled=false;
+     const b=$('patternChoice'+i);b.innerHTML=`<span class="choice-art">${motorworxToyArt(r.choices[i])}</span>`;b.classList.remove('correct','dragging');b.disabled=false;
      b.setAttribute('aria-label',`Drag ${r.choices[i]} into the empty position`);
    }
    $('patternMessage').textContent='Drag the next picture into the empty space.';$('patternNext').hidden=true;
@@ -355,7 +357,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
    const r=patternRounds[patternIndex];
    if(which!==r.correct){animateObject($('patternChoice'+which),false);$('patternMessage').textContent='Look again. Try the other picture.';window.motorworxFeedback?.('retry','pattern');return;}
    patternComplete=true;window.motorworxFeedback?.('success','pattern');
-   const missing=$('patternMissing');missing.textContent=r.choices[r.correct];missing.classList.add('complete');missing.classList.remove('missing');animateObject(missing,true);
+   const missing=$('patternMissing');missing.innerHTML=motorworxToyArt(r.choices[r.correct]);missing.classList.add('complete');missing.classList.remove('missing');animateObject(missing,true);
    for(let i=0;i<2;i++)$('patternChoice'+i).disabled=true;
    $('patternMessage').textContent=patternIndex===patternRounds.length-1?'All four patterns complete! Well done!':'Yes! You finished the pattern!';
    $('patternNext').textContent=patternIndex===patternRounds.length-1?'Play again ↻':'Next pattern →';$('patternNext').hidden=false;
@@ -371,7 +373,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
    btn.addEventListener('pointerdown',e=>{
      if(patternComplete||patternDrag||e.button!==undefined&&e.button!==0)return;
      e.preventDefault();
-     const floating=document.createElement('div');floating.className='pattern-floating';floating.textContent=patternRounds[patternIndex].choices[which];
+     const floating=document.createElement('div');floating.className='pattern-floating';floating.innerHTML=motorworxToyArt(patternRounds[patternIndex].choices[which]);
      document.body.appendChild(floating);floating.style.left=e.clientX+'px';floating.style.top=e.clientY+'px';
      btn.classList.add('dragging');btn.setPointerCapture(e.pointerId);
      patternDrag={which,id:e.pointerId,floating};
@@ -600,7 +602,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
   $('disappearInstruction').textContent='Look at both pictures.';
   $('disappearHint').textContent='Remember what you see.';
   $('disappearStageLabel').textContent='Look carefully';
-  [0,1].forEach(i=>{const el=$('disappearItem'+i);el.textContent=r.items[i];el.classList.remove('vanished');el.setAttribute('aria-label',i===0?'First object':'Second object')});
+  [0,1].forEach(i=>{const el=$('disappearItem'+i);el.innerHTML=motorworxToyArt(r.items[i]);el.classList.remove('vanished');el.setAttribute('aria-label',i===0?'First object':'Second object')});
   $('disappearReadyControls').hidden=false;$('disappearPick').hidden=true;
   $('disappearNext').hidden=true;$('disappearMessage').textContent='Look at the two pictures.';
  }
@@ -613,7 +615,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
   $('disappearHint').textContent='Tap the picture that disappeared.';
   $('disappearStageLabel').textContent='One picture is missing';
   r.order.forEach((itemIndex,i)=>{
-   const b=$('disappearChoice'+i);b.innerHTML=`<span class="choice-art" aria-hidden="true">${r.items[itemIndex]}</span>`;
+   const b=$('disappearChoice'+i);b.innerHTML=`<span class="choice-art" aria-hidden="true">${motorworxToyArt(r.items[itemIndex])}</span>`;
    b.disabled=false;b.setAttribute('aria-label',`Choice ${i+1}`);
   });
   $('disappearMessage').textContent='What is missing?';
@@ -624,7 +626,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
   animateObject($('disappearChoice'+i),correct);
   if(!correct){$('disappearMessage').textContent='Have another look. Which one went away?';window.motorworxFeedback?.('retry','disappear');return}
   disappearPhase='done';window.motorworxFeedback?.('success','disappear');
-  $('disappearItem'+r.missing).textContent=r.items[r.missing];$('disappearItem'+r.missing).classList.remove('vanished');
+  $('disappearItem'+r.missing).innerHTML=motorworxToyArt(r.items[r.missing]);$('disappearItem'+r.missing).classList.remove('vanished');
   [0,1].forEach(j=>$('disappearChoice'+j).disabled=true);
   $('disappearMessage').textContent='Well done!';
   $('disappearNext').textContent=disappearRound===disappearRounds.length-1?'Play again ↻':'Next picture →';
@@ -827,7 +829,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
    $('whichInstruction').textContent=`Tap the ${r.name} at the ${r.place}.`;
    for(let i=0;i<2;i++){
      const b=$('whichChoice'+i),picture=b.querySelector('.which-picture');
-     b.disabled=false;b.className='which-choice';picture.textContent=r.pic;
+     b.disabled=false;b.className='which-choice';picture.innerHTML=motorworxToyArt(r.pic);
      picture.className='which-picture';
      b.setAttribute('aria-label',`${r.name} at the ${i===0?'top':'bottom'}`);
    }
@@ -1054,7 +1056,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
  function parkRender(){const d=parkRounds[parkRound];parkDone=false;parkDragging=false;parkPointer=null;
   $('parkCounter').textContent=`${parkRound+1} of ${parkRounds.length}`;
   $('parkInstruction').textContent=`Park the ${d.name} ${d.car==='🚜'?'tractor':'car'}!`;
-  parkCar.textContent=d.car;parkCar.setAttribute('aria-label',`Park the ${d.name} vehicle`);
+  parkCar.innerHTML=motorworxToyArt(d.car);parkCar.setAttribute('aria-label',`Park the ${d.name} vehicle`);
   parkGarage.style.left=d.x+'%';parkGarage.style.top=d.y+'%';
   parkCar.classList.remove('parked','dragging','wiggle');parkCar.hidden=false;
   $('parkNext').hidden=true;$('parkMessage').textContent=$('parkInstruction').textContent;
