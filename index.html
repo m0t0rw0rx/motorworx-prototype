@@ -300,6 +300,14 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 @keyframes butterflyHappy{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-14deg) scale(1.12)}70%{transform:rotate(14deg) scale(1.12)}}
 @media(max-width:390px){.butterfly-field{height:295px}.butterfly-target{width:110px;height:110px;font-size:80px}.butterfly-flower{font-size:39px}}
 @media(prefers-reduced-motion:reduce){.butterfly-target{animation-duration:9s}}
+
+/* Motorworx illustrated asset library — first three Little Animal Adventures games */
+.feed-animal{height:146px;display:flex;align-items:center;justify-content:center;padding-top:9px}
+.feed-animal img{display:block;max-width:185px;max-height:138px;width:auto;height:auto;object-fit:contain;pointer-events:none}
+.feed-food img{display:block;width:88px;height:88px;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.feed-bowl img{width:154px;height:108px;object-fit:contain;pointer-events:none}
+#turnStart,#turnEnd{opacity:0}
+#turnStartImage,#turnEndImage{pointer-events:none}
 </style>
 </head>
 <body>
@@ -586,9 +594,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   <div class="feed-board" id="feedBoard">
     <div class="feed-ground"></div>
     <div class="feed-animal" id="feedAnimal">🐰</div>
-    <div class="feed-bowl" id="feedBowl" aria-label="Food bowl">
-      <svg viewBox="0 0 154 108" role="img" aria-label="Large food bowl"><path d="M13 25 Q77 10 141 25 L124 84 Q77 105 30 84Z" fill="#f4caa6" stroke="#bc886b" stroke-width="5" stroke-linejoin="round"/><ellipse cx="77" cy="26" rx="64" ry="17" fill="#fff7f0" stroke="#bc886b" stroke-width="5"/></svg>
-    </div>
+    <div class="feed-bowl" id="feedBowl" aria-label="Food bowl"><img src="graphics/animals/bowl.png" alt="Food bowl" draggable="false"/></div>
     <div id="feedFood" class="feed-food" role="button" tabindex="0" aria-label="Drag the carrot into the bowl">🥕</div>
   </div>
   <div id="feedMessage" class="message" aria-live="polite">Touch the food and move it to the bowl.</div>
@@ -608,8 +614,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    <path id="turnWide" class="turn-guide"/>
    <path id="turnDots" class="turn-dots"/>
    <path id="turnProgress" class="turn-trace"/>
-   <text id="turnStart" class="turn-symbol">🐥</text>
-   <text id="turnEnd" class="turn-symbol">🪷</text>
+   <text id="turnStart" class="turn-symbol">🐥</text><image id="turnStartImage" href="graphics/animals/duckling.png" x="55" y="185" width="54" height="62" preserveAspectRatio="xMidYMid meet"/>
+   <text id="turnEnd" class="turn-symbol">🪷</text><image id="turnEndImage" href="graphics/animals/pond.png" x="178" y="41" width="90" height="57" preserveAspectRatio="xMidYMid meet"/>
   </svg>
   <div class="message" id="turnMessage" aria-live="polite">Touch the duckling to begin.</div>
   <div class="controls"><button id="turnReset" class="secondary" type="button">↻ Try again</button><button id="turnNext" type="button" hidden>Next path →</button></div>
@@ -626,20 +632,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  <svg id="board" viewBox="0 0 360 305" role="img" aria-label="Trace from the friendly bunny to the carrot">
   <g id="trail"><line class="guide" x1="82" y1="155" x2="273" y2="155"/><line class="dots" x1="82" y1="155" x2="273" y2="155"/></g>
   <line id="traced" class="traced" x1="82" y1="155" x2="82" y2="155" />
-  <g id="pumpkin" transform="translate(282 155)">
-   <path d="M-6 -17 Q-16 -31 -24 -41" fill="none" stroke="#5d995f" stroke-width="6" stroke-linecap="round"/>
-   <path d="M-11 -27 Q5 -45 23 -31 Q6 -20 -11 -27Z" fill="#7dc66e" stroke="#4f9358" stroke-width="3"/>
-   <path d="M-1 -23 L23 -10 L10 7 L31 20 L-1 28 L-24 15 Z" fill="#f3923d" stroke="#bd6f31" stroke-width="3" stroke-linejoin="round"/>
-   <path d="M1 -11 L14 -4 M-2 2 L12 7 M-7 13 L8 18" stroke="#f6bc6e" stroke-width="3" stroke-linecap="round"/>
-  </g>
-  <g id="ghost" transform="translate(68 155)">
-    <ellipse cx="-13" cy="-28" rx="9" ry="24" transform="rotate(-12 -13 -28)" fill="#fcf9ff" stroke="#927dae" stroke-width="3"/>
-    <ellipse cx="13" cy="-28" rx="9" ry="24" transform="rotate(12 13 -28)" fill="#fcf9ff" stroke="#927dae" stroke-width="3"/>
-    <circle cx="0" cy="2" r="21" fill="#fcf9ff" stroke="#927dae" stroke-width="3"/>
-    <circle cx="-7" cy="0" r="3.5" fill="#514368"/><circle cx="7" cy="0" r="3.5" fill="#514368"/>
-    <circle cx="-12" cy="10" r="4.5" fill="#f5c1d3"/><circle cx="12" cy="10" r="4.5" fill="#f5c1d3"/>
-    <path d="M-4 11 Q0 15 4 11" stroke="#514368" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  </g>
+  <g id="pumpkin" transform="translate(282 155)"><image href="graphics/animals/carrot.png" x="-30" y="-48" width="62" height="92" preserveAspectRatio="xMidYMid meet"/></g>
+  <g id="ghost" transform="translate(68 155)"><image href="graphics/animals/bunny.png" x="-36" y="-64" width="72" height="83" preserveAspectRatio="xMidYMid meet"/></g>
   <g id="sparkles" style="display:none" aria-hidden="true"><text x="155" y="80" font-size="28">⭐</text><text x="262" y="95" font-size="25">✨</text><text x="213" y="225" font-size="28">⭐</text></g>
   <text id="feedback" x="180" y="269" text-anchor="middle" font-size="15" font-weight="800" fill="#7955a7">Start at the bunny!</text>
  </svg>
@@ -746,7 +740,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const paths=[{y:155,a:82,b:273},{y:124,a:82,b:273},{y:185,a:82,b:273}];
  let current=0,progress=0,drag=false,completed=false,pointerId=null;
  const path=()=>paths[current];
- function redraw(){let {y,a,b}=path();ghost.setAttribute('transform',`translate(${a-14+(b-a)*progress} ${y})`);pumpkin.setAttribute('transform',`translate(${b+15} ${y})`);trail.innerHTML=`<line class="guide" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/><line class="dots" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/>`;traced.setAttribute('x1',a);traced.setAttribute('x2',a+(b-a)*progress);traced.setAttribute('y1',y);traced.setAttribute('y2',y);$('sparkles').style.display=completed?'':'none';$('counter').textContent=`${current+1} of 3`;document.querySelectorAll('.steps span').forEach((s,i)=>s.classList.toggle('current',i<=current));}
+ function redraw(){let {y,a,b}=path();ghost.setAttribute('transform',`translate(${a-14+(b-a)*progress} ${y})`);pumpkin.setAttribute('transform',`translate(${b+15} ${y})`);trail.innerHTML=`<line class="guide" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/><line class="dots" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/>`;traced.setAttribute('x1',a);traced.setAttribute('x2',a+(b-a)*progress);traced.setAttribute('y1',y);traced.setAttribute('y2',y);$('sparkles').style.display='none';$('counter').textContent=`${current+1} of 3`;document.querySelectorAll('.steps span').forEach((s,i)=>s.classList.toggle('current',i<=current));}
  function startOver(){progress=0;drag=false;completed=false;pointerId=null;next.hidden=true;reset.hidden=false;feedback.textContent='Start at the bunny!';message.textContent='Ready to trace?';redraw()}
  function coordinates(e){let r=board.getBoundingClientRect();return {x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*305/r.height};}
  function down(e){if(completed)return;const p=coordinates(e),{y,a,b}=path(),ghostX=a-14+(b-a)*progress;if(Math.abs(p.x-ghostX)<37&&Math.abs(p.y-y)<44){drag=true;pointerId=e.pointerId;board.setPointerCapture(pointerId);feedback.textContent='Follow the dots!';message.textContent='Keep going!';e.preventDefault()}else{feedback.textContent='Touch the bunny first.';}}
@@ -1400,23 +1394,24 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  const turnBoard=$('turnBoard');
  // Repeat the same easy two-segment L skill, changing the direction and friend.
  const turnRounds=[
-   {points:[[80,237],[213,237],[213,105]],friend:'duckling',destination:'pond',start:'🐥',end:'🪷'},
-   {points:[[83,92],[230,92],[230,236]],friend:'bunny',destination:'carrot',start:'🐰',end:'🥕'},
-   {points:[[277,231],[107,231],[107,92]],friend:'puppy',destination:'bone',start:'🐶',end:'🦴'}
+   {points:[[80,237],[213,237],[213,105]],friend:'duckling',destination:'pond',start:'🐥',end:'🪷',friendAsset:'duckling',endAsset:'pond'},
+   {points:[[83,92],[230,92],[230,236]],friend:'bunny',destination:'carrot',start:'🐰',end:'🥕',friendAsset:'bunny',endAsset:'carrot'},
+   {points:[[277,231],[107,231],[107,92]],friend:'puppy',destination:'bone',start:'🐶',end:'🦴',friendAsset:'puppy',endAsset:'bone'}
  ];
  let turnRound=0,turnDistance=0,turnDragging=false,turnPointer=null,turnDone=false,turnLastPos=null,turnApproaching=false;
  const turnPts=()=>turnRounds[turnRound].points;
  const turnLength=()=>Math.hypot(turnPts()[1][0]-turnPts()[0][0],turnPts()[1][1]-turnPts()[0][1])+Math.hypot(turnPts()[2][0]-turnPts()[1][0],turnPts()[2][1]-turnPts()[1][1]);
  function turnPointAt(d){const p=turnPts(),first=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),whole=turnLength();d=Math.max(0,Math.min(whole,d));if(d<=first)return [p[0][0]+(p[1][0]-p[0][0])*d/first,p[0][1]+(p[1][1]-p[0][1])*d/first];const t=(d-first)/(whole-first);return [p[1][0]+(p[2][0]-p[1][0])*t,p[1][1]+(p[2][1]-p[1][1])*t];}
- function turnMoveFriend(){const spot=turnPointAt(turnDistance);$('turnStart').setAttribute('x',spot[0]);$('turnStart').setAttribute('y',spot[1]);}
+ function turnMoveFriend(){const spot=turnPointAt(turnDistance);$('turnStart').setAttribute('x',spot[0]);$('turnStart').setAttribute('y',spot[1]);$('turnStartImage').setAttribute('x',spot[0]-30);$('turnStartImage').setAttribute('y',spot[1]-46);}
  function turnPathTo(d){const a=turnPts()[0],b=turnPts()[1],len1=Math.hypot(b[0]-a[0],b[1]-a[1]);const mid=turnPointAt(d);return `M${a[0]} ${a[1]} ${d>len1?`L${b[0]} ${b[1]} `:''}L${mid[0]} ${mid[1]}`;}
  function turnRender(){const p=turnPts(),base=`M${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]} L${p[2][0]} ${p[2][1]}`;
   turnDistance=0;turnDragging=false;turnPointer=null;turnDone=false;turnLastPos=null;turnApproaching=false;
   $('turnWide').setAttribute('d',base);$('turnDots').setAttribute('d',base);$('turnProgress').setAttribute('d',turnPathTo(0));
   const r=turnRounds[turnRound];
   $('turnStart').textContent=r.start;$('turnEnd').textContent=r.end;
+  $('turnStartImage').setAttribute('href',`graphics/animals/${r.friendAsset}.png`);$('turnEndImage').setAttribute('href',`graphics/animals/${r.endAsset}.png`);
   turnMoveFriend();
-  $('turnEnd').setAttribute('x',p[2][0]);$('turnEnd').setAttribute('y',p[2][1]-42);
+  $('turnEnd').setAttribute('x',p[2][0]);$('turnEnd').setAttribute('y',p[2][1]-42);$('turnEndImage').setAttribute('x',p[2][0]-38);$('turnEndImage').setAttribute('y',p[2][1]-89);$('turnEndImage').setAttribute('width',r.endAsset==='pond'?85:60);$('turnEndImage').setAttribute('height',r.endAsset==='pond'?57:78);
   $('turnScreen').querySelector('.instruction').textContent=`Trace the dots to the ${r.destination}.`;
   $('turnScreen').querySelector('.hint').textContent=`Start at the ${r.friend}. Follow the dots and turn the corner.`;
   turnBoard.setAttribute('aria-label',`Trace a wide L-shaped trail from the ${r.friend} to the ${r.destination}`);
@@ -1581,10 +1576,10 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  // Game 15: repeated supported hand-eye movement, with one food and one bowl.
  const feedRounds=[
-  {animal:'🐰',name:'bunny',food:'🥕',foodName:'carrot'},
-  {animal:'🐶',name:'puppy',food:'🦴',foodName:'bone'},
-  {animal:'🐵',name:'monkey',food:'🍌',foodName:'banana'},
-  {animal:'🐭',name:'mouse',food:'🧀',foodName:'cheese'}
+  {animal:'🐰',name:'bunny',asset:'bunny',food:'🥕',foodName:'carrot',foodAsset:'carrot'},
+  {animal:'🐶',name:'puppy',asset:'puppy',food:'🦴',foodName:'bone',foodAsset:'bone'},
+  {animal:'🐵',name:'monkey',asset:'monkey',food:'🍌',foodName:'banana',foodAsset:'banana'},
+  {animal:'🐭',name:'mouse',asset:'mouse',food:'🧀',foodName:'cheese',foodAsset:'cheese'}
  ];
  let feedRound=0,feedDone=false,feedDragging=false,feedPointer=null,feedStart=null;
  const feedBoard=$('feedBoard'),feedFood=$('feedFood');
@@ -1592,7 +1587,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  function feedRender(){
   const r=feedRounds[feedRound];feedDone=false;feedDragging=false;feedPointer=null;
   $('feedCounter').textContent=`${feedRound+1} of ${feedRounds.length}`;
-  $('feedAnimal').textContent=r.animal;feedFood.textContent=r.food;
+  $('feedAnimal').innerHTML=`<img src="graphics/animals/${r.asset}.png" alt="${r.name}" draggable="false">`;feedFood.innerHTML=`<img src="graphics/animals/${r.foodAsset}.png" alt="${r.foodName}" draggable="false">`;
   $('feedInstruction').textContent=`Give the ${r.name} the ${r.foodName}.`;
   feedFood.setAttribute('aria-label',`Drag the ${r.foodName} into the bowl`);
   feedFood.className='feed-food';feedFood.style.visibility='visible';
