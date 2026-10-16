@@ -7,7 +7,7 @@
 <title>Motorworx Play & Discover | Level 1 — Little Explorers</title>
 <style>
 :root{font-family:ui-rounded,'Trebuchet MS',system-ui,sans-serif;color:#29394a;background:#f5f2fc;font-synthesis:none}
-*[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(29px,7vw,39px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
+*[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,3vw,26px)}.screen[hidden]{display:none!important}.home{text-align:center}.home-art{background:#faf7ff;border-radius:22px;margin:20px auto;padding:14px;max-width:340px}.home-art svg{max-height:210px}.home h1{font-size:clamp(30px,7vw,40px)}.home p{line-height:1.55;color:#68768b}.home .home-label{font-weight:850;letter-spacing:.06em;color:#7855aa;font-size:13px}.home .start{min-width:220px;font-size:19px}.home .home-intro{max-width:435px;margin:12px auto 18px}.home .home-skills{max-width:455px;margin:12px auto 22px;font-size:14px}.home .home-skills strong{display:block;font-size:17px;color:#403351;margin-bottom:5px}.child-name-panel{max-width:350px;margin:4px auto 18px;padding:12px 16px;background:#faf7ff;border:2px solid #e9dff6;border-radius:19px;text-align:left}.child-name-panel label{display:block;color:#514166;font-weight:800;font-size:14px;margin-bottom:6px}.child-name-panel input{display:block;width:100%;font:inherit;font-size:17px;color:#29394a;border:2px solid #cfc0e7;border-radius:12px;padding:11px;background:#fff}.child-name-panel small{display:block;font-size:12px;color:#6c788d;margin-top:7px;line-height:1.45}.choose-intro{color:#68768b;font-size:14px;line-height:1.45;margin:10px 0 5px}.back{background:transparent;color:#69449f;padding:7px 5px;min-height:32px;font-size:13px;margin-bottom:10px}.back:hover{text-decoration:underline}
 .game{position:relative;isolation:isolate;width:min(100%,580px);background:#fff;border:2px solid #e9e1f4;border-radius:26px;padding:clamp(15px,4vw,27px);box-shadow:0 12px 40px #68559217}
 header{display:flex;justify-content:space-between;gap:10px;align-items:center}.eyebrow{color:#7855aa;font-size:clamp(11px,2.7vw,13px);font-weight:850;letter-spacing:.055em}.logo-slot{font-size:12px;color:#7e8492;margin-bottom:10px}h1{font-size:clamp(24px,6vw,31px);margin:7px 0 0;line-height:1.15}.counter{white-space:nowrap;color:#69449f;background:#eee6fa;border-radius:50px;padding:9px 12px;font-weight:800;font-size:13px}.steps{display:flex;gap:8px;margin:19px 0}.steps span{height:8px;flex:1;background:#e1d6f2;border-radius:20px}.steps span.current{background:#805db9}.instruction{text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,21px);margin:15px 0 5px}.hint{text-align:center;color:#68768b;font-size:14px;min-height:19px}svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;margin:4px 0}svg .guide{stroke:#eee6fb;stroke-width:68;stroke-linecap:round}svg .dots{stroke:#8f79b8;stroke-width:7;stroke-linecap:round;stroke-dasharray:1 21}svg .traced{stroke:#55bba6;stroke-width:9;stroke-linecap:round}#ghost{pointer-events:none}.message{min-height:28px;text-align:center;color:#477f70;font-size:16px;font-weight:800}.controls{display:flex;gap:10px;justify-content:center;margin:16px 0 0;flex-wrap:wrap}button{border:0;border-radius:16px;background:#7753b7;color:#fff;padding:14px 20px;min-height:48px;font-size:15px;font-weight:800;cursor:pointer}button.secondary{background:#e9e1f6;color:#6b4a9f}button:focus-visible{outline:3px solid #efb751;outline-offset:3px}.note{text-align:center;font-size:12px;color:#768093;margin:16px 0 0}.logo-note{font-size:11px;color:#8d879b;text-align:center;padding-top:4px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
@@ -305,23 +305,24 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 <body>
 <main class="game">
  <section id="homeScreen" class="screen home">
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="home-label">PLAY &amp; DISCOVER | LEVEL 1</div>
   <h1>Play &amp; Discover</h1>
-  <p>Choose a game and let’s play!</p>
+  <p class="home-intro">Little activities. Growing skills. Lots to discover.</p>
   <div class="home-art" aria-hidden="true">
    <svg viewBox="0 0 320 205"><rect x="9" y="12" width="302" height="180" rx="24" fill="#e6f6ef"/><circle cx="58" cy="52" r="22" fill="#ffd276"/><path d="M24 159 Q90 120 160 160 Q231 111 303 157 V192 H24Z" fill="#9bd6ae"/><text x="65" y="128" font-size="62">🐰</text><text x="212" y="131" font-size="57">🥕</text><circle cx="160" cy="83" r="9" fill="#ecb6d2"/><circle cx="183" cy="64" r="7" fill="#b6b4ec"/></svg>
   </div>
-  <p><strong>Nineteen Level 1 activities with voice guidance</strong><br/>Practise tracing, matching, finding, remembering, placing, completing, patterns, spotting differences, tracking, shadow matching, discovering what disappeared, hand-eye coordination, and turning corners.</p>
+  <p class="home-skills"><strong>20 playful Level 1 activities</strong>Explore matching, tracing, visual tracking, memory, spatial awareness and hand-eye coordination through short, playful activities.</p>
+  <div class="child-name-panel"><label for="childName">Child’s first name <span style="font-weight:500">(optional)</span></label><input id="childName" type="text" maxlength="24" autocomplete="off" placeholder="e.g. Alex" aria-describedby="nameHelp"/><small id="nameHelp">For occasional personalised encouragement. Only used while this page is open.</small></div>
   <button id="play" class="start">Choose a game ▶</button>
-  <div class="note">Free prototype · Spoken instructions · Temporary artwork</div>
+  <div class="note">Short activities · Gentle voice guidance · No timers or scores</div>
  </section>
  <section id="chooseScreen" class="screen" hidden>
    <button type="button" id="chooseBack" class="back">← Back to home</button>
-   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+   <div class="logo-slot">Motorworx</div>
    <div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div>
    <h1>Choose a Game</h1>
-   <p class="hint" style="text-align:left;margin-top:10px">Tap a picture to choose a game. You can play any game you like!</p>
+   <p class="choose-intro">Choose any of the 20 activities. Play at your own pace!</p>
    <div class="activity-grid">
      <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">🐰</div><strong>Help the Bunny</strong><small>Little Animal Adventures · Tracing</small></button>
      <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">🎈</div><strong>Find My Match</strong><small>Colourful Discovery · Matching</small></button>
@@ -344,11 +345,11 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startButterfly"><div class="tile-emoji" aria-hidden="true">🦋</div><strong>Catch the Butterfly!</strong><small>Garden Adventure · Visual tracking</small></button>
    </div>
-   <div class="note">Temporary artwork · No scores or timers</div>
+   <div class="note">No time limits. Children can replay their favourites as often as they like.</div>
  </section>
  <section id="matchScreen" class="screen" hidden>
   <button type="button" class="back" id="matchBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Colourful Discovery</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Find My Match!</h1></div><div class="counter" id="matchCounter">1 of 4</div></header>
   <div class="steps" id="matchSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -366,7 +367,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  <section id="peekScreen" class="screen" hidden>
    <button type="button" class="back" id="peekBack">← Choose a game</button>
-   <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+   <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Safari Explorers</div>
    <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Who’s Hiding?</h1></div><div class="counter" id="peekCounter">1 of 4</div></header>
    <div class="steps" id="peekSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -383,7 +384,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="memoryScreen" class="screen" hidden>
   <button type="button" class="back" id="memoryBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>What's Missing?</h1></div><div class="counter" id="memoryCounter">1 of 4</div></header>
   <div class="steps" id="memorySteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -403,7 +404,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  <section id="finishScreen" class="screen" hidden>
   <button type="button" class="back" id="finishBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Animal Adventures</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Finish the Picture</h1></div><div class="counter" id="finishCounter">1 of 4</div></header>
   <div class="steps" id="finishSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -418,7 +419,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="patternScreen" class="screen" hidden>
   <button type="button" class="back" id="patternBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Colourful Discovery</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Pattern</h1></div><div class="counter" id="patternCounter">1 of 4</div></header>
   <div class="steps" id="patternSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -433,7 +434,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="diffScreen" class="screen" hidden>
   <button type="button" class="back" id="diffBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Safari Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Spot the Different One!</h1></div><div class="counter" id="diffCounter">1 of 4</div></header>
   <div class="steps" id="diffSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -451,7 +452,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  <section id="shadowScreen" class="screen" hidden>
   <button type="button" class="back" id="shadowBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Under the Sea</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Find My Shadow!</h1></div><div class="counter" id="shadowCounter">1 of 4</div></header>
   <div class="steps" id="shadowSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -470,7 +471,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  <section id="bubbleScreen" class="screen" hidden>
   <button type="button" class="back" id="bubbleBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Under the Sea</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Pop the Bubble!</h1></div><div class="counter" id="bubbleCounter">1 of 4</div></header>
   <div class="steps" id="bubbleSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -485,7 +486,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="disappearScreen" class="screen" hidden>
   <button type="button" class="back" id="disappearBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>What's Gone?</h1></div><div class="counter" id="disappearCounter">1 of 4</div></header>
   <div class="steps" id="disappearSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -509,7 +510,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="starScreen" class="screen" hidden>
   <button type="button" class="back" id="starBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Space Adventure</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Star!</h1></div><div class="counter" id="starCounter">1 of 4</div></header>
   <div class="steps" id="starSteps" aria-hidden="true"><span class="current"></span><span></span><span></span><span></span></div>
@@ -535,7 +536,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="spatialScreen" class="screen" hidden>
   <button type="button" class="back" id="spatialBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Under the Sea</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Where Does It Go?</h1></div><div class="counter" id="spatialCounter">1 of 4</div></header>
   <div class="steps" id="spatialSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -559,7 +560,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  <section id="whichScreen" class="screen" hidden>
   <button type="button" class="back" id="whichBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Top or Bottom?</h1></div><div class="counter" id="whichCounter">1 of 4</div></header>
   <div class="steps" id="whichSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -576,7 +577,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 
  <section id="feedScreen" class="screen" hidden>
   <button type="button" class="back" id="feedBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Animal Adventures</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Feed the Animal!</h1></div><div class="counter" id="feedCounter">1 of 4</div></header>
   <div class="steps" id="feedSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -596,7 +597,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="turnScreen" class="screen" hidden>
   <button type="button" class="back" id="turnBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Animal Adventures</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Follow the Little Trail!</h1></div><div class="counter" id="turnCounter">1 of 3</div></header>
   <div class="steps" id="turnSteps"><span></span><span></span><span></span></div>
@@ -616,7 +617,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="gameScreen" class="screen" hidden>
  <button id="backHome" class="back" type="button">← Back to home</button>
- <div class="logo-slot" aria-label="Motorworx">Motorworx <span style="font-weight:400">· prototype</span></div>
+ <div class="logo-slot" aria-label="Motorworx">Motorworx</div>
  <div class="theme-label">Little Animal Adventures</div>
  <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Help the Bunny!</h1></div><div id="counter" class="counter">1 of 3</div></header>
  <div class="steps" aria-hidden="true"><span class="current"></span><span></span><span></span></div>
@@ -644,13 +645,13 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </svg>
  <div id="message" class="message" aria-live="polite">Ready to trace?</div>
  <div class="controls"><button id="reset" class="secondary">↻ Try again</button><button id="next" hidden>Next path →</button></div>
- <div class="note">Touchscreen prototype · No timer · No score penalties</div>
- <div class="logo-note">Temporary illustrations. Add the original Motorworx logo before publishing.</div>
+ <div class="note">Trace slowly with your finger. There is no time limit.</div>
+ 
 </section>
 
  <section id="wipeScreen" class="screen" hidden>
   <button type="button" class="back" id="wipeBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Under the Sea</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Clean the Ocean Window</h1></div><div class="counter" id="wipeCounter">1 of 4</div></header>
   <div class="steps" id="wipeSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -667,7 +668,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="towerScreen" class="screen" hidden>
   <button type="button" class="back" id="towerBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Colourful Discovery</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Build a Tower!</h1></div><div class="counter" id="towerCounter">1 of 4</div></header>
   <div class="steps" id="towerSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -684,7 +685,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="parkScreen" class="screen" hidden>
   <button type="button" class="back" id="parkBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Little Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Little Parking Spots</h1></div><div class="counter" id="parkCounter">1 of 4</div></header>
   <div class="steps" id="parkSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -701,7 +702,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="sizeScreen" class="screen" hidden>
   <button type="button" class="back" id="sizeBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Safari Explorers</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Big or Small?</h1></div><div class="counter" id="sizeCounter">1 of 4</div></header>
   <div class="steps" id="sizeSteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -717,7 +718,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  </section>
  <section id="butterflyScreen" class="screen" hidden>
   <button type="button" class="back" id="butterflyBack">← Choose a game</button>
-  <div class="logo-slot">Motorworx <span style="font-weight:400">· prototype</span></div>
+  <div class="logo-slot">Motorworx</div>
   <div class="theme-label">Garden Adventure</div>
   <header><div><div class="eyebrow">PLAY &amp; DISCOVER | LEVEL 1</div><h1>Catch the Butterfly!</h1></div><div class="counter" id="butterflyCounter">1 of 4</div></header>
   <div class="steps" id="butterflySteps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -1884,7 +1885,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 (()=>{
  'use strict';
  const activities={
-  chooseScreen:'Choose a game! Tap one of the pictures to start playing.',
+  chooseScreen:()=>{const name=childName();return name?`Ready to play, ${name}? Choose a game!`:'Choose a game! Tap one of the pictures to start playing.'},
   gameScreen:'Trace the path to the carrot. Touch the bunny and follow the dots.',
   matchScreen:'Find the matching picture. Tap the picture that is the same.',
   peekScreen:()=>document.getElementById('peekInstruction').textContent+' Tap the picture where you see it.',
@@ -1906,6 +1907,16 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   sizeScreen:()=>document.getElementById('sizeInstruction').textContent,
   butterflyScreen:'Tap the butterfly!'
  };
+ // The name stays only in memory and is never sent or stored.
+ let childFirstName='';let personalisedPraiseCount=0;
+ function childName(){return childFirstName}
+ const nameField=document.getElementById('childName');
+ nameField.addEventListener('input',()=>{childFirstName=nameField.value.replace(/[^\p{L}\p{M} '\-]/gu,'').replace(/\s+/g,' ').trim().slice(0,24)});
+ document.getElementById('play').addEventListener('click',()=>{
+  childFirstName=nameField.value.replace(/[^\p{L}\p{M} '\-]/gu,'').replace(/\s+/g,' ').trim().slice(0,24);
+  const intro=document.querySelector('.choose-intro');
+  intro.textContent=childFirstName?`Ready to play, ${childFirstName}? Choose any of the 20 activities.`:'Choose any of the 20 activities. Play at your own pace!';
+ });
  const synth=window.speechSynthesis;
  const supported=!!(synth&&window.SpeechSynthesisUtterance);
  let soundOn=true;
@@ -2140,7 +2151,9 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
  window.motorworxFeedback=function(type,activity){
   if(type==='success'){
    if(activity!=='wipe')celebrate();
-   const phrase=nextPhrase(praise,activity)||'Well done!';
+   let phrase=nextPhrase(praise,activity)||'Well done!';
+   personalisedPraiseCount++;
+   if(childFirstName&&personalisedPraiseCount%3===1)phrase=phrase.replace(/[.!]+$/, '')+', '+childFirstName+'!';
    showFeedback(activity,phrase);
    let voiceDone=false,notifyVoiceDone=null;
    scheduleAutoNext(done=>{notifyVoiceDone=done;if(voiceDone)done()});
@@ -2180,8 +2193,8 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
   const bar=document.createElement('div');bar.className='voice-bar';bar.setAttribute('role','group');bar.setAttribute('aria-label','Spoken instructions');
   bar.innerHTML='<span class="voice-status" aria-live="polite"></span><button type="button" class="voice-replay"><span class="voice-icon" aria-hidden="true">🔁</span><span>Hear again</span></button><button type="button" class="voice-toggle"></button>';
   const steps=screen.querySelector('.steps');
-  const anchor=id==='chooseScreen'?screen.querySelector('p.hint'):(steps||screen.querySelector('header'));
-  anchor.insertAdjacentElement('afterend',bar);
+  const anchor=id==='chooseScreen'?(screen.querySelector('.choose-intro')||screen.querySelector('h1')):(steps||screen.querySelector('header')||screen.querySelector('.instruction'));
+  if(!anchor){screen.prepend(bar)}else{anchor.insertAdjacentElement('afterend',bar)}
   const replay=bar.querySelector('.voice-replay');
   const button=bar.querySelector('.voice-toggle');
   replay.disabled=!supported;
