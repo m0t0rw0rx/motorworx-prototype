@@ -418,14 +418,9 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
    {correct:0,choices:[{kind:'ringPlanet',name:'ringed planet'},{kind:'satellite',name:'satellite'}]},
    {correct:1,choices:[{kind:'rocket',name:'rocket'},{kind:'moon',name:'moon'}]}
  ];
+ const motorworxSpaceGraphics={"bluePlanet":"graphics/space/blue-planet.png","pinkPlanet":"graphics/space/pink-planet.png","moon":"graphics/space/moon.png","rocket":"graphics/space/rocket.png","ringPlanet":"graphics/space/ringed-planet.png","satellite":"graphics/space/satellite.png"};
  function starSpacePicture(kind,x,y){
-   const a=`translate(${x} ${y})`;
-   if(kind==='bluePlanet')return `<g transform="${a}"><circle r="44" fill="#7ec9f1" stroke="#c3eafb" stroke-width="4"/><path d="M-30 -16 Q-9 -35 9 -21 Q24 -8 39 -11 M-26 21 Q-1 10 21 29" fill="none" stroke="#3d93ce" stroke-width="8" stroke-linecap="round"/></g>`;
-   if(kind==='pinkPlanet')return `<g transform="${a}"><circle r="44" fill="#edb7df" stroke="#ffe1f0" stroke-width="4"/><path d="M-29 -12 Q-9 -30 15 -10 Q29 0 34 -13 M-23 26 Q0 11 23 25" fill="none" stroke="#ce82bc" stroke-width="8" stroke-linecap="round"/></g>`;
-   if(kind==='moon')return `<g transform="${a}"><circle r="44" fill="#d7dde9" stroke="#f3f5f9" stroke-width="4"/><circle cx="-14" cy="-12" r="12" fill="#afb9cf"/><circle cx="19" cy="15" r="10" fill="#afb9cf"/><circle cx="15" cy="-20" r="6" fill="#afb9cf"/></g>`;
-   if(kind==='rocket')return `<g transform="${a}"><path d="M0 -47 Q27 -31 24 18 L12 38 H-12 L-24 18 Q-27 -31 0 -47Z" fill="#f1f4ff" stroke="#8192c3" stroke-width="4"/><path d="M-23 10 L-40 31 L-12 26 M23 10 L40 31 L12 26" fill="#ed9b9c" stroke="#bb666a" stroke-width="4" stroke-linejoin="round"/><circle cy="-13" r="11" fill="#7ec9f1" stroke="#8192c3" stroke-width="3"/><path d="M-12 38 L0 51 L12 38" fill="#ffcb75" stroke="#df9740" stroke-width="3"/></g>`;
-   if(kind==='ringPlanet')return `<g transform="${a}"><circle r="34" fill="#f3c175" stroke="#d6a058" stroke-width="4"/><ellipse rx="53" ry="17" fill="none" stroke="#e9e4d7" stroke-width="9" transform="rotate(-22)"/><ellipse rx="53" ry="17" fill="none" stroke="#a17e62" stroke-width="2" transform="rotate(-22)"/></g>`;
-   return `<g transform="${a}"><rect x="-15" y="-26" width="30" height="49" rx="7" fill="#e3e8f3" stroke="#8e9dbc" stroke-width="3"/><rect x="-49" y="-20" width="30" height="38" rx="3" fill="#77afdc" stroke="#4b7fae" stroke-width="3"/><rect x="19" y="-20" width="30" height="38" rx="3" fill="#77afdc" stroke="#4b7fae" stroke-width="3"/><circle cy="-2" r="8" fill="#f8d777"/><path d="M0 -27 V-41 M-9 -41 H9" stroke="#e3e8f3" stroke-width="4"/></g>`;
+  return `<g transform="translate(${x} ${y})"><image href="${motorworxSpaceGraphics[kind]}" x="-56" y="-56" width="112" height="112" preserveAspectRatio="xMidYMid meet"/></g>`;
  }
  function starAnimateChoice(which,correct){
    const art=$('star'+(which===0?'Left':'Right')+'Art');
