@@ -66,7 +66,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
    if(kind==='bush')return `<image href="${motorworxBushGraphic}" x="2" y="40" width="171" height="136" preserveAspectRatio="none"/>`;
    return `<path d="M18 139 Q12 115 40 110 Q43 82 74 96 Q91 70 113 96 Q149 88 148 119 Q169 141 139 157 H36 Q19 155 18 139Z" fill="#d3e9fa" stroke="#91b9d9" stroke-width="3"/>`;
  }
- const motorworxSafariGraphics={"lion":"graphics/safari/lion.png","zebra":"graphics/safari/zebra.png","elephant":"graphics/safari/elephant.png"};
+ const motorworxSafariGraphics={"lion":"graphics/safari/lion.png","zebra":"graphics/safari/zebra.png","elephant":"graphics/safari/elephant.png","giraffe":"graphics/safari/giraffe.png","monkey":"graphics/animals/monkey.png"};
  function peeker(kind){const y={lion:43,zebra:35,elephant:50}[kind];return `<defs><clipPath id="peekAnimalClip-${kind}"><rect x="0" y="0" width="175" height="156"/></clipPath></defs><image href="${motorworxSafariGraphics[kind]}" x="18" y="${y}" width="139" height="153" preserveAspectRatio="xMidYMid meet" clip-path="url(#peekAnimalClip-${kind})"/>`;}
  function peekScene(r,contains){return `<svg viewBox="0 0 175 180" role="img" aria-label="${contains?'Partially hidden '+r.name:'Only the hiding place'}"><rect x="4" y="4" width="167" height="171" rx="19" fill="#ffffff"/>${contains?peeker(r.kind):''}${coverPicture(r.cover)}</svg>`;}
  function renderPeek(){const r=peekRounds[peekRound];peekDone=false;$('peekCounter').textContent=`${peekRound+1} of ${peekRounds.length}`;$('peekInstruction').textContent=`Find the hiding ${r.name}.`;for(let i=0;i<2;i++){const b=$('peekChoice'+i);b.innerHTML=peekScene(r,i===r.correct);b.className='peek-choice';b.disabled=false;b.setAttribute('aria-label',`${i===0?'Left':'Right'} picture`)}$('peekMessage').textContent='Look closely!';$('peekNext').hidden=true;document.querySelectorAll('#peekSteps span').forEach((el,i)=>el.classList.toggle('current',i<=peekRound))}
@@ -396,13 +396,13 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
 
  // Game 8 — spot the different one. Two are the same and one is different.
  const diffRounds=[
-  {items:['🦁','🦁','🐘'],correct:2},
-  {items:['🦒','🐒','🦒'],correct:1},
-  {items:['🐘','🦓','🦓'],correct:0},
-  {items:['🐒','🐒','🦁'],correct:2}
+  {items:['lion','lion','elephant'],correct:2},
+  {items:['giraffe','monkey','giraffe'],correct:1},
+  {items:['elephant','zebra','zebra'],correct:0},
+  {items:['monkey','monkey','lion'],correct:2}
  ];
  let diffRound=0,diffDone=false;
- function renderDiff(){const r=diffRounds[diffRound];diffDone=false;$('diffCounter').textContent=`${diffRound+1} of ${diffRounds.length}`;for(let i=0;i<3;i++){const b=$('diffChoice'+i);b.innerHTML=`<span class="choice-art">${r.items[i]}</span>`;b.className='diff-choice';b.disabled=false;}$('diffMessage').textContent='Look carefully and choose the one that is different.';$('diffNext').hidden=true;document.querySelectorAll('#diffSteps span').forEach((el,i)=>el.classList.toggle('current',i<=diffRound));}
+ function renderDiff(){const r=diffRounds[diffRound];diffDone=false;$('diffCounter').textContent=`${diffRound+1} of ${diffRounds.length}`;for(let i=0;i<3;i++){const b=$('diffChoice'+i);b.innerHTML=`<span class="choice-art"><img src="${motorworxSafariGraphics[r.items[i]]}" alt="${r.items[i]}" draggable="false"></span>`;b.className='diff-choice';b.disabled=false;}$('diffMessage').textContent='Look carefully and choose the one that is different.';$('diffNext').hidden=true;document.querySelectorAll('#diffSteps span').forEach((el,i)=>el.classList.toggle('current',i<=diffRound));}
  function chooseDiff(i){if(diffDone)return;const r=diffRounds[diffRound];if(i!==r.correct){$('diffMessage').textContent='Try the different picture.';animateObject($('diffChoice'+i),false);window.motorworxFeedback?.('retry','diff');return;}diffDone=true;window.motorworxFeedback?.('success','diff');animateObject($('diffChoice'+i),true);[0,1,2].forEach(j=>$('diffChoice'+j).disabled=true);$('diffMessage').textContent=diffRound===diffRounds.length-1?'You found all the different pictures!':'Yes! That one is different!';$('diffNext').textContent=diffRound===diffRounds.length-1?'Play again ↻':'Next picture →';$('diffNext').hidden=false;}
  [0,1,2].forEach(i=>$('diffChoice'+i).addEventListener('click',()=>chooseDiff(i)));
  $('startDiff').addEventListener('click',()=>{diffRound=0;renderDiff();show('diffScreen')});
@@ -1084,10 +1084,10 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
 
  // Game 19: recognise BIG or SMALL — one obvious visual difference at a time.
  const sizeRounds=[
-  {animal:'elephant',emoji:'🐘'},
-  {animal:'giraffe',emoji:'🦒'},
-  {animal:'lion',emoji:'🦁'},
-  {animal:'monkey',emoji:'🐒'}
+  {animal:'elephant',emoji:'elephant'},
+  {animal:'giraffe',emoji:'giraffe'},
+  {animal:'lion',emoji:'lion'},
+  {animal:'monkey',emoji:'monkey'}
  ];
  // Re-randomise the requested size and the side holding the big picture every
  // time a round starts, including when the child chooses Play again.
@@ -1105,7 +1105,7 @@ const motorworxSeaSceneGraphics={"octopus":"graphics/ocean/octopus.png","cave":"
   sizeChoices.forEach((button,i)=>{
    button.disabled=false;button.classList.remove('correct','incorrect');
    const big=i===r.bigSide;
-   button.querySelector('.size-art').textContent=r.emoji;
+   button.querySelector('.size-art').innerHTML=`<img src="${motorworxSafariGraphics[r.animal]}" alt="" draggable="false">`;
    button.querySelector('.size-art').style.fontSize=big?'clamp(100px,27vw,153px)':'clamp(52px,13vw,76px)';
    button.setAttribute('aria-label',`${big?'Big':'Small'} ${r.animal}`);
   });

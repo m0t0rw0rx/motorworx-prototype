@@ -316,6 +316,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
 .wipe-stage::before{content:'';position:absolute;inset:0;border-radius:10px;box-shadow:inset 3px 3px 8px #ffffff88,inset -3px -3px 6px #23617b55;pointer-events:none;z-index:4}
 .wipe-stage .window-bolt{position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4ffff,#8acbd9 55%,#38748b 80%);box-shadow:0 1px 1px #1a536c77;z-index:5;pointer-events:none}
 .window-bolt.top-left{left:4px;top:4px}.window-bolt.top-right{right:4px;top:4px}.window-bolt.bottom-left{left:4px;bottom:4px}.window-bolt.bottom-right{right:4px;bottom:4px}
+
+/* Shared safari artwork: generous invisible touch targets and consistent picture boxes. */
+.safari-menu-art{display:block;width:86px;height:72px;object-fit:contain;pointer-events:none}
+.diff-choice .choice-art{display:flex;width:100%;height:clamp(82px,22vw,112px);align-items:center;justify-content:center}
+.diff-choice .choice-art img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.size-art img{display:block;width:1em;height:1em;object-fit:contain;pointer-events:none}
 </style>
 </head>
 <body>
@@ -342,12 +348,12 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
    <div class="activity-grid">
      <button type="button" class="activity-tile" id="startTrace"><div class="tile-emoji" aria-hidden="true">🐰</div><strong>Help the Bunny</strong><small>Little Animal Adventures · Tracing</small></button>
      <button type="button" class="activity-tile" id="startMatch"><div class="tile-emoji" aria-hidden="true">🎈</div><strong>Find My Match</strong><small>Colourful Discovery · Matching</small></button>
-     <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true">🦁</div><strong>Who’s Hiding?</strong><small>Safari Explorers · Finding</small></button>
+     <button type="button" class="activity-tile" id="startPeek"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/lion.png" alt="" class="safari-menu-art"></div><strong>Who’s Hiding?</strong><small>Safari Explorers · Finding</small></button>
      <button type="button" class="activity-tile" id="startMemory"><div class="tile-emoji" aria-hidden="true">🧸</div><strong>What’s Missing?</strong><small>Little Explorers · Memory</small></button>
      <button type="button" class="activity-tile" id="startSpatial"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Where Does It Go?</strong><small>Under the Sea · Placing</small></button>
      <button type="button" class="activity-tile" id="startFinish"><div class="tile-emoji" aria-hidden="true">🧩</div><strong>Finish the Picture</strong><small>Little Animal Adventures · Completing</small></button>
      <button type="button" class="activity-tile" id="startPattern"><div class="tile-emoji" aria-hidden="true">🌈</div><strong>Follow the Pattern</strong><small>Colourful Discovery · Patterns</small></button>
-     <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true">🦒</div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
+     <button type="button" class="activity-tile" id="startDiff"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/giraffe.png" alt="" class="safari-menu-art"></div><strong>Spot the Different One</strong><small>Safari Explorers · Different</small></button>
      <button type="button" class="activity-tile" id="startStar"><div class="tile-emoji" aria-hidden="true">⭐</div><strong>Follow the Star</strong><small>Space Adventure · Visual tracking</small></button>
      <button type="button" class="activity-tile" id="startShadow"><div class="tile-emoji" aria-hidden="true">🐠</div><strong>Find My Shadow</strong><small>Under the Sea · Matching</small></button>
      <button type="button" class="activity-tile" id="startDisappear"><div class="tile-emoji" aria-hidden="true">🚗</div><strong>What's Gone?</strong><small>Little Explorers · Visual memory</small></button>
@@ -357,7 +363,7 @@ header{display:flex;justify-content:space-between;gap:10px;align-items:center}.e
      <button type="button" class="activity-tile" id="startFeed"><div class="tile-emoji" aria-hidden="true">🥕</div><strong>Feed the Animal</strong><small>Little Animal Adventures · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startWipe"><div class="tile-emoji" aria-hidden="true">🦀</div><strong>Clean the Ocean Window</strong><small>Under the Sea · Finger movement</small></button>
      <button type="button" class="activity-tile" id="startPark"><div class="tile-emoji" aria-hidden="true">🚙</div><strong>Little Parking Spots</strong><small>Little Explorers · Hand-eye coordination</small></button>
-     <button type="button" class="activity-tile" id="startSize"><div class="tile-emoji" aria-hidden="true">🐘</div><strong>Big or Small?</strong><small>Safari Explorers · Size perception</small></button>
+     <button type="button" class="activity-tile" id="startSize"><div class="tile-emoji" aria-hidden="true"><img src="graphics/safari/elephant.png" alt="" class="safari-menu-art"></div><strong>Big or Small?</strong><small>Safari Explorers · Size perception</small></button>
      <button type="button" class="activity-tile" id="startTower"><div class="tile-emoji" aria-hidden="true">🧱</div><strong>Build a Tower</strong><small>Colourful Discovery · Hand-eye coordination</small></button>
      <button type="button" class="activity-tile" id="startButterfly"><div class="tile-emoji" aria-hidden="true">🦋</div><strong>Catch the Butterfly!</strong><small>Garden Adventure · Visual tracking</small></button>
    </div>
