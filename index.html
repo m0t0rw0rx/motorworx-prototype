@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="motorworx-version" content="2026-10-17-three-bunnies23" />
+<meta name="motorworx-version" content="2026-10-17-lime25" />
 <meta name="theme-color" content="#faf7ff" />
 <title>Motorworx Play & Discover | Level 1 — Little Explorers</title>
 <style>
@@ -520,9 +520,9 @@ body:has(#chooseScreen:not([hidden])){background:radial-gradient(ellipse at 3% 8
 .stage-dots button::before{content:'';display:block;width:9px;height:9px;border-radius:50%;background:#d8cbe3;margin:auto;transition:transform .15s}
 .stage-dots button[aria-current]{background:transparent}
 .stage-dots button[aria-current]::before{background:#7854ad;transform:scale(1.4)}
-.journey-complete .journey-next{background:linear-gradient(#147d6d,#106b62);color:#fff;border:1px solid #10665c;box-shadow:0 4px 0 #0b574f;min-height:52px}
-.journey-complete .journey-next:hover{background:#106e61}
-.journey-complete .journey-next:active{transform:translateY(2px);box-shadow:0 2px 0 #0b574f}
+.journey-complete .journey-next{background:linear-gradient(#b8ef63,#96da3d);color:#284619;border:1px solid #7cb72e;box-shadow:0 4px 0 #689d27;min-height:52px}
+.journey-complete .journey-next:hover{background:#b9f06a}
+.journey-complete .journey-next:active{transform:translateY(2px);box-shadow:0 2px 0 #689d27}
 @media(max-width:370px){.stage-page .activity-tile{min-height:166px;padding:17px 7px 11px}.stage-page .tile-emoji{height:86px}.stage-page .activity-menu-art{max-height:86px}.tile-state{width:25px;height:25px;top:8px;right:8px}}
 
 
@@ -535,6 +535,13 @@ body:has(#chooseScreen:not([hidden])){background:radial-gradient(ellipse at 3% 8
 .journey-complete .controls:has(>button:only-child){grid-template-columns:1fr;max-width:190px;margin-left:auto;margin-right:auto}
 .journey-menu{display:block;background:transparent;color:#76548e;box-shadow:none;text-decoration:underline;text-underline-offset:3px;font-size:13px;min-height:44px;padding:8px;margin:9px auto 0}
 #board .guide{stroke-width:62}#traceFriends{pointer-events:none}
+
+
+/* Fixed artwork rows and top-aligned title rows keep every game name level. */
+.stage-page .activity-tile{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:94px minmax(66px,auto);align-content:start;justify-items:center;row-gap:8px;min-height:202px;padding:18px 9px 12px}
+.stage-page .tile-emoji{height:94px;align-self:start;margin:0}
+.stage-page .activity-tile strong{display:block;align-self:start;width:100%;min-height:0;margin:0;padding:0;text-align:center;line-height:1.24}
+@media(max-width:370px){.stage-page .activity-tile{grid-template-rows:86px minmax(62px,auto);min-height:190px;padding:17px 7px 11px}.stage-page .tile-emoji{height:86px}}
 
 </style>
 <!-- Embedded font licences: Delius and Nunito
